@@ -1,0 +1,67 @@
+<div class="portal-panel" id="panel-notifications">
+      <div class="panel-header">
+        <h1 class="panel-title">Notifications</h1>
+        <p class="panel-subtitle">Envoi et suivi des communications vers les citoyens et partenaires.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <strong style="font-size:14px;color:var(--primary)">Notifications reçues <span class="sidebar-badge" style="font-size:11px;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px">4</span></strong>
+        <button class="btn-add" onclick="openModal('modal-notif-send')"><i class="bi bi-send"></i>Envoyer une notification</button>
+      </div>
+
+      <div class="data-table-wrap" style="margin-bottom:24px">
+        <div class="activity-item" style="background:rgba(0,49,137,0.03)">
+          <div class="activity-dot blue"><i class="bi bi-file-earmark-plus"></i></div>
+          <div class="activity-text"><strong>Nouveau dossier soumis</strong> — Permis PB-2026-0014<br><small>Léon Tanga — demande de permis commercial, Bépanda</small></div>
+          <div class="activity-time">Aujourd'hui, 07h42</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot orange"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="activity-text"><strong>Délai dépassé</strong> — Dossier MAR-2026-0001<br><small>Aucune action depuis 21 jours</small></div>
+          <div class="activity-time">Hier, 18h00</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot green"><i class="bi bi-credit-card"></i></div>
+          <div class="activity-text"><strong>Paiement confirmé</strong> — DCL-2026-0087 (5 000 XAF via MTN)</div>
+          <div class="activity-time">Hier, 15h30</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot blue"><i class="bi bi-calendar-check"></i></div>
+          <div class="activity-text"><strong>RDV confirmé</strong> — Jean Fotso, 01/05/2026 09h00</div>
+          <div class="activity-time">26/04/2026, 11h00</div>
+        </div>
+      </div>
+
+      <div class="table-toolbar"><strong style="font-size:14px;color:var(--primary)">Historique des envois</strong></div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Destinataire</th><th>Type</th><th>Canal</th><th>Message</th><th>Statut</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><small>30/04, 08h20</small></td>
+              <td>Jean Fotso</td>
+              <td><span style="font-size:12px">Confirmation RDV</span></td>
+              <td><i class="bi bi-envelope me-1"></i><i class="bi bi-phone"></i></td>
+              <td><small>RDV confirmé pour le 01/05 à 09h00</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+            <tr>
+              <td><small>29/04, 14h00</small></td>
+              <td>Marc Essoh</td>
+              <td><span style="font-size:12px">Pièce requise</span></td>
+              <td><i class="bi bi-envelope me-1"></i></td>
+              <td><small>Veuillez fournir la CNI de Mme Abena</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+            <tr>
+              <td><small>28/04, 10h15</small></td>
+              <td>SCI Bonanjo</td>
+              <td><span style="font-size:12px">Décision favorable</span></td>
+              <td><i class="bi bi-envelope me-1"></i><i class="bi bi-phone"></i></td>
+              <td><small>Votre permis PB-2026-0010 est accordé</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

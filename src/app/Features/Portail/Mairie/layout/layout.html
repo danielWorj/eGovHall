@@ -1,0 +1,90 @@
+<div class="portail-agent">
+  <header class="portal-header">
+  <div class="portal-header-inner">
+    <div class="portal-brand">
+      <div class="portal-brand-icon">M</div>
+      <div class="portal-brand-text">
+        <strong>Mairie de Douala</strong>
+        <small>Espace Agent — GED</small>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="agent-role-badge d-none d-md-inline"><i class="bi bi-shield-check me-1"></i>Agent Mairie</span>
+      <div class="header-notif-btn" onclick="showPanel('notifications')" title="Notifications">
+        <i class="bi bi-bell"></i>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="portal-user-pill">
+        <div class="portal-user-avatar">AK</div>
+        <span class="d-none d-sm-inline">Amina Kouna</span>
+      </div>
+      <a href="index.html" style="font-size:12px;color:var(--text-muted);font-weight:600" title="Déconnexion">
+        <i class="bi bi-box-arrow-right" style="font-size:17px"></i>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="portal-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebarEl">
+    <div class="sidebar-section-label">Tableau de bord</div>
+    <a class="sidebar-item active" data-panel="dashboard" routerLink="portail-mairie/home" routerLinkActive="active">
+      <i class="bi bi-speedometer2"></i> Vue d'ensemble
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">État Civil</div>
+    <a class="sidebar-item" data-panel="naissances" routerLink="portail-mairie/naissance" routerLinkActive="active">
+      <i class="bi bi-hospital"></i> Actes de Naissance
+      <span class="sidebar-badge">7</span>
+    </a>
+    <a class="sidebar-item" data-panel="mariages" routerLink="portail-mairie/mariage" routerLinkActive="active">
+      <i class="bi bi-suit-heart"></i> Actes de Mariage
+      <span class="sidebar-badge gold">3</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Urbanisme</div>
+    <a class="sidebar-item" data-panel="permis" routerLink="portail-mairie/permis" routerLinkActive="active">
+      <i class="bi bi-building"></i> Permis de Bâtir
+      <span class="sidebar-badge">5</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Finances</div>
+    <a class="sidebar-item" data-panel="paiements" routerLink="portail-mairie/paiements" routerLinkActive="active">
+      <i class="bi bi-credit-card"></i> Paiements
+      <span class="sidebar-badge green">12</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Agenda</div>
+    <a class="sidebar-item" data-panel="rendezVous" routerLink="portail-mairie/rdv" routerLinkActive="active">
+      <i class="bi bi-calendar3"></i> Rendez-vous
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Administration</div>
+    <a class="sidebar-item" data-panel="utilisateurs" routerLink="portail-mairie/utilisateurs" routerLinkActive="active">
+      <i class="bi bi-people"></i> Utilisateurs
+    </a>
+    <a class="sidebar-item" data-panel="notifications" routerLink="portail-mairie/notifications" routerLinkActive="active">
+      <i class="bi bi-bell"></i> Notifications
+      <span class="sidebar-badge">4</span>
+    </a>
+    <a  class="sidebar-item" data-panel="ged" routerLink="portail-mairie/documentation" routerLinkActive="active">
+      <i class="bi bi-folder2-open"></i> GED Documents
+    </a>
+    <a class="sidebar-item" data-panel="reporting" routerLink="portail-mairie/permis" routerLinkActive="active">
+      <i class="bi bi-bar-chart-line"></i> Reporting
+    </a>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="portal-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+</div>

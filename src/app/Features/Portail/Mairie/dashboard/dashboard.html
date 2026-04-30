@@ -1,0 +1,94 @@
+<div class="portal-panel active" id="panel-dashboard">
+      <div class="panel-header">
+        <h1 class="panel-title">Tableau de bord</h1>
+        <p class="panel-subtitle">Bienvenue, Amina. Voici l'état du jour — <strong>jeudi 30 avril 2026</strong>.</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Dossiers en attente</div>
+          <div class="kpi-value">23</div>
+          <div class="kpi-sub">↑ 4 depuis hier</div>
+          <i class="bi bi-inbox kpi-icon"></i>
+        </div>
+        <div class="kpi-card accent">
+          <div class="kpi-label">Dossiers urgents</div>
+          <div class="kpi-value">6</div>
+          <div class="kpi-sub">Délai dépassé</div>
+          <i class="bi bi-exclamation-circle kpi-icon"></i>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-label">RDV aujourd'hui</div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-sub">Prochain : 10h30</div>
+          <i class="bi bi-calendar-check kpi-icon"></i>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Traités ce mois</div>
+          <div class="kpi-value">147</div>
+          <div class="kpi-sub">+18% vs avril 2025</div>
+          <i class="bi bi-check-circle kpi-icon"></i>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="stat-section">
+            <div class="stat-section-title"><i class="bi bi-clock-history"></i> Activité récente</div>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-dot blue"><i class="bi bi-file-earmark-plus"></i></div>
+                <div class="activity-text"><strong>Nouvelle déclaration naissance</strong> — Hôpital Général de Douala<br><span style="color:var(--text-muted);font-size:12px">Enfant : <em>Marie Fotso</em> · DCL-2026-0093</span></div>
+                <div class="activity-time">Il y a 12 min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"><i class="bi bi-check-lg"></i></div>
+                <div class="activity-text"><strong>Permis accordé</strong> — PB-2026-0010<br><span style="color:var(--text-muted);font-size:12px">Construction immeuble R+3, Bonanjo</span></div>
+                <div class="activity-time">Il y a 45 min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot orange"><i class="bi bi-credit-card"></i></div>
+                <div class="activity-text"><strong>Paiement reçu</strong> — 5 000 XAF (MTN MoMo)<br><span style="color:var(--text-muted);font-size:12px">Dossier DCL-2026-0087</span></div>
+                <div class="activity-time">1h 20min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot red"><i class="bi bi-x-circle"></i></div>
+                <div class="activity-text"><strong>Pièce complémentaire requise</strong> — MAR-2026-0005<br><span style="color:var(--text-muted);font-size:12px">Dossier mariage incomplet : CNI manquante</span></div>
+                <div class="activity-time">2h 05min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot blue"><i class="bi bi-calendar-plus"></i></div>
+                <div class="activity-text"><strong>RDV planifié</strong> — Remise permis PB-2026-0009<br><span style="color:var(--text-muted);font-size:12px">Lundi 4 mai 2026, 09h00</span></div>
+                <div class="activity-time">3h 30min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="stat-section" style="height:100%">
+            <div class="stat-section-title"><i class="bi bi-pie-chart"></i> Répartition des dossiers</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de naissance</span><strong>62 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:42%;height:100%;background:var(--primary);border-radius:4px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Permis de bâtir</span><strong>51 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:35%;height:100%;background:var(--gold);border-radius:4px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de mariage</span><strong>34 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:23%;height:100%;background:#198754;border-radius:4px"></div></div>
+              </div>
+            </div>
+            <hr style="border-color:var(--border);margin:18px 0">
+            <div class="stat-section-title"><i class="bi bi-lightning"></i> Actions rapides</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn-add" style="width:100%;justify-content:flex-start" onclick="showPanel('naissances');openModal('modal-naissance-add')"><i class="bi bi-plus-circle"></i>Enregistrer une naissance</button>
+              <button class="btn-add accent" style="width:100%;justify-content:flex-start" onclick="showPanel('permis');openModal('modal-permis-add')"><i class="bi bi-plus-circle"></i>Nouveau permis de bâtir</button>
+              <button class="btn-add" style="width:100%;justify-content:flex-start;background:var(--gold)" onclick="showPanel('rendezVous');openModal('modal-rdv-add')"><i class="bi bi-calendar-plus"></i>Planifier un rendez-vous</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

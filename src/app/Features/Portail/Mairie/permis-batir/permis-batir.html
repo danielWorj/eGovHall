@@ -1,0 +1,239 @@
+<div class="portal-panel" id="panel-permis">
+      <div class="panel-header">
+        <h1 class="panel-title">Permis de Bâtir</h1>
+        <p class="panel-subtitle">Instruction et délivrance des permis de construire.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Numéro, nom, adresse…" oninput="filterTable('tbl-permis', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option>Soumis</option>
+            <option>Complet</option>
+            <option>En instruction</option>
+            <option>Accordé</option>
+            <option>Refusé</option>
+          </select>
+          <button class="btn-add accent" onclick="openModal('modal-permis-add')"><i class="bi bi-plus-lg"></i>Nouveau dossier</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-permis">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Demandeur / Projet</th>
+              <th>Adresse</th>
+              <th>Architecte</th>
+              <th>Soumis le</th>
+              <th>Statut</th>
+              <th>Frais</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">PB-2026-0014</span></td>
+              <td><strong>Léon Tanga</strong><small>Entrepôt commercial</small></td>
+              <td><small>Quartier Bépanda</small></td>
+              <td><small>Arch. Moussa</small></td>
+              <td><small>28/04/2026</small></td>
+              <td><span class="pill recu">Soumis</span></td>
+              <td><small style="color:var(--text-muted)">—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Instruire"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0014')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td><strong>Jean Mbida</strong><small>Villa R+1</small></td>
+              <td><small>Akwa Nord</small></td>
+              <td><small>Arch. Tanga</small></td>
+              <td><small>15/03/2026</small></td>
+              <td><span class="pill traitement">En instruction</span></td>
+              <td><small style="color:#e07b00">75 000 XAF</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-permis-decision')" title="Décision"><i class="bi bi-check2-square"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0012')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td><strong>SCI Bonanjo</strong><small>Immeuble R+3</small></td>
+              <td><small>Bonanjo</small></td>
+              <td><small>Arch. Ngono</small></td>
+              <td><small>01/03/2026</small></td>
+              <td><span class="pill accorde">Accordé</span></td>
+              <td><small style="color:#198754">120 000 XAF ✓</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Imprimer permis"><i class="bi bi-printer"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0008</span></td>
+              <td><strong>Rose Ateba</strong><small>Extension pavillon</small></td>
+              <td><small>Deido</small></td>
+              <td><small>—</small></td>
+              <td><small>20/02/2026</small></td>
+              <td><span class="pill refuse">Refusé</span></td>
+              <td><small style="color:var(--text-muted)">—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 51 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">6</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ADD Permis -->
+<div class="modal fade" id="modal-permis-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nouveau dossier permis de bâtir</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Demandeur</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom / Raison sociale <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Type de demandeur</label><select class="fld-ctrl"><option>Particulier</option><option>Architecte</option><option>Société</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Email</label><input type="email" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Projet</div>
+        <div class="row g-3">
+          <div class="col-md-12"><label class="fld-label">Description du projet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Ex: Villa R+1, entrepôt commercial…" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse du terrain <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Références cadastrales</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Architecte responsable</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">N° Ordre des architectes</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Documents joints</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Plan de masse</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">Plan de façade</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">Titre foncier</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">CNI du demandeur</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save accent" onclick="showToast('Dossier permis enregistré','success');closeModal('modal-permis-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Permis -->
+<div class="modal fade" id="modal-permis-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Dossier PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Demandeur</div>
+        <dl class="detail-row"><dt>Nom</dt><dd><strong>Jean Mbida</strong></dd></dl>
+        <dl class="detail-row"><dt>Email</dt><dd>j.mbida@gmail.com</dd></dl>
+        <dl class="detail-row"><dt>Architecte</dt><dd>Arch. Tanga — N° 0452</dd></dl>
+        <div class="modal-section-title">Projet</div>
+        <dl class="detail-row"><dt>Description</dt><dd>Villa R+1 — 180m²</dd></dl>
+        <dl class="detail-row"><dt>Adresse</dt><dd>Akwa Nord, lot 14</dd></dl>
+        <dl class="detail-row"><dt>Références cadastrales</dt><dd>CAD-DLA-AKW-014-B</dd></dl>
+        <div class="modal-section-title">Suivi</div>
+        <ul class="mini-timeline">
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Soumis</strong><span>15/03/2026</span></div></li>
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Dossier complet</strong><span>17/03/2026</span></div></li>
+          <li><div class="tl-dot current">3</div><div class="tl-info"><strong>En instruction</strong><span>En cours par Amina Kouna</span></div></li>
+          <li><div class="tl-dot pending">4</div><div class="tl-info"><strong>Décision</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">5</div><div class="tl-info"><strong>Remise du permis</strong><span>—</span></div></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save accent" onclick="openModal('modal-permis-decision');closeModal('modal-permis-view')"><i class="bi bi-check2-square me-1"></i>Rendre une décision</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Permis -->
+<div class="modal fade" id="modal-permis-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier — PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Demandeur</label><input type="text" class="fld-ctrl" value="Jean Mbida" /></div>
+          <div class="col-md-6"><label class="fld-label">Description projet</label><input type="text" class="fld-ctrl" value="Villa R+1" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse</label><input type="text" class="fld-ctrl" value="Akwa Nord" /></div>
+          <div class="col-md-6"><label class="fld-label">Statut</label><select class="fld-ctrl"><option>Soumis</option><option>Complet</option><option selected>En instruction</option><option>Accordé</option><option>Refusé</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Frais d'instruction (XAF)</label><input type="number" class="fld-ctrl" value="75000" /></div>
+          <div class="col-md-6"><label class="fld-label">Agent urbanisme</label><select class="fld-ctrl"><option selected>Amina Kouna</option><option>Robert Essoh</option></select></div>
+          <div class="col-12"><label class="fld-label">Pièces manquantes / remarques</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save accent" onclick="showToast('Dossier permis mis à jour','success');closeModal('modal-permis-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DÉCISION Permis -->
+<div class="modal fade" id="modal-permis-decision" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-gavel me-2"></i>Décision — PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Décision <span style="color:var(--accent)">*</span></label>
+            <div style="display:flex;gap:10px;margin-top:8px">
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="accorde" style="accent-color:var(--primary)" /> <i class="bi bi-check-circle" style="color:#198754"></i> Accordé</label>
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="refuse" style="accent-color:var(--accent)" /> <i class="bi bi-x-circle" style="color:var(--accent)"></i> Refusé</label>
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="attente" style="accent-color:var(--gold)" /> <i class="bi bi-clock" style="color:var(--gold)"></i> En attente</label>
+            </div>
+          </div>
+          <div class="col-12"><label class="fld-label">Justification / Motifs</label><textarea class="fld-ctrl" rows="4" placeholder="Motivations de la décision (obligatoire en cas de refus)…"></textarea></div>
+          <div class="col-md-6"><label class="fld-label">Date de prise de décision</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Délai de validité (jours)</label><input type="number" class="fld-ctrl" value="365" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Décision enregistrée — citoyen notifié','success');closeModal('modal-permis-decision')"><i class="bi bi-check-lg me-1"></i>Valider la décision</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,194 @@
+<div class="portal-panel" id="panel-utilisateurs">
+      <div class="panel-header">
+        <h1 class="panel-title">Utilisateurs</h1>
+        <p class="panel-subtitle">Gestion des comptes : citoyens, agents, hôpitaux.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Nom, email, rôle…" oninput="filterTable('tbl-users', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous les rôles</option>
+            <option>Administrateur</option>
+            <option>Agent Mairie</option>
+            <option>Hôpital</option>
+            <option>Citoyen</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Tous statuts</option>
+            <option>Actif</option>
+            <option>Inactif</option>
+            <option>En attente</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-user-add')"><i class="bi bi-person-plus"></i>Nouveau compte</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-users">
+          <thead><tr><th>Nom complet</th><th>Email</th><th>Rôle</th><th>Créé le</th><th>Dernière connexion</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">AK</div><strong>Amina Kouna</strong></div></td>
+              <td><small>a.kouna@mairie-douala.cm</small></td>
+              <td><span class="pill confirme">Agent Mairie</span></td>
+              <td><small>01/01/2025</small></td>
+              <td><small>Aujourd'hui, 08h00</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-user-perms')" title="Permissions"><i class="bi bi-shield-lock"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#198754;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">HG</div><strong>Hôpital Général Douala</strong></div></td>
+              <td><small>declarations@hopital-gd.cm</small></td>
+              <td><span class="pill valide">Hôpital</span></td>
+              <td><small>15/06/2024</small></td>
+              <td><small>Aujourd'hui, 08h10</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Hôpital Général')" title="Désactiver"><i class="bi bi-slash-circle"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:var(--text-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">JM</div><strong>Jean Mbida</strong></div></td>
+              <td><small>j.mbida@gmail.com</small></td>
+              <td><span class="pill recu">Citoyen</span></td>
+              <td><small>03/01/2026</small></td>
+              <td><small>25/04/2026</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Jean Mbida')" title="Désactiver"><i class="bi bi-slash-circle"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#e07b00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">LT</div><strong>Léon Tanga</strong></div></td>
+              <td><small>l.tanga@gmail.com</small></td>
+              <td><span class="pill recu">Citoyen</span></td>
+              <td><small>20/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill attente">En attente</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-approve')" title="Approuver"><i class="bi bi-check-lg"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Léon Tanga')" title="Rejeter"><i class="bi bi-x-lg"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 318 comptes</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">32</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+<div class="modal fade" id="modal-user-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Créer un compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Email <span style="color:var(--accent)">*</span></label><input type="email" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Rôle <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Administrateur</option><option>Agent Mairie</option><option>Hôpital</option><option>Citoyen</option></select></div>
+          <div class="col-12"><label class="fld-label">Statut initial</label><select class="fld-ctrl"><option>Actif</option><option>En attente de validation</option></select></div>
+          <div class="col-12" style="background:rgba(0,49,137,0.04);border-radius:var(--radius);padding:12px;font-size:13px;color:var(--text-muted)"><i class="bi bi-info-circle me-1"></i>Un email de bienvenue avec les instructions de connexion sera envoyé automatiquement.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Compte créé — email envoyé','success');closeModal('modal-user-add')"><i class="bi bi-check-lg me-1"></i>Créer le compte</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-edit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-gear me-2"></i>Modifier le compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet</label><input type="text" class="fld-ctrl" value="Amina Kouna" /></div>
+          <div class="col-md-6"><label class="fld-label">Email</label><input type="email" class="fld-ctrl" value="a.kouna@mairie-douala.cm" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" value="+237 699 001 002" /></div>
+          <div class="col-md-6"><label class="fld-label">Rôle</label><select class="fld-ctrl"><option>Administrateur</option><option selected>Agent Mairie</option><option>Hôpital</option><option>Citoyen</option></select></div>
+          <div class="col-12"><label class="fld-label">Statut</label><select class="fld-ctrl"><option selected>Actif</option><option>Inactif</option><option>Suspendu</option></select></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Compte mis à jour','success');closeModal('modal-user-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-perms" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Permissions — Amina Kouna</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Actes de naissance</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Actes de mariage</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Permis de bâtir</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Gestion paiements</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Gestion utilisateurs</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Accès GED</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Reporting &amp; statistiques</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Administration système</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Permissions mises à jour','success');closeModal('modal-user-perms')"><i class="bi bi-shield-check me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-approve" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-person-check me-2"></i>Approuver le compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;font-size:13.5px">
+          Approuver le compte citoyen de <strong>Léon Tanga</strong> (l.tanga@gmail.com) lui permettra de soumettre des demandes.
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="2" placeholder="Vérifications effectuées…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Compte approuvé — citoyen notifié','success');closeModal('modal-user-approve')"><i class="bi bi-person-check me-1"></i>Approuver</button>
+      </div>
+    </div>
+  </div>
+</div>

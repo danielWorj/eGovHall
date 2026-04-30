@@ -1,0 +1,227 @@
+<div class="portal-panel" id="panel-mariages">
+      <div class="panel-header">
+        <h1 class="panel-title">Actes de Mariage</h1>
+        <p class="panel-subtitle">Instruction des dossiers de mariage et gestion des mentions marginales.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Rechercher…" oninput="filterTable('tbl-mariages', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option>Reçu</option>
+            <option>En instruction</option>
+            <option>Cérémonie planifiée</option>
+            <option>Acte établi</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-mariage-add')"><i class="bi bi-plus-lg"></i>Nouveau dossier</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-mariages">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Époux 1</th>
+              <th>Époux 2</th>
+              <th>Date soumission</th>
+              <th>Date cérémonie</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">MAR-2026-0008</span></td>
+              <td><strong>Pierre Kamga</strong><small>Né le 12/03/1990</small></td>
+              <td><strong>Nadège Simo</strong><small>Née le 05/07/1993</small></td>
+              <td><small>25/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill recu">Reçu</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Instruire"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier MAR-2026-0008')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">MAR-2026-0005</span></td>
+              <td><strong>Marc Essoh</strong><small>Né le 03/06/1988</small></td>
+              <td><strong>Sylvie Abena</strong><small>Née le 14/11/1991</small></td>
+              <td><small>10/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill traitement">En instruction</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn gold" onclick="openModal('modal-mariage-ceremonie')" title="Planifier cérémonie"><i class="bi bi-calendar-heart"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier MAR-2026-0005')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">MAR-2026-0003</span></td>
+              <td><strong>Éric Nkeng</strong><small>Né le 20/09/1985</small></td>
+              <td><strong>Alice Tanda</strong><small>Née le 01/04/1988</small></td>
+              <td><small>05/04/2026</small></td>
+              <td><small>17/05/2026, 10h00</small></td>
+              <td><span class="pill confirme">Cérémonie planifiée</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-mariage-mention')" title="Mention marginale"><i class="bi bi-file-earmark-plus"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 3 sur 34 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD Mariage -->
+<div class="modal fade" id="modal-mariage-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-suit-heart me-2"></i>Nouveau dossier de mariage</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Époux 1</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">N° CNI</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Époux 2</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">N° CNI</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Dossier</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date souhaitée de cérémonie</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Régime matrimonial</label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Communauté réduite aux acquêts</option><option>Séparation de biens</option><option>Communauté universelle</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mariage créé','success');closeModal('modal-mariage-add')"><i class="bi bi-check-lg me-1"></i>Créer le dossier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Mariage -->
+<div class="modal fade" id="modal-mariage-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-suit-heart me-2"></i>Dossier MAR-2026-0008</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Époux 1</div>
+        <dl class="detail-row"><dt>Nom</dt><dd>Pierre Kamga</dd></dl>
+        <dl class="detail-row"><dt>Date naissance</dt><dd>12/03/1990</dd></dl>
+        <div class="modal-section-title">Époux 2</div>
+        <dl class="detail-row"><dt>Nom</dt><dd>Nadège Simo</dd></dl>
+        <dl class="detail-row"><dt>Date naissance</dt><dd>05/07/1993</dd></dl>
+        <div class="modal-section-title">Dossier</div>
+        <dl class="detail-row"><dt>Référence</dt><dd><strong>MAR-2026-0008</strong></dd></dl>
+        <dl class="detail-row"><dt>Soumis le</dt><dd>25/04/2026</dd></dl>
+        <dl class="detail-row"><dt>Statut</dt><dd><span class="pill recu">Reçu</span></dd></dl>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save green" onclick="openModal('modal-mariage-edit');closeModal('modal-mariage-view')"><i class="bi bi-pencil me-1"></i>Instruire</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Mariage -->
+<div class="modal fade" id="modal-mariage-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier — MAR-2026-0008</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Époux 1</label><input type="text" class="fld-ctrl" value="Pierre Kamga" /></div>
+          <div class="col-md-6"><label class="fld-label">Époux 2</label><input type="text" class="fld-ctrl" value="Nadège Simo" /></div>
+          <div class="col-md-6"><label class="fld-label">Statut</label><select class="fld-ctrl"><option>Reçu</option><option selected>En instruction</option><option>Cérémonie planifiée</option><option>Acte établi</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Pièces à compléter</label><input type="text" class="fld-ctrl" placeholder="Ex: CNI manquante" /></div>
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mariage mis à jour','success');closeModal('modal-mariage-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CÉRÉMONIE Mariage -->
+<div class="modal fade" id="modal-mariage-ceremonie" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-heart me-2"></i>Planifier la cérémonie</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date cérémonie <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Officier d'état civil</label><select class="fld-ctrl"><option>M. Jean-Pierre Douala</option><option>Mme Amina Kouna</option></select></div>
+          <div class="col-12"><label class="fld-label">Message aux futurs époux</label><textarea class="fld-ctrl" rows="3" placeholder="Instructions particulières…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('Cérémonie planifiée et époux notifiés','success');closeModal('modal-mariage-ceremonie')"><i class="bi bi-check-lg me-1"></i>Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENTION MARGINALE -->
+<div class="modal fade" id="modal-mariage-mention" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Mention marginale</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Type de mention <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Divorce</option><option>Décès époux</option><option>Décès épouse</option><option>Autre</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date de l'événement</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Référence jugement / acte</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Description</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Mention marginale ajoutée','success');closeModal('modal-mariage-mention')"><i class="bi bi-check-lg me-1"></i>Ajouter la mention</button>
+      </div>
+    </div>
+  </div>
+</div>

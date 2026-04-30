@@ -1,0 +1,266 @@
+  <div class="portal-panel" id="panel-naissances">
+      <div class="panel-header">
+        <h1 class="panel-title">Actes de Naissance</h1>
+        <p class="panel-subtitle">Gestion des déclarations reçues et traitement des actes.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Rechercher par nom, numéro…" oninput="filterTable('tbl-naissances', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select" onchange="filterByStatus('tbl-naissances', this.value)">
+            <option value="">Tous les statuts</option>
+            <option>Reçu</option>
+            <option>En traitement</option>
+            <option>Validé</option>
+            <option>Clôturé</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-naissance-add')"><i class="bi bi-plus-lg"></i>Nouvelle déclaration</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-naissances">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Enfant</th>
+              <th>Parents</th>
+              <th>Déclaré par</th>
+              <th>Date déclaration</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">DCL-2026-0093</span></td>
+              <td><strong>Marie Fotso</strong><small>01/04/2026 — Hôpital Général</small></td>
+              <td>Jean Fotso &amp; Cécile Ngom</td>
+              <td><span style="font-size:12px">Hôpital Général</span></td>
+              <td><small>Aujourd'hui, 08h15</small></td>
+              <td><span class="pill recu">Reçu</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-naissance-edit')" title="Traiter"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn gold" onclick="openModal('modal-naissance-rdv')" title="RDV"><i class="bi bi-calendar-plus"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0093')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2026-0087</span></td>
+              <td><strong>Thomas Biya</strong><small>28/03/2026 — Clinique La Grâce</small></td>
+              <td>Paul Biya &amp; Anne Ndomo</td>
+              <td><span style="font-size:12px">Clinique La Grâce</span></td>
+              <td><small>28/03/2026, 11h00</small></td>
+              <td><span class="pill traitement">En traitement</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-naissance-edit')" title="Traiter"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="Générer PDF"><i class="bi bi-file-earmark-pdf"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0087')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2026-0079</span></td>
+              <td><strong>Lucas Eto'o</strong><small>20/03/2026 — Hôpital Général</small></td>
+              <td>Samuel Eto'o &amp; Madeleine Ngo</td>
+              <td><span style="font-size:12px">Hôpital Général</span></td>
+              <td><small>21/03/2026, 09h30</small></td>
+              <td><span class="pill valide">Validé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="PDF certifié"><i class="bi bi-file-earmark-pdf"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0079')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2024-0183</span></td>
+              <td><strong>Chloé Mbarga</strong><small>10/01/2024 — Polyclinique Bassa</small></td>
+              <td>Henri Mbarga &amp; Florence Nkeng</td>
+              <td><span style="font-size:12px">Polyclinique Bassa</span></td>
+              <td><small>11/01/2024, 14h00</small></td>
+              <td><span class="pill attente" style="background:rgba(25,135,84,0.1);color:#198754">Clôturé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="PDF certifié"><i class="bi bi-file-earmark-pdf"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 62 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">7</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /naissances -->
+
+
+
+
+<!-- ADD Naissance -->
+<div class="modal fade" id="modal-naissance-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Nouvelle déclaration de naissance</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Informations de l'enfant</div>
+        <div class="row g-3">
+          <div class="col-md-4"><label class="fld-label">Prénom(s) <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Marie" /></div>
+          <div class="col-md-4"><label class="fld-label">Nom <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Fotso" /></div>
+          <div class="col-md-4"><label class="fld-label">Sexe <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Féminin</option><option>Masculin</option></select></div>
+          <div class="col-md-4"><label class="fld-label">Date de naissance <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-4"><label class="fld-label">Heure de naissance</label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-md-4"><label class="fld-label">Lieu de naissance <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Hôpital Général" /></div>
+        </div>
+
+        <div class="modal-section-title">Informations des parents</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet du père <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Nom complet de la mère <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse domicile <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Contact téléphonique <span style="color:var(--accent)">*</span></label><input type="tel" class="fld-ctrl" placeholder="+237 6XX XXX XXX" /></div>
+        </div>
+
+        <div class="modal-section-title">Déclarant</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Établissement <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Hôpital Général de Douala</option><option>Clinique La Grâce</option><option>Polyclinique Bassa</option><option>Déclaration directe</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date déclaration <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Déclaration enregistrée','success');closeModal('modal-naissance-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Naissance -->
+<div class="modal fade" id="modal-naissance-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2"></i>Dossier DCL-2026-0093</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Enfant</div>
+        <dl class="detail-row"><dt>Nom complet</dt><dd><strong>Marie Fotso</strong></dd></dl>
+        <dl class="detail-row"><dt>Date de naissance</dt><dd>01/04/2026 à 07h42</dd></dl>
+        <dl class="detail-row"><dt>Lieu</dt><dd>Hôpital Général de Douala</dd></dl>
+        <dl class="detail-row"><dt>Sexe</dt><dd>Féminin</dd></dl>
+        <div class="modal-section-title">Parents</div>
+        <dl class="detail-row"><dt>Père</dt><dd>Jean Fotso</dd></dl>
+        <dl class="detail-row"><dt>Mère</dt><dd>Cécile Ngom</dd></dl>
+        <dl class="detail-row"><dt>Adresse</dt><dd>Akwa, Douala</dd></dl>
+        <dl class="detail-row"><dt>Contact</dt><dd>+237 677 123 456</dd></dl>
+        <div class="modal-section-title">Suivi du dossier</div>
+        <ul class="mini-timeline">
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Déclaration reçue</strong><span>Aujourd'hui, 08h15 — Hôpital Général</span></div></li>
+          <li><div class="tl-dot current">2</div><div class="tl-info"><strong>En traitement (mairie)</strong><span>En attente de traitement</span></div></li>
+          <li><div class="tl-dot pending">3</div><div class="tl-info"><strong>Acte pré-rempli</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">4</div><div class="tl-info"><strong>Rendez-vous remise</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">5</div><div class="tl-info"><strong>Clôturé</strong><span>—</span></div></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save" onclick="openModal('modal-naissance-edit');closeModal('modal-naissance-view')"><i class="bi bi-pencil me-1"></i>Traiter le dossier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT / TRAITER Naissance -->
+<div class="modal fade" id="modal-naissance-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Traiter — DCL-2026-0093</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Vérification des données</div>
+        <div class="row g-3">
+          <div class="col-md-4"><label class="fld-label">Prénom(s) <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" value="Marie" /></div>
+          <div class="col-md-4"><label class="fld-label">Nom</label><input type="text" class="fld-ctrl" value="Fotso" /></div>
+          <div class="col-md-4"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" value="2026-04-01" /></div>
+          <div class="col-md-6"><label class="fld-label">Père</label><input type="text" class="fld-ctrl" value="Jean Fotso" /></div>
+          <div class="col-md-6"><label class="fld-label">Mère</label><input type="text" class="fld-ctrl" value="Cécile Ngom" /></div>
+        </div>
+        <div class="modal-section-title">Statut du dossier</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Statut <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option>Reçu</option><option selected>En traitement</option><option>Validé</option><option>Clôturé</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Agent responsable</label><input type="text" class="fld-ctrl" value="Amina Kouna" /></div>
+          <div class="col-12"><label class="fld-label">Notes internes</label><textarea class="fld-ctrl" rows="3" placeholder="Observations, remarques…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mis à jour','success');closeModal('modal-naissance-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RDV Naissance -->
+<div class="modal fade" id="modal-naissance-rdv" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Planifier un rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Agent assigné</label><select class="fld-ctrl"><option>Amina Kouna</option><option>Robert Essoh</option><option>Fatou Dia</option></select></div>
+          <div class="col-12"><label class="fld-label">Message au citoyen</label><textarea class="fld-ctrl" rows="3" placeholder="Instructions particulières pour le rendez-vous…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV planifié et notifié','success');closeModal('modal-naissance-rdv')"><i class="bi bi-calendar-check me-1"></i>Confirmer le RDV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Naissance -->
+<div class="modal fade" id="modal-naissance-pdf" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-pdf me-2"></i>Générer l'acte officiel</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;font-size:13.5px">
+          <i class="bi bi-check-circle me-2" style="color:#198754"></i>Dossier <strong>DCL-2026-0087</strong> validé — prêt pour génération.
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Modèle d'acte</label><select class="fld-ctrl"><option>Modèle standard — Acte de naissance 2026</option><option>Modèle extrait — Copie intégrale</option></select></div>
+          <div class="col-12"><label class="fld-label">Officier d'état civil signataire</label><select class="fld-ctrl"><option>M. Jean-Pierre Douala — Officier en chef</option><option>Mme Amina Kouna — Officier adjoint</option></select></div>
+          <div class="col-12" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="chk-send-parent" checked /><label for="chk-send-parent" style="font-size:13.5px;cursor:pointer">Envoyer automatiquement par email au parent</label></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Acte généré et envoyé','success');closeModal('modal-naissance-pdf')"><i class="bi bi-file-earmark-arrow-down me-1"></i>Générer le PDF</button>
+      </div>
+    </div>
+  </div>
+</div>

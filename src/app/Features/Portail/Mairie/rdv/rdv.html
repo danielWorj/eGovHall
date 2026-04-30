@@ -1,0 +1,153 @@
+<div class="portal-panel" id="panel-rendezVous">
+      <div class="panel-header">
+        <h1 class="panel-title">Rendez-vous</h1>
+        <p class="panel-subtitle">Gestion de l'agenda et des créneaux disponibles.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="page-btn"><i class="bi bi-chevron-left"></i></button>
+          <strong style="font-size:14px">Semaine du 28 avril — 2 mai 2026</strong>
+          <button class="page-btn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-add" onclick="openModal('modal-rdv-add')"><i class="bi bi-calendar-plus"></i>Nouveau RDV</button>
+        </div>
+      </div>
+
+      <div class="agenda-week">
+        <div class="agenda-cell header"></div>
+        <div class="agenda-cell header">Lun 28</div>
+        <div class="agenda-cell header">Mar 29</div>
+        <div class="agenda-cell header">Mer 30</div>
+        <div class="agenda-cell header">Jeu 01</div>
+        <div class="agenda-cell header">Ven 02</div>
+        <!-- 08h00 -->
+        <div class="agenda-cell time">08h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Remise acte (DCL-0079)</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <!-- 09h00 -->
+        <div class="agenda-cell time">09h00</div>
+        <div class="agenda-cell"><div class="rdv-block green">Permis (PB-0010)</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-93</div></div>
+        <div class="agenda-cell"></div>
+        <!-- 10h00 -->
+        <div class="agenda-cell time">10h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0003</div></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-87</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <!-- 11h00 -->
+        <div class="agenda-cell time">11h00</div>
+        <div class="agenda-cell"><div class="rdv-block">Permis PB-0012</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0008</div></div>
+        <div class="agenda-cell"></div>
+        <!-- 14h00 -->
+        <div class="agenda-cell time">14h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block green">Remise permis</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-79</div></div>
+        <!-- 15h00 -->
+        <div class="agenda-cell time">15h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0005</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="table-toolbar"><span style="font-size:14px;font-weight:700;color:var(--primary)">Liste des RDV à venir</span></div>
+        <div class="data-table-wrap">
+          <table class="data-table" id="tbl-rdv">
+            <thead><tr><th>Date &amp; Heure</th><th>Type</th><th>Dossier</th><th>Citoyen</th><th>Agent</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Jeu 01/05, 09h00</strong></td>
+                <td><span style="font-size:12px"><i class="bi bi-hospital me-1"></i>Naissance</span></td>
+                <td><span class="ref">DCL-2026-0093</span></td>
+                <td>Jean Fotso</td>
+                <td>Amina Kouna</td>
+                <td><span class="pill confirme">Confirmé</span></td>
+                <td><div class="tbl-actions">
+                  <button class="tbl-btn success" onclick="openModal('modal-rdv-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                  <button class="tbl-btn danger" onclick="openConfirmDelete('RDV du 01/05/2026')" title="Annuler"><i class="bi bi-x-lg"></i></button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><strong>Mer 30/04, 10h30</strong></td>
+                <td><span style="font-size:12px"><i class="bi bi-hospital me-1"></i>Naissance</span></td>
+                <td><span class="ref">DCL-2026-0087</span></td>
+                <td>Paul Biya</td>
+                <td>Amina Kouna</td>
+                <td><span class="pill confirme">Confirmé</span></td>
+                <td><div class="tbl-actions">
+                  <button class="tbl-btn success" onclick="openModal('modal-rdv-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                  <button class="tbl-btn danger" onclick="openConfirmDelete('RDV du 30/04/2026')" title="Annuler"><i class="bi bi-x-lg"></i></button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+
+
+<div class="modal fade" id="modal-rdv-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Nouveau rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Type de RDV</label><select class="fld-ctrl"><option>Remise acte de naissance</option><option>Remise permis de bâtir</option><option>Cérémonie de mariage</option><option>Autre</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Dossier lié</label><input type="text" class="fld-ctrl" placeholder="Référence dossier" /></div>
+          <div class="col-md-6"><label class="fld-label">Citoyen</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Agent assigné</label><select class="fld-ctrl"><option>Amina Kouna</option><option>Robert Essoh</option><option>Fatou Dia</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV planifié et citoyen notifié','success');closeModal('modal-rdv-add')"><i class="bi bi-calendar-check me-1"></i>Planifier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-rdv-edit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier le rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" value="2026-05-01" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure</label><input type="time" class="fld-ctrl" value="09:00" /></div>
+          <div class="col-12"><label class="fld-label">Statut</label><select class="fld-ctrl"><option selected>Confirmé</option><option>Reporté</option><option>Annulé</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV mis à jour','success');closeModal('modal-rdv-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>

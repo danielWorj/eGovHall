@@ -1,0 +1,81 @@
+<div class="portal-panel" id="panel-ged">
+      <div class="panel-header">
+        <h1 class="panel-title">GED — Documents</h1>
+        <p class="panel-subtitle">Classement, indexation et archivage des documents officiels.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap" style="max-width:400px">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Recherche full-text : nom, numéro d'acte, date…" oninput="filterTable('tbl-ged', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select">
+            <option value="">Tous les types</option>
+            <option>Acte de naissance</option>
+            <option>Acte de mariage</option>
+            <option>Permis de construire</option>
+            <option>Reçu de paiement</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-ged-upload')"><i class="bi bi-cloud-upload"></i>Numériser / Importer</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-ged">
+          <thead><tr><th>Document</th><th>Type</th><th>Dossier lié</th><th>Taille</th><th>Version</th><th>Archivé le</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-pdf" style="color:#e8002d;font-size:18px"></i><div><strong>Acte_naissance_Fotso_Marie.pdf</strong><small>Signé — certifié</small></div></div></td>
+              <td><span style="font-size:12px">Acte de naissance</span></td>
+              <td><span class="ref">DCL-2026-0093</span></td>
+              <td><small>124 Ko</small></td>
+              <td><small>v1.0</small></td>
+              <td><small>—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-ged-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Document Acte naissance Fotso')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-pdf" style="color:#e8002d;font-size:18px"></i><div><strong>Permis_construire_PB2026-0010.pdf</strong><small>Signé — certifié</small></div></div></td>
+              <td><span style="font-size:12px">Permis de construire</span></td>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td><small>280 Ko</small></td>
+              <td><small>v2.1</small></td>
+              <td><small>28/04/2026</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-ged-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" title="Historique versions"><i class="bi bi-clock-history"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-image" style="color:var(--primary);font-size:18px"></i><div><strong>Plan_facade_PB2026-0012.jpg</strong><small>Pièce jointe dossier</small></div></div></td>
+              <td><span style="font-size:12px">Plan architectural</span></td>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td><small>1.8 Mo</small></td>
+              <td><small>v1.0</small></td>
+              <td><small>15/03/2026</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Plan façade PB-2026-0012')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>3 sur 1 247 documents archivés</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">125</button>
+          </div>
+        </div>
+      </div>
+    </div>

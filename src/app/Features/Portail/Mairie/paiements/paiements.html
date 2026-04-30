@@ -1,0 +1,171 @@
+<div class="portal-panel" id="panel-paiements">
+      <div class="panel-header">
+        <h1 class="panel-title">Paiements</h1>
+        <p class="panel-subtitle">Suivi des recettes et validation des règlements.</p>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card green"><div class="kpi-label">Encaissé ce mois</div><div class="kpi-value" style="font-size:24px">1 240 000</div><div class="kpi-sub">XAF — 89 transactions</div><i class="bi bi-cash-stack kpi-icon"></i></div>
+        <div class="kpi-card gold"><div class="kpi-label">En attente</div><div class="kpi-value" style="font-size:24px">345 000</div><div class="kpi-sub">XAF — 12 transactions</div><i class="bi bi-hourglass-split kpi-icon"></i></div>
+        <div class="kpi-card accent"><div class="kpi-label">Remboursements</div><div class="kpi-value" style="font-size:24px">25 000</div><div class="kpi-sub">XAF — 2 dossiers refusés</div><i class="bi bi-arrow-counterclockwise kpi-icon"></i></div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Référence dossier, nom…" oninput="filterTable('tbl-paiements', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous</option>
+            <option>Payé</option>
+            <option>En attente</option>
+            <option>Remboursé</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Tous moyens</option>
+            <option>MTN MoMo</option>
+            <option>Orange Money</option>
+            <option>Carte bancaire</option>
+            <option>Virement</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-paiement-add')"><i class="bi bi-plus-lg"></i>Saisir paiement</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-paiements">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Dossier</th>
+              <th>Citoyen</th>
+              <th>Montant</th>
+              <th>Moyen</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><small>30/04/2026, 08h50</small></td>
+              <td><span class="ref">DCL-2026-0087</span></td>
+              <td>Paul Biya</td>
+              <td><strong>5 000 XAF</strong></td>
+              <td><span style="font-size:12px"><i class="bi bi-phone me-1"></i>MTN MoMo</span></td>
+              <td><span class="pill paye">Payé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Reçu"><i class="bi bi-receipt"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-view')" title="Détail"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><small>28/04/2026, 14h20</small></td>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td>SCI Bonanjo</td>
+              <td><strong>120 000 XAF</strong></td>
+              <td><span style="font-size:12px"><i class="bi bi-bank me-1"></i>Virement</span></td>
+              <td><span class="pill paye">Payé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Reçu"><i class="bi bi-receipt"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-view')" title="Détail"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><small>En attente</small></td>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td>Jean Mbida</td>
+              <td><strong>75 000 XAF</strong></td>
+              <td><span style="font-size:12px;color:var(--text-muted)">—</span></td>
+              <td><span class="pill impaye">En attente</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-valider')" title="Valider paiement"><i class="bi bi-check-lg"></i></button>
+                <button class="tbl-btn" title="Envoyer relance"><i class="bi bi-send"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 3 sur 89 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">9</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal-paiement-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-credit-card me-2"></i>Saisir un paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Dossier lié <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="DCL-2026-XXXX" /></div>
+          <div class="col-md-6"><label class="fld-label">Citoyen</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Montant (XAF) <span style="color:var(--accent)">*</span></label><input type="number" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Moyen de paiement</label><select class="fld-ctrl"><option>MTN Mobile Money</option><option>Orange Money</option><option>Carte bancaire</option><option>Virement</option><option>Espèces</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date paiement</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Référence transaction</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Paiement enregistré','success');closeModal('modal-paiement-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-paiement-view" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-receipt me-2"></i>Détail du paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <dl class="detail-row"><dt>Dossier</dt><dd><strong>DCL-2026-0087</strong></dd></dl>
+        <dl class="detail-row"><dt>Citoyen</dt><dd>Paul Biya</dd></dl>
+        <dl class="detail-row"><dt>Montant</dt><dd><strong>5 000 XAF</strong></dd></dl>
+        <dl class="detail-row"><dt>Moyen</dt><dd>MTN Mobile Money</dd></dl>
+        <dl class="detail-row"><dt>Date</dt><dd>30/04/2026 à 08h50</dd></dl>
+        <dl class="detail-row"><dt>Référence</dt><dd>MTN-2026-04-78923</dd></dl>
+        <dl class="detail-row"><dt>Statut</dt><dd><span class="pill paye">Payé</span></dd></dl>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save green" onclick="showToast('Reçu téléchargé','success');closeModal('modal-paiement-view')"><i class="bi bi-download me-1"></i>Télécharger le reçu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-paiement-valider" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>Valider le paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px">
+          Valider le paiement de <strong>75 000 XAF</strong> pour le dossier <strong>PB-2026-0012</strong> (Jean Mbida) ?
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Référence de transaction <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Ex: VIR-2026-04-XXXX" /></div>
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Paiement validé — reçu envoyé','success');closeModal('modal-paiement-valider')"><i class="bi bi-check-lg me-1"></i>Confirmer la validation</button>
+      </div>
+    </div>
+  </div>
+</div>

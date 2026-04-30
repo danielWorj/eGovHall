@@ -1,0 +1,335 @@
+
+
+/* ── DESIGN TOKENS (identical to style.css) ── */
+    .portail-agent{
+      --primary:       #003189;
+      --primary-dark:  #001f5e;
+      --primary-light: #1a4db5;
+      --accent:        #e8002d;
+      --accent-soft:   #ff3355;
+      --gold:          #c8a84b;
+      --light-bg:      #f5f7fc;
+      --white:         #ffffff;
+      --text-dark:     #0d1b3e;
+      --text-mid:      #3a4a6b;
+      --text-muted:    #7a8aab;
+      --border:        #d8e0f0;
+      --shadow-sm:     0 2px 12px rgba(0,49,137,0.08);
+      --shadow-md:     0 8px 32px rgba(0,49,137,0.13);
+      --shadow-lg:     0 20px 60px rgba(0,49,137,0.18);
+      --radius:        4px;
+      --radius-lg:     12px;
+    }
+.portail-agent *, .portail-agent *::before, .portail-agent *::after{ box-sizing: border-box; margin: 0; padding: 0; }
+.portail-agent{ font-family: 'Source Sans 3', sans-serif; color: var(--text-dark); background: var(--light-bg); font-size: 15px; line-height: 1.6; }
+.portail-agent h1, .portail-agent h2, .portail-agent h3, .portail-agent h4, .portail-agent h5, .portail-agent h6{ font-family: 'Playfair Display', serif; line-height: 1.2; }
+.portail-agent a{ color: inherit; text-decoration: none; }
+/* ── PORTAL HEADER ── */
+    .portail-agent .portal-header{
+      background: white;
+      border-bottom: 3px solid var(--accent);
+      box-shadow: var(--shadow-sm);
+      position: sticky; top: 0; z-index: 300;
+    }
+.portail-agent .portal-header-inner{
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 28px;
+    }
+.portail-agent .portal-brand{ display: flex; align-items: center; gap: 14px; }
+.portail-agent .portal-brand-icon{
+      width: 44px; height: 44px; background: var(--primary); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900;
+    }
+.portail-agent .portal-brand-text strong{ display: block; font-family: 'Playfair Display', serif; font-size: 16px; color: var(--primary); line-height: 1.1; }
+.portail-agent .portal-brand-text small{ font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+/* Agent role badge */
+    .portail-agent .agent-role-badge{
+      background: rgba(0,49,137,0.08); border: 1px solid rgba(0,49,137,0.18);
+      color: var(--primary); font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+    }
+.portail-agent .portal-user-pill{
+      display: flex; align-items: center; gap: 10px;
+      background: var(--light-bg); border: 1px solid var(--border);
+      border-radius: 30px; padding: 5px 14px 5px 6px;
+      font-size: 13px; font-weight: 600; color: var(--text-dark);
+    }
+.portail-agent .portal-user-avatar{
+      width: 30px; height: 30px; background: var(--primary); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 11px; font-weight: 700;
+    }
+.portail-agent .header-actions{ display: flex; align-items: center; gap: 14px; }
+.portail-agent .header-notif-btn{
+      position: relative; width: 36px; height: 36px;
+      background: var(--light-bg); border: 1px solid var(--border);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--text-mid); font-size: 17px; cursor: pointer; transition: all .18s;
+    }
+.portail-agent .header-notif-btn:hover{ background: var(--primary); color: white; border-color: var(--primary); }
+.portail-agent .notif-dot{
+      position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+      background: var(--accent); border-radius: 50%; border: 2px solid white;
+    }
+/* ── LAYOUT ── */
+    .portail-agent .portal-layout{ display: flex; min-height: calc(100vh - 71px); }
+/* ── SIDEBAR ── */
+    .portail-agent .sidebar{
+      width: 264px; flex-shrink: 0; background: white;
+      border-right: 1px solid var(--border); padding: 20px 0;
+      position: sticky; top: 71px; height: calc(100vh - 71px); overflow-y: auto;
+    }
+.portail-agent .sidebar-section-label{
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text-muted);
+      padding: 0 22px; margin: 18px 0 4px;
+    }
+.portail-agent .sidebar-item{
+      display: flex; align-items: center; gap: 11px;
+      padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-mid); cursor: pointer; transition: all .16s;
+      border-left: 3px solid transparent; text-decoration: none;
+    }
+.portail-agent .sidebar-item:hover{ color: var(--primary); background: rgba(0,49,137,0.04); }
+.portail-agent .sidebar-item.active{ color: var(--primary); background: rgba(0,49,137,0.07); border-left-color: var(--primary); }
+.portail-agent .sidebar-item i{ font-size: 16px; width: 18px; text-align: center; flex-shrink: 0; }
+.portail-agent .sidebar-badge{
+      margin-left: auto; background: var(--accent); color: white;
+      font-size: 10px; font-weight: 700; min-width: 18px; height: 18px;
+      border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; padding: 0 5px;
+    }
+.portail-agent .sidebar-badge.green{ background: #198754; }
+.portail-agent .sidebar-badge.gold{ background: var(--gold); }
+.portail-agent .sidebar-divider{ height: 1px; background: var(--border); margin: 10px 22px; }
+/* ── MAIN CONTENT ── */
+    .portail-agent .portal-main{ flex: 1; padding: 28px 32px; min-width: 0; }
+/* ── PANELS ── */
+    .portail-agent .portal-panel{ display: none; }
+.portail-agent .portal-panel.active{ display: block; }
+.portail-agent .panel-header{ margin-bottom: 24px; }
+.portail-agent .panel-title{ font-family: 'Playfair Display', serif; font-size: 24px; color: var(--primary); margin-bottom: 2px; }
+.portail-agent .panel-subtitle{ color: var(--text-muted); font-size: 13.5px; }
+/* ── KPI CARDS ── */
+    .portail-agent .kpi-grid{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.portail-agent .kpi-card{
+      background: white; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 20px 22px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+    }
+.portail-agent .kpi-card::before{ content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); }
+.portail-agent .kpi-card.accent::before{ background: var(--accent); }
+.portail-agent .kpi-card.gold::before{ background: var(--gold); }
+.portail-agent .kpi-card.green::before{ background: #198754; }
+.portail-agent .kpi-label{ font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+.portail-agent .kpi-value{ font-size: 32px; font-weight: 700; color: var(--text-dark); line-height: 1; margin-bottom: 6px; font-family: 'Source Sans 3', sans-serif; }
+.portail-agent .kpi-sub{ font-size: 12px; color: var(--text-muted); }
+.portail-agent .kpi-icon{ position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 36px; opacity: .07; color: var(--primary); }
+/* ── TOOLBAR ── */
+    .portail-agent .table-toolbar{
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+.portail-agent .search-input-wrap{ position: relative; flex: 1; max-width: 320px; }
+.portail-agent .search-input-wrap i{ position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+.portail-agent .search-input-wrap input{
+      width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 8px 12px 8px 34px; font-size: 13px; font-family: 'Source Sans 3', sans-serif;
+      color: var(--text-dark); outline: none; transition: border-color .2s;
+    }
+.portail-agent .search-input-wrap input:focus{ border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,49,137,0.08); }
+.portail-agent .filter-select{
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 8px 30px 8px 12px; font-size: 13px; font-family: 'Source Sans 3', sans-serif;
+      color: var(--text-dark); outline: none; background: white; cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%237a8aab' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+.portail-agent .btn-add{
+      background: var(--primary); color: white; border: none;
+      padding: 8px 18px; border-radius: var(--radius); font-size: 13px;
+      font-weight: 700; font-family: 'Source Sans 3', sans-serif;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: all .18s;
+    }
+.portail-agent .btn-add:hover{ background: var(--primary-dark); transform: translateY(-1px); }
+.portail-agent .btn-add.accent{ background: var(--accent); }
+.portail-agent .btn-add.accent:hover{ background: #c0001f; }
+/* ── DATA TABLE ── */
+    .portail-agent .data-table-wrap{
+      background: white; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+.portail-agent .data-table{ width: 100%; border-collapse: collapse; }
+.portail-agent .data-table thead tr{ background: var(--light-bg); border-bottom: 2px solid var(--border); }
+.portail-agent .data-table th{
+      padding: 11px 16px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+.portail-agent .data-table td{ padding: 13px 16px; font-size: 13.5px; color: var(--text-dark); vertical-align: middle; border-bottom: 1px solid var(--border); }
+.portail-agent .data-table tbody tr:last-child td{ border-bottom: none; }
+.portail-agent .data-table tbody tr:hover{ background: rgba(0,49,137,0.025); }
+.portail-agent .data-table td .ref{ font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .5px; }
+.portail-agent .data-table td strong{ font-weight: 700; color: var(--text-dark); }
+.portail-agent .data-table td small{ font-size: 12px; color: var(--text-muted); display: block; }
+.portail-agent .table-footer{
+      padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+      background: var(--light-bg); border-top: 1px solid var(--border);
+      font-size: 12.5px; color: var(--text-muted);
+    }
+.portail-agent .pagination-btns{ display: flex; gap: 4px; }
+.portail-agent .page-btn{
+      min-width: 30px; height: 30px; border: 1px solid var(--border);
+      background: white; border-radius: var(--radius); font-size: 12px;
+      font-family: 'Source Sans 3', sans-serif; cursor: pointer; transition: all .16s;
+      display: inline-flex; align-items: center; justify-content: center; color: var(--text-mid);
+    }
+.portail-agent .page-btn:hover, .portail-agent .page-btn.active{ background: var(--primary); color: white; border-color: var(--primary); }
+/* ── STATUS PILLS ── */
+    .portail-agent .pill{
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: .3px; white-space: nowrap;
+    }
+.portail-agent .pill.recu{ background: rgba(255,193,7,0.15); color: #856404; }
+.portail-agent .pill.traitement{ background: rgba(13,110,253,0.1);  color: #0d6efd; }
+.portail-agent .pill.valide{ background: rgba(25,135,84,0.1);   color: #198754; }
+.portail-agent .pill.refuse{ background: rgba(220,53,69,0.1);   color: #dc3545; }
+.portail-agent .pill.attente{ background: rgba(108,117,125,0.1); color: #6c757d; }
+.portail-agent .pill.accorde{ background: rgba(25,135,84,0.1);   color: #198754; }
+.portail-agent .pill.paye{ background: rgba(25,135,84,0.1);   color: #198754; }
+.portail-agent .pill.impaye{ background: rgba(220,53,69,0.1);   color: #dc3545; }
+.portail-agent .pill.confirme{ background: rgba(13,110,253,0.1);  color: #0d6efd; }
+.portail-agent .pill.annule{ background: rgba(108,117,125,0.1); color: #6c757d; }
+.portail-agent .pill.actif{ background: rgba(25,135,84,0.1);   color: #198754; }
+.portail-agent .pill.inactif{ background: rgba(108,117,125,0.1); color: #6c757d; }
+/* ── TABLE ACTION BUTTONS ── */
+    .portail-agent .tbl-actions{ display: flex; gap: 6px; }
+.portail-agent .tbl-btn{
+      width: 30px; height: 30px; border: 1.5px solid var(--border); border-radius: var(--radius);
+      background: white; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 14px; cursor: pointer; transition: all .16s;
+    }
+.portail-agent .tbl-btn:hover{ border-color: var(--primary); color: var(--primary); }
+.portail-agent .tbl-btn.danger:hover{ border-color: #dc3545; color: #dc3545; }
+.portail-agent .tbl-btn.success:hover{ border-color: #198754; color: #198754; }
+.portail-agent .tbl-btn.gold:hover{ border-color: var(--gold); color: var(--gold); }
+/* ── MODAL OVERRIDES ── */
+    .portail-agent .modal-header{
+      background: var(--primary); color: white; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 18px 24px; border: none;
+    }
+.portail-agent .modal-header.gold{ background: var(--gold); }
+.portail-agent .modal-header.accent{ background: var(--accent); }
+.portail-agent .modal-header.green{ background: #198754; }
+.portail-agent .modal-title{ font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+.portail-agent .btn-close-white{ filter: brightness(0) invert(1); }
+.portail-agent .modal-content{ border: none; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.portail-agent .modal-body{ padding: 24px; }
+.portail-agent .modal-footer{ border-top: 1px solid var(--border); padding: 16px 24px; }
+/* ── FORM IN MODAL ── */
+    .portail-agent .fld-label{ display: block; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.portail-agent .fld-ctrl{
+      width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius);
+      padding: 9px 13px; font-size: 13.5px; font-family: 'Source Sans 3', sans-serif;
+      color: var(--text-dark); outline: none; transition: border-color .2s;
+    }
+.portail-agent .fld-ctrl:focus{ border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,49,137,0.08); }
+.portail-agent select.fld-ctrl{
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%237a8aab' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; background-color: white;
+    }
+.portail-agent .modal-section-title{
+      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-muted); display: flex; align-items: center; gap: 10px; margin: 18px 0 12px;
+    }
+.portail-agent .modal-section-title::after{ content: ''; flex: 1; height: 1px; background: var(--border); }
+.portail-agent .btn-modal-cancel{
+      background: white; color: var(--text-mid); border: 1.5px solid var(--border);
+      padding: 9px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 700;
+      font-family: 'Source Sans 3', sans-serif; cursor: pointer; transition: all .16s;
+    }
+.portail-agent .btn-modal-cancel:hover{ background: var(--light-bg); }
+.portail-agent .btn-modal-save{
+      background: var(--primary); color: white; border: none;
+      padding: 9px 22px; border-radius: var(--radius); font-size: 13px; font-weight: 700;
+      font-family: 'Source Sans 3', sans-serif; cursor: pointer; transition: all .16s;
+    }
+.portail-agent .btn-modal-save:hover{ background: var(--primary-dark); }
+.portail-agent .btn-modal-save.accent{ background: var(--accent); }
+.portail-agent .btn-modal-save.accent:hover{ background: #c0001f; }
+.portail-agent .btn-modal-save.green{ background: #198754; }
+.portail-agent .btn-modal-save.green:hover{ background: #146c43; }
+/* ── DETAIL ROW ── */
+    .portail-agent .detail-row{ display: grid; grid-template-columns: 160px 1fr; gap: 6px 16px; margin-bottom: 8px; font-size: 13.5px; }
+.portail-agent .detail-row dt{ font-weight: 700; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; padding-top: 2px; }
+.portail-agent .detail-row dd{ color: var(--text-dark); }
+/* ── TIMELINE / STEPPER (mini) ── */
+    .portail-agent .mini-timeline{ list-style: none; padding: 0; }
+.portail-agent .mini-timeline li{
+      display: flex; gap: 12px; padding-bottom: 14px; position: relative;
+      font-size: 13px;
+    }
+.portail-agent .mini-timeline li:not(:last-child)::before{
+      content: ''; position: absolute; left: 13px; top: 26px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+.portail-agent .tl-dot{
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    }
+.portail-agent .tl-dot.done{ background: #198754; color: white; }
+.portail-agent .tl-dot.current{ background: var(--primary); color: white; box-shadow: 0 0 0 4px rgba(0,49,137,0.15); }
+.portail-agent .tl-dot.pending{ background: var(--border); color: var(--text-muted); }
+.portail-agent .tl-info strong{ display: block; font-weight: 700; color: var(--text-dark); }
+.portail-agent .tl-info span{ font-size: 12px; color: var(--text-muted); }
+/* ── STAT CARDS (reporting) ── */
+    .portail-agent .stat-section{ background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+.portail-agent .stat-section-title{ font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+/* ── AGENDA GRID (rendez-vous) ── */
+    .portail-agent .agenda-week{ display: grid; grid-template-columns: 60px repeat(5, 1fr); gap: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: white; }
+.portail-agent .agenda-cell{ border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px 8px; font-size: 12px; min-height: 52px; }
+.portail-agent .agenda-cell.header{ background: var(--light-bg); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .8px; text-align: center; min-height: auto; padding: 10px 8px; }
+.portail-agent .agenda-cell.time{ background: var(--light-bg); color: var(--text-muted); font-size: 11px; font-weight: 600; text-align: right; border-right: 2px solid var(--border); }
+.portail-agent .rdv-block{ background: rgba(0,49,137,0.08); border-left: 3px solid var(--primary); border-radius: 3px; padding: 4px 7px; margin: 1px; font-size: 11px; font-weight: 600; color: var(--primary); }
+.portail-agent .rdv-block.gold{ background: rgba(200,168,75,0.12); border-color: var(--gold); color: #7a5000; }
+.portail-agent .rdv-block.green{ background: rgba(25,135,84,0.08); border-color: #198754; color: #0d6e40; }
+/* ── DASHBOARD ACTIVITY ── */
+    .portail-agent .activity-feed{ background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.portail-agent .activity-item{
+      display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px;
+      border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+.portail-agent .activity-item:last-child{ border-bottom: none; }
+.portail-agent .activity-dot{ width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.portail-agent .activity-dot.blue{ background: rgba(0,49,137,0.08); color: var(--primary); }
+.portail-agent .activity-dot.green{ background: rgba(25,135,84,0.08); color: #198754; }
+.portail-agent .activity-dot.orange{ background: rgba(255,145,0,0.1); color: #e07b00; }
+.portail-agent .activity-dot.red{ background: rgba(220,53,69,0.08); color: #dc3545; }
+.portail-agent .activity-text{ flex: 1; }
+.portail-agent .activity-text strong{ font-weight: 700; }
+.portail-agent .activity-time{ font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+/* ── MOBILE ── */
+    .portail-agent .sidebar-toggle{
+      display: none; background: var(--primary); color: white; border: none;
+      border-radius: 50%; width: 44px; height: 44px; font-size: 20px; cursor: pointer;
+      position: fixed; bottom: 24px; right: 24px; z-index: 400; box-shadow: var(--shadow-md);
+      align-items: center; justify-content: center;
+    }
+@media (max-width: 991px) {
+
+.portail-agent .sidebar{ display: none; position: fixed; top: 71px; left: 0; z-index: 200; height: calc(100vh - 71px); }
+.portail-agent .sidebar.open{ display: block; }
+.portail-agent .sidebar-toggle{ display: flex; }
+.portail-agent .portal-main{ padding: 18px 14px; }
+.portail-agent .kpi-grid{ grid-template-columns: repeat(2, 1fr); }
+
+    
+
+}
+@media (max-width: 575px) {
+
+.portail-agent .kpi-grid{ grid-template-columns: 1fr; }
+
+    
+
+}

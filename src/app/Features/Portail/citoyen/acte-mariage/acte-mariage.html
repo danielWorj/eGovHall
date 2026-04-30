@@ -1,1 +1,130 @@
-<p>acte-mariage works!</p>
+ <!-- PANEL: ACTE DE MARIAGE -->
+    <div class="portal-panel" id="panel-mariage">
+      <h1 class="panel-title">Acte de Mariage</h1>
+      <p class="panel-subtitle">Constituez et soumettez votre dossier de mariage civil en ligne.</p>
+
+      <div class="form-card">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)">
+          <div style="width:48px;height:48px;background:rgba(232,0,45,0.07);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:22px;flex-shrink:0"><i class="bi bi-heart"></i></div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--primary)">Demande de Mariage Civil</div>
+            <div style="font-size:13px;color:var(--text-muted)">Remplissez le formulaire ci-dessous. La mairie validera la recevabilité de votre dossier.</div>
+          </div>
+        </div>
+
+        <form>
+          <!-- Époux -->
+          <div class="form-section-title">Premier époux / Épouse</div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label-custom">Nom <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Nom de famille" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Prénom(s) <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Prénom(s)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Date de naissance <span style="color:var(--accent)">*</span></label>
+              <input type="date" class="form-control-custom" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Lieu de naissance <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Ville, Pays" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Numéro CNI <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Ex: 12345678" />
+            </div>
+          </div>
+
+          <!-- Époux 2 -->
+          <div class="form-section-title">Second époux / Épouse</div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label-custom">Nom <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Nom de famille" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Prénom(s) <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Prénom(s)" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label-custom">Date de naissance <span style="color:var(--accent)">*</span></label>
+              <input type="date" class="form-control-custom" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Lieu de naissance <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Ville, Pays" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Numéro CNI <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control-custom" placeholder="Ex: 12345678" />
+            </div>
+          </div>
+
+          <!-- Cérémonie -->
+          <div class="form-section-title">Informations complémentaires</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label-custom">Date souhaitée de cérémonie</label>
+              <input type="date" class="form-control-custom" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Régime matrimonial <span style="color:var(--accent)">*</span></label>
+              <select class="form-control-custom">
+                <option value="">— Sélectionner —</option>
+                <option>Communauté de biens réduite aux acquêts</option>
+                <option>Séparation de biens</option>
+                <option>Communauté universelle</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Pièces jointes -->
+          <div class="form-section-title">Pièces justificatives</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label-custom">Acte de naissance époux 1 <span style="color:var(--accent)">*</span></label>
+              <div class="file-input-wrap">
+                <input type="file" accept=".pdf,image/*" />
+                <div class="file-icon-sm"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="file-text-sm"><strong>Joindre le document</strong><span>PDF ou image</span></div>
+                <span class="file-btn-sm"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">Acte de naissance époux 2 <span style="color:var(--accent)">*</span></label>
+              <div class="file-input-wrap">
+                <input type="file" accept=".pdf,image/*" />
+                <div class="file-icon-sm"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="file-text-sm"><strong>Joindre le document</strong><span>PDF ou image</span></div>
+                <span class="file-btn-sm"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">CNI époux 1 <span style="color:var(--accent)">*</span></label>
+              <div class="file-input-wrap">
+                <input type="file" accept=".pdf,image/*" />
+                <div class="file-icon-sm"><i class="bi bi-person-vcard"></i></div>
+                <div class="file-text-sm"><strong>Joindre la CNI</strong><span>PDF ou image</span></div>
+                <span class="file-btn-sm"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label-custom">CNI époux 2 <span style="color:var(--accent)">*</span></label>
+              <div class="file-input-wrap">
+                <input type="file" accept=".pdf,image/*" />
+                <div class="file-icon-sm"><i class="bi bi-person-vcard"></i></div>
+                <div class="file-text-sm"><strong>Joindre la CNI</strong><span>PDF ou image</span></div>
+                <span class="file-btn-sm"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:28px;display:flex;justify-content:flex-end">
+            <button type="submit" class="btn-primary-custom"><i class="bi bi-send me-2"></i>Soumettre le dossier</button>
+          </div>
+        </form>
+      </div>
+    </div>
