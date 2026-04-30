@@ -1,0 +1,491 @@
+<div id="navbar-container"></div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="container position-relative" style="z-index:2">
+    <span class="section-label" style="color:var(--gold)">Services en ligne</span>
+    <h1>État Civil</h1>
+    <p>Déclarations de naissance, actes de mariage, déclarations de décès — toutes vos démarches en ligne.</p>
+    <div class="breadcrumb-wrap"><a href="index.html">Accueil</a> <span>›</span> État Civil</div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="etat-civil-nav">
+  <div class="container">
+    <div class="etat-civil-nav-inner">
+      <a href="#naissance" class="ec-tab active" id="tab-naissance" onclick="showSection('naissance',this)">
+        <i class="bi bi-person-plus"></i>Déclaration de Naissance
+      </a>
+      <a href="#mariage" class="ec-tab" id="tab-mariage" onclick="showSection('mariage',this)">
+        <i class="bi bi-heart"></i>Acte de Mariage
+      </a>
+      <a href="#deces" class="ec-tab" id="tab-deces" onclick="showSection('deces',this)">
+        <i class="bi bi-file-earmark-medical"></i>Déclaration de Décès
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ NAISSANCE ══════════════════ -->
+<section id="section-naissance" class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <span class="section-label">Naissance</span>
+        <h2 class="section-title">Déclaration de Naissance</h2>
+        <p class="text-muted mb-4">Toute naissance doit être déclarée dans les <strong>30 jours</strong> suivant l'accouchement. La déclaration peut être effectuée par l'hôpital (via leur portail institutionnel) ou directement par les parents.</p>
+
+        <div class="alert-info-custom mb-4">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          <strong>Délai légal :</strong> 30 jours à compter de la naissance. Au-delà, un jugement supplétif est nécessaire.
+        </div>
+
+        <!-- ÉTAPES -->
+        <h4 style="font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:24px">Procédure</h4>
+        <div class="step-item">
+          <div class="step-badge">1</div>
+          <div class="step-content">
+            <h6>Rassemblez les documents requis</h6>
+            <p>Préparez tous les documents listés ci-contre avant de commencer la déclaration en ligne.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge">2</div>
+          <div class="step-content">
+            <h6>Remplissez le formulaire en ligne</h6>
+            <p>Complétez le formulaire avec les informations de l'enfant et des parents. L'hôpital peut le faire directement depuis son portail institutionnel.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge">3</div>
+          <div class="step-content">
+            <h6>Recevez l'accusé de réception</h6>
+            <p>Un numéro de dossier vous est attribué (ex: NAIS-2026-XXXXX) et un email de confirmation est envoyé.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge">4</div>
+          <div class="step-content">
+            <h6>Rendez-vous & remise de l'acte</h6>
+            <p>Un créneau de rendez-vous vous est proposé. L'officier d'état civil finalise et vous remet l'acte officiel.</p>
+          </div>
+        </div>
+
+        <!-- FORMULAIRE -->
+        <div class="form-section mt-5">
+          <h4 class="form-section-title"><i class="bi bi-pencil-square me-2"></i>Formulaire de Déclaration</h4>
+          <div class="alert-info-custom mb-4">
+            <i class="bi bi-person-fill me-2"></i>Vous devez être <a href="login.html" style="color:var(--primary);font-weight:700">connecté à votre espace citoyen</a> pour soumettre ce formulaire.
+          </div>
+
+          <h6 style="color:var(--primary);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Informations de l'enfant</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Nom de famille *</label>
+              <input type="text" class="form-control" placeholder="Nom de famille">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Prénom(s) *</label>
+              <input type="text" class="form-control" placeholder="Prénom(s)">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Date de naissance *</label>
+              <input type="date" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Heure de naissance *</label>
+              <input type="time" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Sexe *</label>
+              <select class="form-select">
+                <option>Sélectionner...</option>
+                <option>Masculin</option>
+                <option>Féminin</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Lieu de naissance (établissement) *</label>
+              <input type="text" class="form-control" placeholder="Ex: Hôpital Général de Douala">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Ville *</label>
+              <input type="text" class="form-control" value="Douala">
+            </div>
+          </div>
+
+          <h6 style="color:var(--primary);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Informations du père</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Nom & Prénom *</label>
+              <input type="text" class="form-control" placeholder="Nom complet du père">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">N° CNI / Passeport *</label>
+              <input type="text" class="form-control" placeholder="Numéro de la pièce d'identité">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Date de naissance</label>
+              <input type="date" class="form-control">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Profession</label>
+              <input type="text" class="form-control" placeholder="Profession du père">
+            </div>
+          </div>
+
+          <h6 style="color:var(--primary);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Informations de la mère</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Nom & Prénom *</label>
+              <input type="text" class="form-control" placeholder="Nom complet de la mère">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">N° CNI / Passeport *</label>
+              <input type="text" class="form-control" placeholder="Numéro de la pièce d'identité">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Date de naissance</label>
+              <input type="date" class="form-control">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Adresse domicile *</label>
+              <input type="text" class="form-control" placeholder="Adresse complète">
+            </div>
+          </div>
+
+          <h6 style="color:var(--primary);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Pièces justificatives (upload)</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">CNI du père *</label>
+              <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">CNI de la mère *</label>
+              <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Bulletin de naissance (hôpital) *</label>
+              <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Carnet de santé mère (facultatif)</label>
+              <input type="file" class="form-control" accept=".pdf,.jpg,.png">
+            </div>
+          </div>
+
+          <button class="btn btn-lg" style="background:var(--primary);color:white;font-weight:700;padding:12px 40px" data-bs-toggle="modal" data-bs-target="#confirmModal">
+            <i class="bi bi-send-fill me-2"></i>Soumettre la Déclaration
+          </button>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="col-lg-4">
+        <div class="doc-required">
+          <h6><i class="bi bi-paperclip me-2"></i>Pièces Requises</h6>
+          <ul class="doc-list">
+            <li><i class="bi bi-check-circle-fill"></i>Bulletin de naissance délivré par l'hôpital</li>
+            <li><i class="bi bi-check-circle-fill"></i>Carte Nationale d'Identité du père</li>
+            <li><i class="bi bi-check-circle-fill"></i>Carte Nationale d'Identité de la mère</li>
+            <li><i class="bi bi-check-circle-fill"></i>Acte de mariage des parents (si mariés)</li>
+            <li><i class="bi bi-check-circle-fill"></i>Justificatif de domicile (père ou mère)</li>
+            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>2 témoins munis de leur CNI (au RDV)</li>
+          </ul>
+        </div>
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body p-4">
+            <h6 style="color:var(--primary);margin-bottom:16px"><i class="bi bi-clock me-2"></i>Délais & Tarifs</h6>
+            <table class="table table-sm mb-0" style="font-size:14px">
+              <tbody>
+                <tr><td>Délai légal</td><td class="fw-bold">30 jours</td></tr>
+                <tr><td>Traitement</td><td class="fw-bold">3–5 jours ouvrés</td></tr>
+                <tr><td>Frais d'établissement</td><td class="fw-bold" style="color:var(--accent)">2 500 FCFA</td></tr>
+                <tr><td>Copie certifiée</td><td class="fw-bold" style="color:var(--accent)">500 FCFA</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card border-0 mt-4" style="background:rgba(0,49,137,0.05);border-radius:12px">
+          <div class="card-body p-4">
+            <h6 style="color:var(--primary);margin-bottom:12px"><i class="bi bi-question-circle me-2"></i>Besoin d'aide ?</h6>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Nos agents sont disponibles pour vous guider dans votre démarche.</p>
+            <a href="contact.html" class="btn btn-sm w-100" style="background:var(--primary);color:white;font-weight:600"><i class="bi bi-telephone me-1"></i>Contacter un agent</a>
+            <a href="rdv.html" class="btn btn-sm w-100 mt-2" style="border:1px solid var(--primary);color:var(--primary);font-weight:600"><i class="bi bi-calendar3 me-1"></i>Prendre RDV</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MARIAGE ══════════════════ -->
+<section id="section-mariage" class="section" style="display:none">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <span class="section-label">Mariage Civil</span>
+        <h2 class="section-title">Acte de Mariage</h2>
+        <p class="text-muted mb-4">La demande de mariage civil doit être déposée <strong>au moins 15 jours</strong> avant la date souhaitée de cérémonie. Initiez votre dossier en ligne et suivez son avancement.</p>
+
+        <div class="alert-info-custom mb-4">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          <strong>Publication des bans :</strong> Obligatoire 15 jours avant la cérémonie. Les bans sont publiés sur le tableau d'affichage de la mairie.
+        </div>
+
+        <h4 style="font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:24px">Procédure</h4>
+        <div class="step-item">
+          <div class="step-badge" style="background:var(--accent)">1</div>
+          <div class="step-content">
+            <h6>Constitution du dossier en ligne</h6>
+            <p>L'un des futurs époux remplit le formulaire et upload les pièces pour les deux époux.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:var(--accent)">2</div>
+          <div class="step-content">
+            <h6>Instruction du dossier</h6>
+            <p>L'officier d'état civil vérifie la recevabilité légale du dossier (absence d'empêchement, vérification pièces).</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:var(--accent)">3</div>
+          <div class="step-content">
+            <h6>Confirmation de la date de cérémonie</h6>
+            <p>Une date est proposée aux époux. Confirmation en ligne, puis paiement des frais de publication.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:var(--accent)">4</div>
+          <div class="step-content">
+            <h6>Cérémonie civile & remise de l'acte</h6>
+            <p>Célébration à la mairie. Signature des époux, des témoins et de l'officier. Remise de l'acte certifié.</p>
+          </div>
+        </div>
+
+        <div class="form-section mt-5">
+          <h4 class="form-section-title"><i class="bi bi-pencil-square me-2"></i>Dossier de Mariage Civil</h4>
+
+          <h6 style="color:var(--accent);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Futur(e) époux/épouse 1</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><label class="form-label fw-semibold">Nom *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Prénom(s) *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Date de naissance *</label><input type="date" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Lieu de naissance *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">N° CNI / Passeport *</label><input type="text" class="form-control"></div>
+            <div class="col-md-8"><label class="form-label fw-semibold">Adresse domicile *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Profession *</label><input type="text" class="form-control"></div>
+          </div>
+
+          <h6 style="color:var(--accent);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Futur(e) époux/épouse 2</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><label class="form-label fw-semibold">Nom *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Prénom(s) *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Date de naissance *</label><input type="date" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Lieu de naissance *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">N° CNI / Passeport *</label><input type="text" class="form-control"></div>
+            <div class="col-md-8"><label class="form-label fw-semibold">Adresse domicile *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Profession *</label><input type="text" class="form-control"></div>
+          </div>
+
+          <h6 style="color:var(--accent);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Témoins</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-semibold">Témoin 1 — Nom & Prénom *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Témoin 1 — N° CNI *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Témoin 2 — Nom & Prénom *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Témoin 2 — N° CNI *</label><input type="text" class="form-control"></div>
+          </div>
+
+          <h6 style="color:var(--accent);margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Date souhaitée</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><label class="form-label fw-semibold">Date souhaitée *</label><input type="date" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Heure préférée *</label><input type="time" class="form-control"></div>
+          </div>
+
+          <button class="btn btn-lg" style="background:var(--accent);color:white;font-weight:700;padding:12px 40px" data-bs-toggle="modal" data-bs-target="#confirmModal">
+            <i class="bi bi-send-fill me-2"></i>Soumettre le Dossier de Mariage
+          </button>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="doc-required" style="border-color:var(--accent)">
+          <h6><i class="bi bi-paperclip me-2"></i>Pièces Requises</h6>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Pour chacun des futurs époux :</p>
+          <ul class="doc-list">
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>Acte de naissance (moins de 3 mois)</li>
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>Carte Nationale d'Identité valide</li>
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>Certificat de résidence</li>
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>Certificat de célibat ou de divorce</li>
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>Photo d'identité récente (x2)</li>
+          </ul>
+          <hr>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px">Pour les 2 témoins :</p>
+          <ul class="doc-list">
+            <li><i class="bi bi-check-circle-fill" style="color:var(--accent)"></i>CNI de chaque témoin</li>
+          </ul>
+        </div>
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body p-4">
+            <h6 style="color:var(--primary);margin-bottom:16px"><i class="bi bi-clock me-2"></i>Délais & Tarifs</h6>
+            <table class="table table-sm mb-0" style="font-size:14px">
+              <tbody>
+                <tr><td>Délai dossier</td><td class="fw-bold">15 jours min.</td></tr>
+                <tr><td>Publication des bans</td><td class="fw-bold">15 jours</td></tr>
+                <tr><td>Frais de publication</td><td class="fw-bold" style="color:var(--accent)">5 000 FCFA</td></tr>
+                <tr><td>Frais de cérémonie</td><td class="fw-bold" style="color:var(--accent)">25 000 FCFA</td></tr>
+                <tr><td>Copie certifiée</td><td class="fw-bold" style="color:var(--accent)">500 FCFA</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ DÉCÈS ══════════════════ -->
+<section id="section-deces" class="section" style="display:none">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <span class="section-label">Déclaration de Décès</span>
+        <h2 class="section-title">Déclarer un Décès</h2>
+        <p class="text-muted mb-4">Toute déclaration de décès doit être effectuée dans les <strong>24 heures</strong> suivant le décès. Elle peut être faite par tout proche parent ou par l'établissement de santé.</p>
+
+        <div class="alert-info-custom mb-4" style="border-color:var(--accent);background:rgba(232,0,45,0.04)">
+          <i class="bi bi-exclamation-triangle-fill me-2" style="color:var(--accent)"></i>
+          <strong>Délai impératif :</strong> 24 heures après le décès. Passé ce délai, une déclaration tardive entraîne une procédure judiciaire.
+        </div>
+
+        <h4 style="font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:24px">Procédure</h4>
+        <div class="step-item">
+          <div class="step-badge" style="background:#6c757d">1</div>
+          <div class="step-content">
+            <h6>Obtenez le certificat médical de décès</h6>
+            <p>Le médecin ou l'hôpital délivre le certificat de décès, document indispensable à la déclaration.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:#6c757d">2</div>
+          <div class="step-content">
+            <h6>Remplissez le formulaire en ligne</h6>
+            <p>Le proche parent ou le déclarant remplit le formulaire et upload les pièces justificatives.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:#6c757d">3</div>
+          <div class="step-content">
+            <h6>Validation par l'agent d'état civil</h6>
+            <p>L'agent vérifie les documents et établit l'acte de décès officiel dans le registre numérique.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-badge" style="background:#6c757d">4</div>
+          <div class="step-content">
+            <h6>Réception de l'acte de décès</h6>
+            <p>L'acte est remis sur rendez-vous ou envoyé par email en version PDF certifiée.</p>
+          </div>
+        </div>
+
+        <div class="form-section mt-5">
+          <h4 class="form-section-title"><i class="bi bi-pencil-square me-2"></i>Formulaire de Déclaration de Décès</h4>
+
+          <h6 style="color:#6c757d;margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Informations du défunt</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4"><label class="form-label fw-semibold">Nom *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Prénom(s) *</label><input type="text" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Sexe *</label><select class="form-select"><option>Masculin</option><option>Féminin</option></select></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Date de naissance *</label><input type="date" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Date de décès *</label><input type="date" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">Heure de décès *</label><input type="time" class="form-control"></div>
+            <div class="col-md-8"><label class="form-label fw-semibold">Lieu de décès *</label><input type="text" class="form-control" placeholder="Établissement ou adresse"></div>
+            <div class="col-md-4"><label class="form-label fw-semibold">N° CNI du défunt</label><input type="text" class="form-control"></div>
+          </div>
+
+          <h6 style="color:#6c757d;margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Informations du déclarant</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-semibold">Nom & Prénom du déclarant *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Lien de parenté *</label><select class="form-select"><option>Sélectionner...</option><option>Époux/Épouse</option><option>Enfant</option><option>Parent</option><option>Autre proche</option><option>Représentant légal</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">N° CNI du déclarant *</label><input type="text" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Téléphone *</label><input type="tel" class="form-control" placeholder="+237 6XX XXX XXX"></div>
+          </div>
+
+          <h6 style="color:#6c757d;margin-bottom:16px;font-size:14px;text-transform:uppercase;letter-spacing:1px">Documents (upload)</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6"><label class="form-label fw-semibold">Certificat médical de décès *</label><input type="file" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">CNI du défunt</label><input type="file" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">CNI du déclarant *</label><input type="file" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label fw-semibold">Acte de naissance du défunt</label><input type="file" class="form-control"></div>
+          </div>
+
+          <button class="btn btn-lg" style="background:#6c757d;color:white;font-weight:700;padding:12px 40px" data-bs-toggle="modal" data-bs-target="#confirmModal">
+            <i class="bi bi-send-fill me-2"></i>Soumettre la Déclaration de Décès
+          </button>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="doc-required" style="border-color:#6c757d;background:#f8f9fa">
+          <h6 style="color:#495057"><i class="bi bi-paperclip me-2"></i>Pièces Requises</h6>
+          <ul class="doc-list">
+            <li><i class="bi bi-check-circle-fill" style="color:#6c757d"></i>Certificat médical de décès (original)</li>
+            <li><i class="bi bi-check-circle-fill" style="color:#6c757d"></i>Pièce d'identité du défunt (si disponible)</li>
+            <li><i class="bi bi-check-circle-fill" style="color:#6c757d"></i>Pièce d'identité du déclarant</li>
+            <li><i class="bi bi-check-circle-fill" style="color:#6c757d"></i>Acte de naissance du défunt (si disponible)</li>
+            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>Livret de famille (si marié)</li>
+          </ul>
+        </div>
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-body p-4">
+            <h6 style="color:var(--primary);margin-bottom:16px"><i class="bi bi-clock me-2"></i>Délais & Tarifs</h6>
+            <table class="table table-sm mb-0" style="font-size:14px">
+              <tbody>
+                <tr><td>Délai légal</td><td class="fw-bold text-danger">24 heures</td></tr>
+                <tr><td>Traitement urgent</td><td class="fw-bold">Même jour</td></tr>
+                <tr><td>Acte de décès</td><td class="fw-bold" style="color:var(--accent)">Gratuit</td></tr>
+                <tr><td>Copie certifiée</td><td class="fw-bold" style="color:var(--accent)">500 FCFA</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card border-0 mt-4" style="background:rgba(108,117,125,0.05);border-radius:12px">
+          <div class="card-body p-4">
+            <h6 style="color:#6c757d;margin-bottom:12px"><i class="bi bi-telephone me-2"></i>Urgences</h6>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:8px">Pour les cas urgents, contactez directement notre service d'état civil :</p>
+            <strong style="font-size:16px;color:var(--primary)"><i class="bi bi-telephone-fill me-1"></i>+237 233 42 10 01</strong>
+            <p style="font-size:12px;color:var(--text-muted);margin-top:4px">Disponible 24h/24 pour les déclarations urgentes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border:none;border-radius:16px;overflow:hidden">
+      <div class="modal-header" style="background:var(--primary);color:white;border:none">
+        <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>Déclaration soumise avec succès</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <div style="width:80px;height:80px;background:rgba(25,135,84,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#198754">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h5 style="color:var(--primary);margin-bottom:8px">Dossier reçu !</h5>
+        <p style="color:var(--text-muted);margin-bottom:16px">Votre numéro de suivi :</p>
+        <div style="background:var(--light-bg);border-radius:8px;padding:12px;font-size:20px;font-weight:900;color:var(--primary);letter-spacing:2px" id="trackingNumber">NAIS-2026-00731</div>
+        <p class="mt-3" style="font-size:14px;color:var(--text-muted)">Un email de confirmation a été envoyé. Un agent prendra contact avec vous sous 48h pour confirmer le rendez-vous.</p>
+      </div>
+      <div class="modal-footer border-0 p-4 pt-0 d-flex gap-2 justify-content-center">
+        <button class="btn" style="background:var(--primary);color:white;font-weight:700;padding:10px 28px" data-bs-dismiss="modal">Fermer</button>
+        <a href="index.html" class="btn" style="border:1px solid var(--border);color:var(--text-mid);padding:10px 28px">Retour à l'accueil</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer-container"></div>

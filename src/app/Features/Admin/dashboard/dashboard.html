@@ -1,0 +1,1892 @@
+<div class="portail-agent">
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="portal-header">
+  <div class="portal-header-inner">
+    <div class="portal-brand">
+      <div class="portal-brand-icon">M</div>
+      <div class="portal-brand-text">
+        <strong>Mairie de Douala</strong>
+        <small>Espace Agent — GED</small>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="agent-role-badge d-none d-md-inline"><i class="bi bi-shield-check me-1"></i>Agent Mairie</span>
+      <div class="header-notif-btn" onclick="showPanel('notifications')" title="Notifications">
+        <i class="bi bi-bell"></i>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="portal-user-pill">
+        <div class="portal-user-avatar">AK</div>
+        <span class="d-none d-sm-inline">Amina Kouna</span>
+      </div>
+      <a href="index.html" style="font-size:12px;color:var(--text-muted);font-weight:600" title="Déconnexion">
+        <i class="bi bi-box-arrow-right" style="font-size:17px"></i>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     LAYOUT
+══════════════════════════════════════════════ -->
+<div class="portal-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebarEl">
+    <div class="sidebar-section-label">Tableau de bord</div>
+    <a class="sidebar-item active" data-panel="dashboard" href="#">
+      <i class="bi bi-speedometer2"></i> Vue d'ensemble
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">État Civil</div>
+    <a class="sidebar-item" data-panel="naissances" href="#">
+      <i class="bi bi-hospital"></i> Actes de Naissance
+      <span class="sidebar-badge">7</span>
+    </a>
+    <a class="sidebar-item" data-panel="mariages" href="#">
+      <i class="bi bi-suit-heart"></i> Actes de Mariage
+      <span class="sidebar-badge gold">3</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Urbanisme</div>
+    <a class="sidebar-item" data-panel="permis" href="#">
+      <i class="bi bi-building"></i> Permis de Bâtir
+      <span class="sidebar-badge">5</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Finances</div>
+    <a class="sidebar-item" data-panel="paiements" href="#">
+      <i class="bi bi-credit-card"></i> Paiements
+      <span class="sidebar-badge green">12</span>
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Agenda</div>
+    <a class="sidebar-item" data-panel="rendezVous" href="#">
+      <i class="bi bi-calendar3"></i> Rendez-vous
+    </a>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Administration</div>
+    <a class="sidebar-item" data-panel="utilisateurs" href="#">
+      <i class="bi bi-people"></i> Utilisateurs
+    </a>
+    <a class="sidebar-item" data-panel="notifications" href="#">
+      <i class="bi bi-bell"></i> Notifications
+      <span class="sidebar-badge">4</span>
+    </a>
+    <a class="sidebar-item" data-panel="ged" href="#">
+      <i class="bi bi-folder2-open"></i> GED Documents
+    </a>
+    <a class="sidebar-item" data-panel="reporting" href="#">
+      <i class="bi bi-bar-chart-line"></i> Reporting
+    </a>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="portal-main">
+
+    <!-- ════════════════════════════ DASHBOARD ════════════════════════════ -->
+    <div class="portal-panel active" id="panel-dashboard">
+      <div class="panel-header">
+        <h1 class="panel-title">Tableau de bord</h1>
+        <p class="panel-subtitle">Bienvenue, Amina. Voici l'état du jour — <strong>jeudi 30 avril 2026</strong>.</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Dossiers en attente</div>
+          <div class="kpi-value">23</div>
+          <div class="kpi-sub">↑ 4 depuis hier</div>
+          <i class="bi bi-inbox kpi-icon"></i>
+        </div>
+        <div class="kpi-card accent">
+          <div class="kpi-label">Dossiers urgents</div>
+          <div class="kpi-value">6</div>
+          <div class="kpi-sub">Délai dépassé</div>
+          <i class="bi bi-exclamation-circle kpi-icon"></i>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-label">RDV aujourd'hui</div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-sub">Prochain : 10h30</div>
+          <i class="bi bi-calendar-check kpi-icon"></i>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Traités ce mois</div>
+          <div class="kpi-value">147</div>
+          <div class="kpi-sub">+18% vs avril 2025</div>
+          <i class="bi bi-check-circle kpi-icon"></i>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="stat-section">
+            <div class="stat-section-title"><i class="bi bi-clock-history"></i> Activité récente</div>
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="activity-dot blue"><i class="bi bi-file-earmark-plus"></i></div>
+                <div class="activity-text"><strong>Nouvelle déclaration naissance</strong> — Hôpital Général de Douala<br><span style="color:var(--text-muted);font-size:12px">Enfant : <em>Marie Fotso</em> · DCL-2026-0093</span></div>
+                <div class="activity-time">Il y a 12 min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"><i class="bi bi-check-lg"></i></div>
+                <div class="activity-text"><strong>Permis accordé</strong> — PB-2026-0010<br><span style="color:var(--text-muted);font-size:12px">Construction immeuble R+3, Bonanjo</span></div>
+                <div class="activity-time">Il y a 45 min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot orange"><i class="bi bi-credit-card"></i></div>
+                <div class="activity-text"><strong>Paiement reçu</strong> — 5 000 XAF (MTN MoMo)<br><span style="color:var(--text-muted);font-size:12px">Dossier DCL-2026-0087</span></div>
+                <div class="activity-time">1h 20min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot red"><i class="bi bi-x-circle"></i></div>
+                <div class="activity-text"><strong>Pièce complémentaire requise</strong> — MAR-2026-0005<br><span style="color:var(--text-muted);font-size:12px">Dossier mariage incomplet : CNI manquante</span></div>
+                <div class="activity-time">2h 05min</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot blue"><i class="bi bi-calendar-plus"></i></div>
+                <div class="activity-text"><strong>RDV planifié</strong> — Remise permis PB-2026-0009<br><span style="color:var(--text-muted);font-size:12px">Lundi 4 mai 2026, 09h00</span></div>
+                <div class="activity-time">3h 30min</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="stat-section" style="height:100%">
+            <div class="stat-section-title"><i class="bi bi-pie-chart"></i> Répartition des dossiers</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de naissance</span><strong>62 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:42%;height:100%;background:var(--primary);border-radius:4px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Permis de bâtir</span><strong>51 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:35%;height:100%;background:var(--gold);border-radius:4px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de mariage</span><strong>34 dossiers</strong></div>
+                <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:23%;height:100%;background:#198754;border-radius:4px"></div></div>
+              </div>
+            </div>
+            <hr style="border-color:var(--border);margin:18px 0">
+            <div class="stat-section-title"><i class="bi bi-lightning"></i> Actions rapides</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn-add" style="width:100%;justify-content:flex-start" onclick="showPanel('naissances');openModal('modal-naissance-add')"><i class="bi bi-plus-circle"></i>Enregistrer une naissance</button>
+              <button class="btn-add accent" style="width:100%;justify-content:flex-start" onclick="showPanel('permis');openModal('modal-permis-add')"><i class="bi bi-plus-circle"></i>Nouveau permis de bâtir</button>
+              <button class="btn-add" style="width:100%;justify-content:flex-start;background:var(--gold)" onclick="showPanel('rendezVous');openModal('modal-rdv-add')"><i class="bi bi-calendar-plus"></i>Planifier un rendez-vous</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /dashboard -->
+
+
+    <!-- ════════════════════════════ ACTES DE NAISSANCE ════════════════════════════ -->
+    <div class="portal-panel" id="panel-naissances">
+      <div class="panel-header">
+        <h1 class="panel-title">Actes de Naissance</h1>
+        <p class="panel-subtitle">Gestion des déclarations reçues et traitement des actes.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Rechercher par nom, numéro…" oninput="filterTable('tbl-naissances', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select" onchange="filterByStatus('tbl-naissances', this.value)">
+            <option value="">Tous les statuts</option>
+            <option>Reçu</option>
+            <option>En traitement</option>
+            <option>Validé</option>
+            <option>Clôturé</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-naissance-add')"><i class="bi bi-plus-lg"></i>Nouvelle déclaration</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-naissances">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Enfant</th>
+              <th>Parents</th>
+              <th>Déclaré par</th>
+              <th>Date déclaration</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">DCL-2026-0093</span></td>
+              <td><strong>Marie Fotso</strong><small>01/04/2026 — Hôpital Général</small></td>
+              <td>Jean Fotso &amp; Cécile Ngom</td>
+              <td><span style="font-size:12px">Hôpital Général</span></td>
+              <td><small>Aujourd'hui, 08h15</small></td>
+              <td><span class="pill recu">Reçu</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-naissance-edit')" title="Traiter"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn gold" onclick="openModal('modal-naissance-rdv')" title="RDV"><i class="bi bi-calendar-plus"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0093')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2026-0087</span></td>
+              <td><strong>Thomas Biya</strong><small>28/03/2026 — Clinique La Grâce</small></td>
+              <td>Paul Biya &amp; Anne Ndomo</td>
+              <td><span style="font-size:12px">Clinique La Grâce</span></td>
+              <td><small>28/03/2026, 11h00</small></td>
+              <td><span class="pill traitement">En traitement</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-naissance-edit')" title="Traiter"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="Générer PDF"><i class="bi bi-file-earmark-pdf"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0087')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2026-0079</span></td>
+              <td><strong>Lucas Eto'o</strong><small>20/03/2026 — Hôpital Général</small></td>
+              <td>Samuel Eto'o &amp; Madeleine Ngo</td>
+              <td><span style="font-size:12px">Hôpital Général</span></td>
+              <td><small>21/03/2026, 09h30</small></td>
+              <td><span class="pill valide">Validé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="PDF certifié"><i class="bi bi-file-earmark-pdf"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Déclaration DCL-2026-0079')" title="Supprimer"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">DCL-2024-0183</span></td>
+              <td><strong>Chloé Mbarga</strong><small>10/01/2024 — Polyclinique Bassa</small></td>
+              <td>Henri Mbarga &amp; Florence Nkeng</td>
+              <td><span style="font-size:12px">Polyclinique Bassa</span></td>
+              <td><small>11/01/2024, 14h00</small></td>
+              <td><span class="pill attente" style="background:rgba(25,135,84,0.1);color:#198754">Clôturé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-naissance-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-naissance-pdf')" title="PDF certifié"><i class="bi bi-file-earmark-pdf"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 62 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">7</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /naissances -->
+
+
+    <!-- ════════════════════════════ ACTES DE MARIAGE ════════════════════════════ -->
+    <div class="portal-panel" id="panel-mariages">
+      <div class="panel-header">
+        <h1 class="panel-title">Actes de Mariage</h1>
+        <p class="panel-subtitle">Instruction des dossiers de mariage et gestion des mentions marginales.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Rechercher…" oninput="filterTable('tbl-mariages', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option>Reçu</option>
+            <option>En instruction</option>
+            <option>Cérémonie planifiée</option>
+            <option>Acte établi</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-mariage-add')"><i class="bi bi-plus-lg"></i>Nouveau dossier</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-mariages">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Époux 1</th>
+              <th>Époux 2</th>
+              <th>Date soumission</th>
+              <th>Date cérémonie</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">MAR-2026-0008</span></td>
+              <td><strong>Pierre Kamga</strong><small>Né le 12/03/1990</small></td>
+              <td><strong>Nadège Simo</strong><small>Née le 05/07/1993</small></td>
+              <td><small>25/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill recu">Reçu</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Instruire"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier MAR-2026-0008')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">MAR-2026-0005</span></td>
+              <td><strong>Marc Essoh</strong><small>Né le 03/06/1988</small></td>
+              <td><strong>Sylvie Abena</strong><small>Née le 14/11/1991</small></td>
+              <td><small>10/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill traitement">En instruction</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn gold" onclick="openModal('modal-mariage-ceremonie')" title="Planifier cérémonie"><i class="bi bi-calendar-heart"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier MAR-2026-0005')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">MAR-2026-0003</span></td>
+              <td><strong>Éric Nkeng</strong><small>Né le 20/09/1985</small></td>
+              <td><strong>Alice Tanda</strong><small>Née le 01/04/1988</small></td>
+              <td><small>05/04/2026</small></td>
+              <td><small>17/05/2026, 10h00</small></td>
+              <td><span class="pill confirme">Cérémonie planifiée</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-mariage-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-mariage-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-mariage-mention')" title="Mention marginale"><i class="bi bi-file-earmark-plus"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 3 sur 34 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /mariages -->
+
+
+    <!-- ════════════════════════════ PERMIS DE BÂTIR ════════════════════════════ -->
+    <div class="portal-panel" id="panel-permis">
+      <div class="panel-header">
+        <h1 class="panel-title">Permis de Bâtir</h1>
+        <p class="panel-subtitle">Instruction et délivrance des permis de construire.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Numéro, nom, adresse…" oninput="filterTable('tbl-permis', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select">
+            <option value="">Tous les statuts</option>
+            <option>Soumis</option>
+            <option>Complet</option>
+            <option>En instruction</option>
+            <option>Accordé</option>
+            <option>Refusé</option>
+          </select>
+          <button class="btn-add accent" onclick="openModal('modal-permis-add')"><i class="bi bi-plus-lg"></i>Nouveau dossier</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-permis">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Demandeur / Projet</th>
+              <th>Adresse</th>
+              <th>Architecte</th>
+              <th>Soumis le</th>
+              <th>Statut</th>
+              <th>Frais</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ref">PB-2026-0014</span></td>
+              <td><strong>Léon Tanga</strong><small>Entrepôt commercial</small></td>
+              <td><small>Quartier Bépanda</small></td>
+              <td><small>Arch. Moussa</small></td>
+              <td><small>28/04/2026</small></td>
+              <td><span class="pill recu">Soumis</span></td>
+              <td><small style="color:var(--text-muted)">—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Instruire"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0014')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td><strong>Jean Mbida</strong><small>Villa R+1</small></td>
+              <td><small>Akwa Nord</small></td>
+              <td><small>Arch. Tanga</small></td>
+              <td><small>15/03/2026</small></td>
+              <td><span class="pill traitement">En instruction</span></td>
+              <td><small style="color:#e07b00">75 000 XAF</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-permis-decision')" title="Décision"><i class="bi bi-check2-square"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0012')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td><strong>SCI Bonanjo</strong><small>Immeuble R+3</small></td>
+              <td><small>Bonanjo</small></td>
+              <td><small>Arch. Ngono</small></td>
+              <td><small>01/03/2026</small></td>
+              <td><span class="pill accorde">Accordé</span></td>
+              <td><small style="color:#198754">120 000 XAF ✓</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Imprimer permis"><i class="bi bi-printer"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><span class="ref">PB-2026-0008</span></td>
+              <td><strong>Rose Ateba</strong><small>Extension pavillon</small></td>
+              <td><small>Deido</small></td>
+              <td><small>—</small></td>
+              <td><small>20/02/2026</small></td>
+              <td><span class="pill refuse">Refusé</span></td>
+              <td><small style="color:var(--text-muted)">—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 51 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">6</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /permis -->
+
+
+    <!-- ════════════════════════════ PAIEMENTS ════════════════════════════ -->
+    <div class="portal-panel" id="panel-paiements">
+      <div class="panel-header">
+        <h1 class="panel-title">Paiements</h1>
+        <p class="panel-subtitle">Suivi des recettes et validation des règlements.</p>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-card green"><div class="kpi-label">Encaissé ce mois</div><div class="kpi-value" style="font-size:24px">1 240 000</div><div class="kpi-sub">XAF — 89 transactions</div><i class="bi bi-cash-stack kpi-icon"></i></div>
+        <div class="kpi-card gold"><div class="kpi-label">En attente</div><div class="kpi-value" style="font-size:24px">345 000</div><div class="kpi-sub">XAF — 12 transactions</div><i class="bi bi-hourglass-split kpi-icon"></i></div>
+        <div class="kpi-card accent"><div class="kpi-label">Remboursements</div><div class="kpi-value" style="font-size:24px">25 000</div><div class="kpi-sub">XAF — 2 dossiers refusés</div><i class="bi bi-arrow-counterclockwise kpi-icon"></i></div>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Référence dossier, nom…" oninput="filterTable('tbl-paiements', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous</option>
+            <option>Payé</option>
+            <option>En attente</option>
+            <option>Remboursé</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Tous moyens</option>
+            <option>MTN MoMo</option>
+            <option>Orange Money</option>
+            <option>Carte bancaire</option>
+            <option>Virement</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-paiement-add')"><i class="bi bi-plus-lg"></i>Saisir paiement</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-paiements">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Dossier</th>
+              <th>Citoyen</th>
+              <th>Montant</th>
+              <th>Moyen</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><small>30/04/2026, 08h50</small></td>
+              <td><span class="ref">DCL-2026-0087</span></td>
+              <td>Paul Biya</td>
+              <td><strong>5 000 XAF</strong></td>
+              <td><span style="font-size:12px"><i class="bi bi-phone me-1"></i>MTN MoMo</span></td>
+              <td><span class="pill paye">Payé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Reçu"><i class="bi bi-receipt"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-view')" title="Détail"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><small>28/04/2026, 14h20</small></td>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td>SCI Bonanjo</td>
+              <td><strong>120 000 XAF</strong></td>
+              <td><span style="font-size:12px"><i class="bi bi-bank me-1"></i>Virement</span></td>
+              <td><span class="pill paye">Payé</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Reçu"><i class="bi bi-receipt"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-view')" title="Détail"><i class="bi bi-eye"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><small>En attente</small></td>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td>Jean Mbida</td>
+              <td><strong>75 000 XAF</strong></td>
+              <td><span style="font-size:12px;color:var(--text-muted)">—</span></td>
+              <td><span class="pill impaye">En attente</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-paiement-valider')" title="Valider paiement"><i class="bi bi-check-lg"></i></button>
+                <button class="tbl-btn" title="Envoyer relance"><i class="bi bi-send"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 3 sur 89 résultats</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">9</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /paiements -->
+
+
+    <!-- ════════════════════════════ RENDEZ-VOUS ════════════════════════════ -->
+    <div class="portal-panel" id="panel-rendezVous">
+      <div class="panel-header">
+        <h1 class="panel-title">Rendez-vous</h1>
+        <p class="panel-subtitle">Gestion de l'agenda et des créneaux disponibles.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button class="page-btn"><i class="bi bi-chevron-left"></i></button>
+          <strong style="font-size:14px">Semaine du 28 avril — 2 mai 2026</strong>
+          <button class="page-btn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-add" onclick="openModal('modal-rdv-add')"><i class="bi bi-calendar-plus"></i>Nouveau RDV</button>
+        </div>
+      </div>
+
+      <div class="agenda-week">
+        <div class="agenda-cell header"></div>
+        <div class="agenda-cell header">Lun 28</div>
+        <div class="agenda-cell header">Mar 29</div>
+        <div class="agenda-cell header">Mer 30</div>
+        <div class="agenda-cell header">Jeu 01</div>
+        <div class="agenda-cell header">Ven 02</div>
+        <!-- 08h00 -->
+        <div class="agenda-cell time">08h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Remise acte (DCL-0079)</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <!-- 09h00 -->
+        <div class="agenda-cell time">09h00</div>
+        <div class="agenda-cell"><div class="rdv-block green">Permis (PB-0010)</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-93</div></div>
+        <div class="agenda-cell"></div>
+        <!-- 10h00 -->
+        <div class="agenda-cell time">10h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0003</div></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-87</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <!-- 11h00 -->
+        <div class="agenda-cell time">11h00</div>
+        <div class="agenda-cell"><div class="rdv-block">Permis PB-0012</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0008</div></div>
+        <div class="agenda-cell"></div>
+        <!-- 14h00 -->
+        <div class="agenda-cell time">14h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block green">Remise permis</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block">Naissance DCL-79</div></div>
+        <!-- 15h00 -->
+        <div class="agenda-cell time">15h00</div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"><div class="rdv-block gold">Mariage MAR-0005</div></div>
+        <div class="agenda-cell"></div>
+        <div class="agenda-cell"></div>
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="table-toolbar"><span style="font-size:14px;font-weight:700;color:var(--primary)">Liste des RDV à venir</span></div>
+        <div class="data-table-wrap">
+          <table class="data-table" id="tbl-rdv">
+            <thead><tr><th>Date &amp; Heure</th><th>Type</th><th>Dossier</th><th>Citoyen</th><th>Agent</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Jeu 01/05, 09h00</strong></td>
+                <td><span style="font-size:12px"><i class="bi bi-hospital me-1"></i>Naissance</span></td>
+                <td><span class="ref">DCL-2026-0093</span></td>
+                <td>Jean Fotso</td>
+                <td>Amina Kouna</td>
+                <td><span class="pill confirme">Confirmé</span></td>
+                <td><div class="tbl-actions">
+                  <button class="tbl-btn success" onclick="openModal('modal-rdv-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                  <button class="tbl-btn danger" onclick="openConfirmDelete('RDV du 01/05/2026')" title="Annuler"><i class="bi bi-x-lg"></i></button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><strong>Mer 30/04, 10h30</strong></td>
+                <td><span style="font-size:12px"><i class="bi bi-hospital me-1"></i>Naissance</span></td>
+                <td><span class="ref">DCL-2026-0087</span></td>
+                <td>Paul Biya</td>
+                <td>Amina Kouna</td>
+                <td><span class="pill confirme">Confirmé</span></td>
+                <td><div class="tbl-actions">
+                  <button class="tbl-btn success" onclick="openModal('modal-rdv-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                  <button class="tbl-btn danger" onclick="openConfirmDelete('RDV du 30/04/2026')" title="Annuler"><i class="bi bi-x-lg"></i></button>
+                </div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /rendez-vous -->
+
+
+    <!-- ════════════════════════════ UTILISATEURS ════════════════════════════ -->
+    <div class="portal-panel" id="panel-utilisateurs">
+      <div class="panel-header">
+        <h1 class="panel-title">Utilisateurs</h1>
+        <p class="panel-subtitle">Gestion des comptes : citoyens, agents, hôpitaux.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Nom, email, rôle…" oninput="filterTable('tbl-users', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <select class="filter-select">
+            <option value="">Tous les rôles</option>
+            <option>Administrateur</option>
+            <option>Agent Mairie</option>
+            <option>Hôpital</option>
+            <option>Citoyen</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Tous statuts</option>
+            <option>Actif</option>
+            <option>Inactif</option>
+            <option>En attente</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-user-add')"><i class="bi bi-person-plus"></i>Nouveau compte</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-users">
+          <thead><tr><th>Nom complet</th><th>Email</th><th>Rôle</th><th>Créé le</th><th>Dernière connexion</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">AK</div><strong>Amina Kouna</strong></div></td>
+              <td><small>a.kouna@mairie-douala.cm</small></td>
+              <td><span class="pill confirme">Agent Mairie</span></td>
+              <td><small>01/01/2025</small></td>
+              <td><small>Aujourd'hui, 08h00</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" onclick="openModal('modal-user-perms')" title="Permissions"><i class="bi bi-shield-lock"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#198754;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">HG</div><strong>Hôpital Général Douala</strong></div></td>
+              <td><small>declarations@hopital-gd.cm</small></td>
+              <td><span class="pill valide">Hôpital</span></td>
+              <td><small>15/06/2024</small></td>
+              <td><small>Aujourd'hui, 08h10</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Hôpital Général')" title="Désactiver"><i class="bi bi-slash-circle"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:var(--text-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">JM</div><strong>Jean Mbida</strong></div></td>
+              <td><small>j.mbida@gmail.com</small></td>
+              <td><span class="pill recu">Citoyen</span></td>
+              <td><small>03/01/2026</small></td>
+              <td><small>25/04/2026</small></td>
+              <td><span class="pill actif">Actif</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Jean Mbida')" title="Désactiver"><i class="bi bi-slash-circle"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;background:#e07b00;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0">LT</div><strong>Léon Tanga</strong></div></td>
+              <td><small>l.tanga@gmail.com</small></td>
+              <td><span class="pill recu">Citoyen</span></td>
+              <td><small>20/04/2026</small></td>
+              <td><small>—</small></td>
+              <td><span class="pill attente">En attente</span></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn success" onclick="openModal('modal-user-approve')" title="Approuver"><i class="bi bi-check-lg"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Compte Léon Tanga')" title="Rejeter"><i class="bi bi-x-lg"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>Affichage de 4 sur 318 comptes</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">32</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /utilisateurs -->
+
+
+    <!-- ════════════════════════════ NOTIFICATIONS ════════════════════════════ -->
+    <div class="portal-panel" id="panel-notifications">
+      <div class="panel-header">
+        <h1 class="panel-title">Notifications</h1>
+        <p class="panel-subtitle">Envoi et suivi des communications vers les citoyens et partenaires.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <strong style="font-size:14px;color:var(--primary)">Notifications reçues <span class="sidebar-badge" style="font-size:11px;min-width:20px;height:20px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px">4</span></strong>
+        <button class="btn-add" onclick="openModal('modal-notif-send')"><i class="bi bi-send"></i>Envoyer une notification</button>
+      </div>
+
+      <div class="data-table-wrap" style="margin-bottom:24px">
+        <div class="activity-item" style="background:rgba(0,49,137,0.03)">
+          <div class="activity-dot blue"><i class="bi bi-file-earmark-plus"></i></div>
+          <div class="activity-text"><strong>Nouveau dossier soumis</strong> — Permis PB-2026-0014<br><small>Léon Tanga — demande de permis commercial, Bépanda</small></div>
+          <div class="activity-time">Aujourd'hui, 07h42</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot orange"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="activity-text"><strong>Délai dépassé</strong> — Dossier MAR-2026-0001<br><small>Aucune action depuis 21 jours</small></div>
+          <div class="activity-time">Hier, 18h00</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot green"><i class="bi bi-credit-card"></i></div>
+          <div class="activity-text"><strong>Paiement confirmé</strong> — DCL-2026-0087 (5 000 XAF via MTN)</div>
+          <div class="activity-time">Hier, 15h30</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot blue"><i class="bi bi-calendar-check"></i></div>
+          <div class="activity-text"><strong>RDV confirmé</strong> — Jean Fotso, 01/05/2026 09h00</div>
+          <div class="activity-time">26/04/2026, 11h00</div>
+        </div>
+      </div>
+
+      <div class="table-toolbar"><strong style="font-size:14px;color:var(--primary)">Historique des envois</strong></div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Destinataire</th><th>Type</th><th>Canal</th><th>Message</th><th>Statut</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><small>30/04, 08h20</small></td>
+              <td>Jean Fotso</td>
+              <td><span style="font-size:12px">Confirmation RDV</span></td>
+              <td><i class="bi bi-envelope me-1"></i><i class="bi bi-phone"></i></td>
+              <td><small>RDV confirmé pour le 01/05 à 09h00</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+            <tr>
+              <td><small>29/04, 14h00</small></td>
+              <td>Marc Essoh</td>
+              <td><span style="font-size:12px">Pièce requise</span></td>
+              <td><i class="bi bi-envelope me-1"></i></td>
+              <td><small>Veuillez fournir la CNI de Mme Abena</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+            <tr>
+              <td><small>28/04, 10h15</small></td>
+              <td>SCI Bonanjo</td>
+              <td><span style="font-size:12px">Décision favorable</span></td>
+              <td><i class="bi bi-envelope me-1"></i><i class="bi bi-phone"></i></td>
+              <td><small>Votre permis PB-2026-0010 est accordé</small></td>
+              <td><span class="pill valide">Envoyé</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /notifications -->
+
+
+    <!-- ════════════════════════════ GED DOCUMENTS ════════════════════════════ -->
+    <div class="portal-panel" id="panel-ged">
+      <div class="panel-header">
+        <h1 class="panel-title">GED — Documents</h1>
+        <p class="panel-subtitle">Classement, indexation et archivage des documents officiels.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <div class="search-input-wrap" style="max-width:400px">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Recherche full-text : nom, numéro d'acte, date…" oninput="filterTable('tbl-ged', this.value)" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select">
+            <option value="">Tous les types</option>
+            <option>Acte de naissance</option>
+            <option>Acte de mariage</option>
+            <option>Permis de construire</option>
+            <option>Reçu de paiement</option>
+          </select>
+          <button class="btn-add" onclick="openModal('modal-ged-upload')"><i class="bi bi-cloud-upload"></i>Numériser / Importer</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table" id="tbl-ged">
+          <thead><tr><th>Document</th><th>Type</th><th>Dossier lié</th><th>Taille</th><th>Version</th><th>Archivé le</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-pdf" style="color:#e8002d;font-size:18px"></i><div><strong>Acte_naissance_Fotso_Marie.pdf</strong><small>Signé — certifié</small></div></div></td>
+              <td><span style="font-size:12px">Acte de naissance</span></td>
+              <td><span class="ref">DCL-2026-0093</span></td>
+              <td><small>124 Ko</small></td>
+              <td><small>v1.0</small></td>
+              <td><small>—</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-ged-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Document Acte naissance Fotso')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-pdf" style="color:#e8002d;font-size:18px"></i><div><strong>Permis_construire_PB2026-0010.pdf</strong><small>Signé — certifié</small></div></div></td>
+              <td><span style="font-size:12px">Permis de construire</span></td>
+              <td><span class="ref">PB-2026-0010</span></td>
+              <td><small>280 Ko</small></td>
+              <td><small>v2.1</small></td>
+              <td><small>28/04/2026</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn success" onclick="openModal('modal-ged-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
+                <button class="tbl-btn" title="Historique versions"><i class="bi bi-clock-history"></i></button>
+              </div></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><i class="bi bi-file-earmark-image" style="color:var(--primary);font-size:18px"></i><div><strong>Plan_facade_PB2026-0012.jpg</strong><small>Pièce jointe dossier</small></div></div></td>
+              <td><span style="font-size:12px">Plan architectural</span></td>
+              <td><span class="ref">PB-2026-0012</span></td>
+              <td><small>1.8 Mo</small></td>
+              <td><small>v1.0</small></td>
+              <td><small>15/03/2026</small></td>
+              <td><div class="tbl-actions">
+                <button class="tbl-btn" title="Prévisualiser"><i class="bi bi-eye"></i></button>
+                <button class="tbl-btn" title="Télécharger"><i class="bi bi-download"></i></button>
+                <button class="tbl-btn danger" onclick="openConfirmDelete('Plan façade PB-2026-0012')"><i class="bi bi-trash"></i></button>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-footer">
+          <span>3 sur 1 247 documents archivés</span>
+          <div class="pagination-btns">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">125</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /ged -->
+
+
+    <!-- ════════════════════════════ REPORTING ════════════════════════════ -->
+    <div class="portal-panel" id="panel-reporting">
+      <div class="panel-header">
+        <h1 class="panel-title">Reporting &amp; Statistiques</h1>
+        <p class="panel-subtitle">Indicateurs de performance et transparence administrative.</p>
+      </div>
+
+      <div class="table-toolbar">
+        <select class="filter-select">
+          <option>Avril 2026</option>
+          <option>Mars 2026</option>
+          <option>Février 2026</option>
+          <option>Trimestre 1 — 2026</option>
+        </select>
+        <div style="display:flex;gap:8px">
+          <button class="btn-add" style="background:white;color:var(--primary);border:1.5px solid var(--primary)"><i class="bi bi-file-earmark-pdf me-1"></i>Export PDF</button>
+          <button class="btn-add" style="background:white;color:#198754;border:1.5px solid #198754"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Export Excel</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Actes délivrés</div><div class="kpi-value">147</div><div class="kpi-sub">+18% vs avril 2025</div><i class="bi bi-file-earmark-check kpi-icon"></i></div>
+        <div class="kpi-card gold"><div class="kpi-label">Délai moyen</div><div class="kpi-value">4,2 j</div><div class="kpi-sub">Naissance · objectif 5j ✓</div><i class="bi bi-stopwatch kpi-icon"></i></div>
+        <div class="kpi-card green"><div class="kpi-label">Recettes</div><div class="kpi-value">1,24M</div><div class="kpi-sub">XAF encaissés</div><i class="bi bi-cash-coin kpi-icon"></i></div>
+        <div class="kpi-card accent"><div class="kpi-label">Dossiers incomplets</div><div class="kpi-value">8</div><div class="kpi-sub">À la 1ʳᵉ soumission</div><i class="bi bi-exclamation-triangle kpi-icon"></i></div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="stat-section">
+            <div class="stat-section-title"><i class="bi bi-bar-chart"></i> Dossiers par type</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de naissance</span><strong>62 (42%)</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:42%;height:100%;background:var(--primary);border-radius:5px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Permis de bâtir</span><strong>51 (35%)</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:35%;height:100%;background:var(--gold);border-radius:5px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Actes de mariage</span><strong>34 (23%)</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:23%;height:100%;background:#198754;border-radius:5px"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stat-section">
+            <div class="stat-section-title"><i class="bi bi-phone"></i> Paiements par canal</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>MTN Mobile Money</span><strong>58% — 720 000 XAF</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:58%;height:100%;background:#f6ae00;border-radius:5px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Orange Money</span><strong>25% — 310 000 XAF</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:25%;height:100%;background:#ff6b00;border-radius:5px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>Virement / Carte</span><strong>17% — 210 000 XAF</strong></div>
+                <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:17%;height:100%;background:var(--primary);border-radius:5px"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /reporting -->
+
+  </main>
+</div><!-- /portal-layout -->
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — NAISSANCE
+══════════════════════════════════════════════ -->
+
+<!-- ADD Naissance -->
+<div class="modal fade" id="modal-naissance-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Nouvelle déclaration de naissance</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Informations de l'enfant</div>
+        <div class="row g-3">
+          <div class="col-md-4"><label class="fld-label">Prénom(s) <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Marie" /></div>
+          <div class="col-md-4"><label class="fld-label">Nom <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Fotso" /></div>
+          <div class="col-md-4"><label class="fld-label">Sexe <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Féminin</option><option>Masculin</option></select></div>
+          <div class="col-md-4"><label class="fld-label">Date de naissance <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-4"><label class="fld-label">Heure de naissance</label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-md-4"><label class="fld-label">Lieu de naissance <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Hôpital Général" /></div>
+        </div>
+
+        <div class="modal-section-title">Informations des parents</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet du père <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Nom complet de la mère <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse domicile <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Contact téléphonique <span style="color:var(--accent)">*</span></label><input type="tel" class="fld-ctrl" placeholder="+237 6XX XXX XXX" /></div>
+        </div>
+
+        <div class="modal-section-title">Déclarant</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Établissement <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Hôpital Général de Douala</option><option>Clinique La Grâce</option><option>Polyclinique Bassa</option><option>Déclaration directe</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date déclaration <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Déclaration enregistrée','success');closeModal('modal-naissance-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Naissance -->
+<div class="modal fade" id="modal-naissance-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2"></i>Dossier DCL-2026-0093</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Enfant</div>
+        <dl class="detail-row"><dt>Nom complet</dt><dd><strong>Marie Fotso</strong></dd></dl>
+        <dl class="detail-row"><dt>Date de naissance</dt><dd>01/04/2026 à 07h42</dd></dl>
+        <dl class="detail-row"><dt>Lieu</dt><dd>Hôpital Général de Douala</dd></dl>
+        <dl class="detail-row"><dt>Sexe</dt><dd>Féminin</dd></dl>
+        <div class="modal-section-title">Parents</div>
+        <dl class="detail-row"><dt>Père</dt><dd>Jean Fotso</dd></dl>
+        <dl class="detail-row"><dt>Mère</dt><dd>Cécile Ngom</dd></dl>
+        <dl class="detail-row"><dt>Adresse</dt><dd>Akwa, Douala</dd></dl>
+        <dl class="detail-row"><dt>Contact</dt><dd>+237 677 123 456</dd></dl>
+        <div class="modal-section-title">Suivi du dossier</div>
+        <ul class="mini-timeline">
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Déclaration reçue</strong><span>Aujourd'hui, 08h15 — Hôpital Général</span></div></li>
+          <li><div class="tl-dot current">2</div><div class="tl-info"><strong>En traitement (mairie)</strong><span>En attente de traitement</span></div></li>
+          <li><div class="tl-dot pending">3</div><div class="tl-info"><strong>Acte pré-rempli</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">4</div><div class="tl-info"><strong>Rendez-vous remise</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">5</div><div class="tl-info"><strong>Clôturé</strong><span>—</span></div></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save" onclick="openModal('modal-naissance-edit');closeModal('modal-naissance-view')"><i class="bi bi-pencil me-1"></i>Traiter le dossier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT / TRAITER Naissance -->
+<div class="modal fade" id="modal-naissance-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Traiter — DCL-2026-0093</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Vérification des données</div>
+        <div class="row g-3">
+          <div class="col-md-4"><label class="fld-label">Prénom(s) <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" value="Marie" /></div>
+          <div class="col-md-4"><label class="fld-label">Nom</label><input type="text" class="fld-ctrl" value="Fotso" /></div>
+          <div class="col-md-4"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" value="2026-04-01" /></div>
+          <div class="col-md-6"><label class="fld-label">Père</label><input type="text" class="fld-ctrl" value="Jean Fotso" /></div>
+          <div class="col-md-6"><label class="fld-label">Mère</label><input type="text" class="fld-ctrl" value="Cécile Ngom" /></div>
+        </div>
+        <div class="modal-section-title">Statut du dossier</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Statut <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option>Reçu</option><option selected>En traitement</option><option>Validé</option><option>Clôturé</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Agent responsable</label><input type="text" class="fld-ctrl" value="Amina Kouna" /></div>
+          <div class="col-12"><label class="fld-label">Notes internes</label><textarea class="fld-ctrl" rows="3" placeholder="Observations, remarques…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mis à jour','success');closeModal('modal-naissance-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RDV Naissance -->
+<div class="modal fade" id="modal-naissance-rdv" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Planifier un rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Agent assigné</label><select class="fld-ctrl"><option>Amina Kouna</option><option>Robert Essoh</option><option>Fatou Dia</option></select></div>
+          <div class="col-12"><label class="fld-label">Message au citoyen</label><textarea class="fld-ctrl" rows="3" placeholder="Instructions particulières pour le rendez-vous…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV planifié et notifié','success');closeModal('modal-naissance-rdv')"><i class="bi bi-calendar-check me-1"></i>Confirmer le RDV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Naissance -->
+<div class="modal fade" id="modal-naissance-pdf" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-pdf me-2"></i>Générer l'acte officiel</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;font-size:13.5px">
+          <i class="bi bi-check-circle me-2" style="color:#198754"></i>Dossier <strong>DCL-2026-0087</strong> validé — prêt pour génération.
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Modèle d'acte</label><select class="fld-ctrl"><option>Modèle standard — Acte de naissance 2026</option><option>Modèle extrait — Copie intégrale</option></select></div>
+          <div class="col-12"><label class="fld-label">Officier d'état civil signataire</label><select class="fld-ctrl"><option>M. Jean-Pierre Douala — Officier en chef</option><option>Mme Amina Kouna — Officier adjoint</option></select></div>
+          <div class="col-12" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="chk-send-parent" checked /><label for="chk-send-parent" style="font-size:13.5px;cursor:pointer">Envoyer automatiquement par email au parent</label></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Acte généré et envoyé','success');closeModal('modal-naissance-pdf')"><i class="bi bi-file-earmark-arrow-down me-1"></i>Générer le PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — MARIAGE
+══════════════════════════════════════════════ -->
+
+<!-- ADD Mariage -->
+<div class="modal fade" id="modal-mariage-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-suit-heart me-2"></i>Nouveau dossier de mariage</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Époux 1</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">N° CNI</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Époux 2</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">Date de naissance</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-3"><label class="fld-label">N° CNI</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Dossier</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date souhaitée de cérémonie</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Régime matrimonial</label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Communauté réduite aux acquêts</option><option>Séparation de biens</option><option>Communauté universelle</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mariage créé','success');closeModal('modal-mariage-add')"><i class="bi bi-check-lg me-1"></i>Créer le dossier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Mariage -->
+<div class="modal fade" id="modal-mariage-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-suit-heart me-2"></i>Dossier MAR-2026-0008</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Époux 1</div>
+        <dl class="detail-row"><dt>Nom</dt><dd>Pierre Kamga</dd></dl>
+        <dl class="detail-row"><dt>Date naissance</dt><dd>12/03/1990</dd></dl>
+        <div class="modal-section-title">Époux 2</div>
+        <dl class="detail-row"><dt>Nom</dt><dd>Nadège Simo</dd></dl>
+        <dl class="detail-row"><dt>Date naissance</dt><dd>05/07/1993</dd></dl>
+        <div class="modal-section-title">Dossier</div>
+        <dl class="detail-row"><dt>Référence</dt><dd><strong>MAR-2026-0008</strong></dd></dl>
+        <dl class="detail-row"><dt>Soumis le</dt><dd>25/04/2026</dd></dl>
+        <dl class="detail-row"><dt>Statut</dt><dd><span class="pill recu">Reçu</span></dd></dl>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save green" onclick="openModal('modal-mariage-edit');closeModal('modal-mariage-view')"><i class="bi bi-pencil me-1"></i>Instruire</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Mariage -->
+<div class="modal fade" id="modal-mariage-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#198754">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier — MAR-2026-0008</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Époux 1</label><input type="text" class="fld-ctrl" value="Pierre Kamga" /></div>
+          <div class="col-md-6"><label class="fld-label">Époux 2</label><input type="text" class="fld-ctrl" value="Nadège Simo" /></div>
+          <div class="col-md-6"><label class="fld-label">Statut</label><select class="fld-ctrl"><option>Reçu</option><option selected>En instruction</option><option>Cérémonie planifiée</option><option>Acte établi</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Pièces à compléter</label><input type="text" class="fld-ctrl" placeholder="Ex: CNI manquante" /></div>
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Dossier mariage mis à jour','success');closeModal('modal-mariage-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CÉRÉMONIE Mariage -->
+<div class="modal fade" id="modal-mariage-ceremonie" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-heart me-2"></i>Planifier la cérémonie</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date cérémonie <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Officier d'état civil</label><select class="fld-ctrl"><option>M. Jean-Pierre Douala</option><option>Mme Amina Kouna</option></select></div>
+          <div class="col-12"><label class="fld-label">Message aux futurs époux</label><textarea class="fld-ctrl" rows="3" placeholder="Instructions particulières…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('Cérémonie planifiée et époux notifiés','success');closeModal('modal-mariage-ceremonie')"><i class="bi bi-check-lg me-1"></i>Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENTION MARGINALE -->
+<div class="modal fade" id="modal-mariage-mention" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-file-earmark-plus me-2"></i>Mention marginale</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Type de mention <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Divorce</option><option>Décès époux</option><option>Décès épouse</option><option>Autre</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date de l'événement</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Référence jugement / acte</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Description</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Mention marginale ajoutée','success');closeModal('modal-mariage-mention')"><i class="bi bi-check-lg me-1"></i>Ajouter la mention</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — PERMIS
+══════════════════════════════════════════════ -->
+
+<!-- ADD Permis -->
+<div class="modal fade" id="modal-permis-add" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nouveau dossier permis de bâtir</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Demandeur</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom / Raison sociale <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Type de demandeur</label><select class="fld-ctrl"><option>Particulier</option><option>Architecte</option><option>Société</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Email</label><input type="email" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Projet</div>
+        <div class="row g-3">
+          <div class="col-md-12"><label class="fld-label">Description du projet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Ex: Villa R+1, entrepôt commercial…" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse du terrain <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Références cadastrales</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Architecte responsable</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">N° Ordre des architectes</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+        <div class="modal-section-title">Documents joints</div>
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Plan de masse</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">Plan de façade</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">Titre foncier</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+          <div class="col-md-6"><label class="fld-label">CNI du demandeur</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save accent" onclick="showToast('Dossier permis enregistré','success');closeModal('modal-permis-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW Permis -->
+<div class="modal fade" id="modal-permis-view" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Dossier PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section-title">Demandeur</div>
+        <dl class="detail-row"><dt>Nom</dt><dd><strong>Jean Mbida</strong></dd></dl>
+        <dl class="detail-row"><dt>Email</dt><dd>j.mbida@gmail.com</dd></dl>
+        <dl class="detail-row"><dt>Architecte</dt><dd>Arch. Tanga — N° 0452</dd></dl>
+        <div class="modal-section-title">Projet</div>
+        <dl class="detail-row"><dt>Description</dt><dd>Villa R+1 — 180m²</dd></dl>
+        <dl class="detail-row"><dt>Adresse</dt><dd>Akwa Nord, lot 14</dd></dl>
+        <dl class="detail-row"><dt>Références cadastrales</dt><dd>CAD-DLA-AKW-014-B</dd></dl>
+        <div class="modal-section-title">Suivi</div>
+        <ul class="mini-timeline">
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Soumis</strong><span>15/03/2026</span></div></li>
+          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Dossier complet</strong><span>17/03/2026</span></div></li>
+          <li><div class="tl-dot current">3</div><div class="tl-info"><strong>En instruction</strong><span>En cours par Amina Kouna</span></div></li>
+          <li><div class="tl-dot pending">4</div><div class="tl-info"><strong>Décision</strong><span>—</span></div></li>
+          <li><div class="tl-dot pending">5</div><div class="tl-info"><strong>Remise du permis</strong><span>—</span></div></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save accent" onclick="openModal('modal-permis-decision');closeModal('modal-permis-view')"><i class="bi bi-check2-square me-1"></i>Rendre une décision</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Permis -->
+<div class="modal fade" id="modal-permis-edit" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier — PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Demandeur</label><input type="text" class="fld-ctrl" value="Jean Mbida" /></div>
+          <div class="col-md-6"><label class="fld-label">Description projet</label><input type="text" class="fld-ctrl" value="Villa R+1" /></div>
+          <div class="col-md-6"><label class="fld-label">Adresse</label><input type="text" class="fld-ctrl" value="Akwa Nord" /></div>
+          <div class="col-md-6"><label class="fld-label">Statut</label><select class="fld-ctrl"><option>Soumis</option><option>Complet</option><option selected>En instruction</option><option>Accordé</option><option>Refusé</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Frais d'instruction (XAF)</label><input type="number" class="fld-ctrl" value="75000" /></div>
+          <div class="col-md-6"><label class="fld-label">Agent urbanisme</label><select class="fld-ctrl"><option selected>Amina Kouna</option><option>Robert Essoh</option></select></div>
+          <div class="col-12"><label class="fld-label">Pièces manquantes / remarques</label><textarea class="fld-ctrl" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save accent" onclick="showToast('Dossier permis mis à jour','success');closeModal('modal-permis-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DÉCISION Permis -->
+<div class="modal fade" id="modal-permis-decision" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-gavel me-2"></i>Décision — PB-2026-0012</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Décision <span style="color:var(--accent)">*</span></label>
+            <div style="display:flex;gap:10px;margin-top:8px">
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="accorde" style="accent-color:var(--primary)" /> <i class="bi bi-check-circle" style="color:#198754"></i> Accordé</label>
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="refuse" style="accent-color:var(--accent)" /> <i class="bi bi-x-circle" style="color:var(--accent)"></i> Refusé</label>
+              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="attente" style="accent-color:var(--gold)" /> <i class="bi bi-clock" style="color:var(--gold)"></i> En attente</label>
+            </div>
+          </div>
+          <div class="col-12"><label class="fld-label">Justification / Motifs</label><textarea class="fld-ctrl" rows="4" placeholder="Motivations de la décision (obligatoire en cas de refus)…"></textarea></div>
+          <div class="col-md-6"><label class="fld-label">Date de prise de décision</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Délai de validité (jours)</label><input type="number" class="fld-ctrl" value="365" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Décision enregistrée — citoyen notifié','success');closeModal('modal-permis-decision')"><i class="bi bi-check-lg me-1"></i>Valider la décision</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — PAIEMENTS
+══════════════════════════════════════════════ -->
+
+<div class="modal fade" id="modal-paiement-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-credit-card me-2"></i>Saisir un paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Dossier lié <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="DCL-2026-XXXX" /></div>
+          <div class="col-md-6"><label class="fld-label">Citoyen</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Montant (XAF) <span style="color:var(--accent)">*</span></label><input type="number" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Moyen de paiement</label><select class="fld-ctrl"><option>MTN Mobile Money</option><option>Orange Money</option><option>Carte bancaire</option><option>Virement</option><option>Espèces</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Date paiement</label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Référence transaction</label><input type="text" class="fld-ctrl" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Paiement enregistré','success');closeModal('modal-paiement-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-paiement-view" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-receipt me-2"></i>Détail du paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <dl class="detail-row"><dt>Dossier</dt><dd><strong>DCL-2026-0087</strong></dd></dl>
+        <dl class="detail-row"><dt>Citoyen</dt><dd>Paul Biya</dd></dl>
+        <dl class="detail-row"><dt>Montant</dt><dd><strong>5 000 XAF</strong></dd></dl>
+        <dl class="detail-row"><dt>Moyen</dt><dd>MTN Mobile Money</dd></dl>
+        <dl class="detail-row"><dt>Date</dt><dd>30/04/2026 à 08h50</dd></dl>
+        <dl class="detail-row"><dt>Référence</dt><dd>MTN-2026-04-78923</dd></dl>
+        <dl class="detail-row"><dt>Statut</dt><dd><span class="pill paye">Payé</span></dd></dl>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
+        <button class="btn-modal-save green" onclick="showToast('Reçu téléchargé','success');closeModal('modal-paiement-view')"><i class="bi bi-download me-1"></i>Télécharger le reçu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-paiement-valider" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>Valider le paiement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px">
+          Valider le paiement de <strong>75 000 XAF</strong> pour le dossier <strong>PB-2026-0012</strong> (Jean Mbida) ?
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Référence de transaction <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Ex: VIR-2026-04-XXXX" /></div>
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Paiement validé — reçu envoyé','success');closeModal('modal-paiement-valider')"><i class="bi bi-check-lg me-1"></i>Confirmer la validation</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — RENDEZ-VOUS
+══════════════════════════════════════════════ -->
+
+<div class="modal fade" id="modal-rdv-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-calendar-plus me-2"></i>Nouveau rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure <span style="color:var(--accent)">*</span></label><input type="time" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Type de RDV</label><select class="fld-ctrl"><option>Remise acte de naissance</option><option>Remise permis de bâtir</option><option>Cérémonie de mariage</option><option>Autre</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Dossier lié</label><input type="text" class="fld-ctrl" placeholder="Référence dossier" /></div>
+          <div class="col-md-6"><label class="fld-label">Citoyen</label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-12"><label class="fld-label">Agent assigné</label><select class="fld-ctrl"><option>Amina Kouna</option><option>Robert Essoh</option><option>Fatou Dia</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV planifié et citoyen notifié','success');closeModal('modal-rdv-add')"><i class="bi bi-calendar-check me-1"></i>Planifier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-rdv-edit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background:var(--gold)">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier le rendez-vous</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Date <span style="color:var(--accent)">*</span></label><input type="date" class="fld-ctrl" value="2026-05-01" /></div>
+          <div class="col-md-6"><label class="fld-label">Heure</label><input type="time" class="fld-ctrl" value="09:00" /></div>
+          <div class="col-12"><label class="fld-label">Statut</label><select class="fld-ctrl"><option selected>Confirmé</option><option>Reporté</option><option>Annulé</option></select></div>
+          <div class="col-12"><label class="fld-label">Notes</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" style="background:var(--gold)" onclick="showToast('RDV mis à jour','success');closeModal('modal-rdv-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — UTILISATEURS
+══════════════════════════════════════════════ -->
+
+<div class="modal fade" id="modal-user-add" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Créer un compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Email <span style="color:var(--accent)">*</span></label><input type="email" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" /></div>
+          <div class="col-md-6"><label class="fld-label">Rôle <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Administrateur</option><option>Agent Mairie</option><option>Hôpital</option><option>Citoyen</option></select></div>
+          <div class="col-12"><label class="fld-label">Statut initial</label><select class="fld-ctrl"><option>Actif</option><option>En attente de validation</option></select></div>
+          <div class="col-12" style="background:rgba(0,49,137,0.04);border-radius:var(--radius);padding:12px;font-size:13px;color:var(--text-muted)"><i class="bi bi-info-circle me-1"></i>Un email de bienvenue avec les instructions de connexion sera envoyé automatiquement.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Compte créé — email envoyé','success');closeModal('modal-user-add')"><i class="bi bi-check-lg me-1"></i>Créer le compte</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-edit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-gear me-2"></i>Modifier le compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="fld-label">Nom complet</label><input type="text" class="fld-ctrl" value="Amina Kouna" /></div>
+          <div class="col-md-6"><label class="fld-label">Email</label><input type="email" class="fld-ctrl" value="a.kouna@mairie-douala.cm" /></div>
+          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" value="+237 699 001 002" /></div>
+          <div class="col-md-6"><label class="fld-label">Rôle</label><select class="fld-ctrl"><option>Administrateur</option><option selected>Agent Mairie</option><option>Hôpital</option><option>Citoyen</option></select></div>
+          <div class="col-12"><label class="fld-label">Statut</label><select class="fld-ctrl"><option selected>Actif</option><option>Inactif</option><option>Suspendu</option></select></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Compte mis à jour','success');closeModal('modal-user-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-perms" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Permissions — Amina Kouna</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Actes de naissance</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Actes de mariage</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Permis de bâtir</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Gestion paiements</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Gestion utilisateurs</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Accès GED</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Reporting &amp; statistiques</span><input type="checkbox" checked style="accent-color:var(--primary);width:16px;height:16px" /></label>
+          <label style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px"><span>Administration système</span><input type="checkbox" style="accent-color:var(--primary);width:16px;height:16px" /></label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Permissions mises à jour','success');closeModal('modal-user-perms')"><i class="bi bi-shield-check me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-user-approve" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header green">
+        <h5 class="modal-title"><i class="bi bi-person-check me-2"></i>Approuver le compte</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div style="background:rgba(25,135,84,0.06);border:1px solid rgba(25,135,84,0.2);border-radius:var(--radius);padding:14px 16px;margin-bottom:18px;font-size:13.5px">
+          Approuver le compte citoyen de <strong>Léon Tanga</strong> (l.tanga@gmail.com) lui permettra de soumettre des demandes.
+        </div>
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="2" placeholder="Vérifications effectuées…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save green" onclick="showToast('Compte approuvé — citoyen notifié','success');closeModal('modal-user-approve')"><i class="bi bi-person-check me-1"></i>Approuver</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS — NOTIFICATIONS / GED
+══════════════════════════════════════════════ -->
+
+<div class="modal fade" id="modal-notif-send" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-send me-2"></i>Envoyer une notification</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Destinataire(s) <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option>Citoyen spécifique</option><option>Tous les citoyens</option><option>Agents mairie</option><option>Hôpitaux partenaires</option></select></div>
+          <div class="col-12"><label class="fld-label">Citoyen (si individuel)</label><input type="text" class="fld-ctrl" placeholder="Nom ou email…" /></div>
+          <div class="col-12"><label class="fld-label">Canal</label><div style="display:flex;gap:12px;margin-top:6px"><label style="display:flex;align-items:center;gap:6px;font-size:13.5px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)" /> Email</label><label style="display:flex;align-items:center;gap:6px;font-size:13.5px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--primary)" /> SMS</label><label style="display:flex;align-items:center;gap:6px;font-size:13.5px;cursor:pointer"><input type="checkbox" style="accent-color:var(--primary)" /> In-app</label></div></div>
+          <div class="col-12"><label class="fld-label">Objet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Objet du message" /></div>
+          <div class="col-12"><label class="fld-label">Message <span style="color:var(--accent)">*</span></label><textarea class="fld-ctrl" rows="4" placeholder="Contenu de la notification…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Notification envoyée','success');closeModal('modal-notif-send')"><i class="bi bi-send me-1"></i>Envoyer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-ged-upload" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-cloud-upload me-2"></i>Numériser / Importer un document</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Fichier <span style="color:var(--accent)">*</span></label><input type="file" class="fld-ctrl" style="padding:6px" accept=".pdf,.jpg,.jpeg,.png,.tif" /></div>
+          <div class="col-md-6"><label class="fld-label">Type de document <span style="color:var(--accent)">*</span></label><select class="fld-ctrl"><option value="">— Sélectionner —</option><option>Acte de naissance</option><option>Acte de mariage</option><option>Permis de construire</option><option>Plan architectural</option><option>Reçu de paiement</option><option>Autre</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Dossier associé</label><input type="text" class="fld-ctrl" placeholder="Référence dossier" /></div>
+          <div class="col-12"><label class="fld-label">Activer l'OCR (indexation automatique)</label><div style="display:flex;align-items:center;gap:8px;margin-top:6px"><input type="checkbox" checked id="chk-ocr" style="accent-color:var(--primary);width:16px;height:16px" /><label for="chk-ocr" style="font-size:13px;cursor:pointer;color:var(--text-muted)">Reconnaissance optique de caractères activée</label></div></div>
+          <div class="col-12"><label class="fld-label">Observations</label><textarea class="fld-ctrl" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Document importé et indexé','success');closeModal('modal-ged-upload')"><i class="bi bi-cloud-check me-1"></i>Importer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-ged-edit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier les métadonnées</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12"><label class="fld-label">Nom du fichier</label><input type="text" class="fld-ctrl" value="Acte_naissance_Fotso_Marie.pdf" /></div>
+          <div class="col-md-6"><label class="fld-label">Type de document</label><select class="fld-ctrl"><option selected>Acte de naissance</option><option>Acte de mariage</option><option>Permis de construire</option></select></div>
+          <div class="col-md-6"><label class="fld-label">Dossier lié</label><input type="text" class="fld-ctrl" value="DCL-2026-0093" /></div>
+          <div class="col-12"><label class="fld-label">Durée de conservation</label><select class="fld-ctrl"><option>75 ans (état civil)</option><option>30 ans (urbanisme)</option><option>10 ans (paiements)</option></select></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save" onclick="showToast('Métadonnées mises à jour','success');closeModal('modal-ged-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CONFIRM DELETE MODAL (shared)
+══════════════════════════════════════════════ -->
+<div class="modal fade" id="modal-confirm-delete" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header accent">
+        <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Confirmer la suppression</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="text-align:center;padding:28px 20px">
+        <i class="bi bi-trash" style="font-size:42px;color:var(--accent);display:block;margin-bottom:14px;opacity:.7"></i>
+        <p style="font-size:14px;color:var(--text-mid)">Supprimer <strong id="delete-target-name">cet élément</strong> ?<br><span style="font-size:12px;color:var(--text-muted)">Cette action est irréversible.</span></p>
+      </div>
+      <div class="modal-footer" style="justify-content:center;gap:12px">
+        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn-modal-save accent" onclick="showToast('Élément supprimé','info');closeModal('modal-confirm-delete')"><i class="bi bi-trash me-1"></i>Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     TOAST NOTIFICATIONS
+══════════════════════════════════════════════ -->
+<div id="toast-container" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px"></div>
+
+<!-- MOBILE TOGGLE -->
+<button class="sidebar-toggle" onclick="document.getElementById('sidebarEl').classList.toggle('open')">
+  <i class="bi bi-list"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ── SIDEBAR NAVIGATION ──
+  const sidebarItems = document.querySelectorAll('.sidebar-item[data-panel]');
+  const panels       = document.querySelectorAll('.portal-panel');
+
+  function showPanel(name) {
+    sidebarItems.forEach(i => {
+      i.classList.toggle('active', i.dataset.panel === name);
+    });
+    panels.forEach(p => {
+      p.classList.toggle('active', p.id === 'panel-' + name);
+    });
+    document.getElementById('sidebarEl').classList.remove('open');
+  }
+
+  sidebarItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      showPanel(this.dataset.panel);
+    });
+  });
+
+  // ── MODAL HELPERS ──
+  const bsModals = {};
+  function getModal(id) {
+    if (!bsModals[id]) {
+      const el = document.getElementById(id);
+      if (el) bsModals[id] = new bootstrap.Modal(el);
+    }
+    return bsModals[id];
+  }
+  function openModal(id)  { const m = getModal(id); if (m) m.show(); }
+  function closeModal(id) { const m = getModal(id); if (m) m.hide(); }
+
+  function openConfirmDelete(name) {
+    document.getElementById('delete-target-name').textContent = name;
+    openModal('modal-confirm-delete');
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type = 'success') {
+    const colors = { success: '#198754', info: '#0d6efd', warning: '#e07b00', error: '#dc3545' };
+    const icons  = { success: 'bi-check-circle', info: 'bi-info-circle', warning: 'bi-exclamation-triangle', error: 'bi-x-circle' };
+    const t = document.createElement('div');
+    t.style.cssText = `background:white;border:1px solid #d8e0f0;border-left:4px solid ${colors[type]};border-radius:8px;padding:12px 16px;box-shadow:0 8px 32px rgba(0,49,137,0.13);display:flex;align-items:center;gap:10px;font-size:13.5px;font-family:'Source Sans 3',sans-serif;min-width:260px;animation:fadeIn .25s ease`;
+    t.innerHTML = `<i class="bi ${icons[type]}" style="color:${colors[type]};font-size:17px"></i><span>${msg}</span>`;
+    const s = document.createElement('style');
+    s.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}';
+    document.head.appendChild(s);
+    document.getElementById('toast-container').appendChild(t);
+    setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+  }
+
+  // ── TABLE FILTER ──
+  function filterTable(tableId, query) {
+    const q   = query.toLowerCase();
+    const tbl = document.getElementById(tableId);
+    if (!tbl) return;
+    tbl.querySelectorAll('tbody tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  function filterByStatus(tableId, status) {
+    const tbl = document.getElementById(tableId);
+    if (!tbl) return;
+    tbl.querySelectorAll('tbody tr').forEach(row => {
+      row.style.display = (!status || row.textContent.includes(status)) ? '' : 'none';
+    });
+  }
+</script>
+</div>

@@ -1,0 +1,197 @@
+  .wizard-nav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      position: sticky;
+      top: 72px;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .wizard-steps {
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+    }
+    .wizard-step {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 24px;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      min-width: 160px;
+      color: var(--text-muted);
+      position: relative;
+    }
+    .wizard-step::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 10px solid var(--border);
+      z-index: 1;
+    }
+    .wizard-step:last-child::after { display: none; }
+    .wizard-step.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(0,49,137,0.03);
+    }
+    .wizard-step.done { color: #198754; border-bottom-color: #198754; }
+    .wizard-step-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      background: var(--border); color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .wizard-step.active .wizard-step-num { background: var(--primary); color: white; }
+    .wizard-step.done .wizard-step-num { background: #198754; color: white; }
+    .wizard-step-text strong { display: block; font-size: 13px; font-weight: 700; }
+    .wizard-step-text small { font-size: 11px; opacity: .7; }
+
+    /* ── FORM PANELS ── */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    /* ── SECTION HEADING ── */
+    .fsec-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--text-muted);
+      display: flex; align-items: center; gap: 12px;
+      margin: 28px 0 18px;
+    }
+    .fsec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ── FILE INPUT ── */
+    .file-zone {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px;
+      cursor: pointer; transition: all .2s; position: relative;
+      background: white;
+    }
+    .file-zone:hover { border-color: var(--primary); background: rgba(0,49,137,0.02); }
+    .file-zone input[type="file"] { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
+    .fz-icon {
+      width: 40px; height: 40px;
+      background: rgba(0,49,137,0.07); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary); font-size: 18px; flex-shrink: 0;
+    }
+    .fz-text strong { display:block; font-size:13px; font-weight:700; color:var(--text-dark); }
+    .fz-text span { font-size:12px; color:var(--text-muted); }
+    .fz-btn {
+      margin-left:auto; background:transparent; border:1.5px solid var(--border);
+      color:var(--text-muted); padding:6px 14px; border-radius:var(--radius);
+      font-size:12px; font-weight:700; font-family:'Source Sans 3',sans-serif;
+      pointer-events:none; flex-shrink:0;
+    }
+    .file-zone.filled { border-color:#198754; border-style:solid; }
+    .file-zone.filled .fz-icon { background:rgba(25,135,84,0.08); color:#198754; }
+
+    /* ── FORM CONTROLS ── */
+    .form-label { font-size:13px; font-weight:700; color:var(--text-mid); margin-bottom:6px; }
+    .form-control, .form-select {
+      border: 1.5px solid var(--border); border-radius:var(--radius);
+      padding:10px 14px; font-size:14px; font-family:'Source Sans 3',sans-serif;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,49,137,0.1); outline:none;
+    }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+
+    /* ── NAV BUTTONS ── */
+    .wizard-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 0; border-top: 1px solid var(--border); margin-top: 32px;
+    }
+    .btn-prev {
+      background: white; color: var(--text-mid); border: 1.5px solid var(--border);
+      padding: 12px 28px; border-radius: var(--radius); font-size:14px; font-weight:700;
+      font-family:'Source Sans 3',sans-serif; cursor:pointer; transition:all .2s;
+      display:flex; align-items:center; gap:8px;
+    }
+    .btn-prev:hover { border-color:var(--text-mid); }
+    .btn-next {
+      background: var(--primary); color: white; border: none;
+      padding: 12px 32px; border-radius:var(--radius); font-size:14px; font-weight:700;
+      font-family:'Source Sans 3',sans-serif; cursor:pointer; transition:all .2s;
+      display:flex; align-items:center; gap:8px;
+    }
+    .btn-next:hover { background:var(--primary-dark); transform:translateY(-1px); }
+    .btn-submit-final {
+      background: #198754; color: white; border: none;
+      padding: 12px 36px; border-radius:var(--radius); font-size:14px; font-weight:700;
+      font-family:'Source Sans 3',sans-serif; cursor:pointer; transition:all .2s;
+      display:flex; align-items:center; gap:8px;
+    }
+    .btn-submit-final:hover { background:#157347; }
+
+    /* ── SIDEBAR CARDS ── */
+    .info-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding:24px;
+      margin-bottom: 20px; box-shadow: var(--shadow-sm);
+    }
+    .info-card-title {
+      font-family:'Playfair Display',serif; font-size:16px;
+      color:var(--primary); margin-bottom:16px; padding-bottom:12px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:8px;
+    }
+    .tarif-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:10px 0; border-bottom:1px solid var(--border);
+      font-size:14px;
+    }
+    .tarif-row:last-child { border:none; }
+    .tarif-row .label { color:var(--text-muted); }
+    .tarif-row .value { font-weight:700; color:var(--text-dark); }
+
+    /* ── TYPE CARDS (selector) ── */
+    .type-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; }
+    .type-card {
+      border:1.5px solid var(--border); border-radius:var(--radius-lg);
+      padding:20px; cursor:pointer; transition:all .2s; text-align:center;
+      background:white;
+    }
+    .type-card:hover { border-color:var(--primary); background:rgba(0,49,137,0.03); }
+    .type-card.selected { border-color:var(--primary); background:rgba(0,49,137,0.06); }
+    .type-card input[type="radio"] { display:none; }
+    .type-card-icon { font-size:28px; color:var(--text-muted); margin-bottom:10px; }
+    .type-card.selected .type-card-icon { color:var(--primary); }
+    .type-card strong { display:block; font-size:14px; font-weight:700; color:var(--text-dark); }
+    .type-card span { font-size:12px; color:var(--text-muted); }
+
+    /* ── RECAP ── */
+    .recap-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); font-size:14px; }
+    .recap-row:last-child { border:none; }
+    .recap-label { color:var(--text-muted); font-weight:600; width:180px; flex-shrink:0; }
+    .recap-value { color:var(--text-dark); font-weight:700; }
+    .recap-section { background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin-bottom:20px; }
+    .recap-section-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--primary); margin-bottom:16px; }
+
+    /* ── PROGRESS BAR HEADER ── */
+    .wizard-progress-bar {
+      height:3px; background:var(--border); position:relative; overflow:hidden;
+    }
+    .wizard-progress-fill {
+      height:100%; background:var(--primary); transition:width .4s ease;
+      border-radius:0 2px 2px 0;
+    }
+
+    @media(max-width:768px) {
+      .type-grid { grid-template-columns:1fr; }
+      .wizard-step-text small { display:none; }
+    }
