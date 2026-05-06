@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BasicAuthData } from '../../../../Core/Model/Auth/BasicAuthData';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../../Core/Service/Auth/auth-service';
 import { Router,ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })
@@ -28,11 +28,21 @@ export class Auth {
     });
   }
 
+  roleRoutes: Record<number, string> = {
+    1: '/admin/home',
+    2: '/admin/mairie-home',
+    3: '/admin/citoyen-home',
+    4: '/admin/hopital-home'
+  };
+
   login(): void {
     this.isLoading = true;
 
     const formData: FormData = new FormData();
     formData.append('auth', JSON.stringify(this.authForm.value));
+
+    console.log('Données du formulaire:', this.authForm.value);
+
 
     this.authService.login(formData).subscribe({
       next: (data: BasicAuthData) => {
@@ -46,7 +56,8 @@ export class Auth {
           // ← Lecture du returnUrl + sécurité Open Redirect
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           console.log('Return URL:', returnUrl);
-          const safeUrl = returnUrl?.startsWith('/') ? returnUrl : '/admin/admin-dashboard';
+          const defaultRoute = this.roleRoutes[data.role] ?? '/landing-page';
+          const safeUrl = returnUrl?.startsWith('/') ? returnUrl : defaultRoute;
           this.router.navigateByUrl(safeUrl);
         }
       },

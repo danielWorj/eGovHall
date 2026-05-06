@@ -10,12 +10,14 @@
     </div>
 
     <!-- Formulaire -->
-    <div class="mb-3">
+    <form action="" [formGroup]="authForm" (ngSubmit)="login()">
+      <div class="mb-3">
       <label style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:6px;display:block">
         Adresse e-mail
       </label>
       <input
         type="email"
+        formControlName="email"
         class="form-control"
         placeholder="exemple@email.com"
         style="border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;width:100%"
@@ -28,6 +30,7 @@
       </label>
       <input
         type="password"
+        formControlName="password"
         class="form-control"
         placeholder="••••••••"
         style="border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;width:100%"
@@ -40,9 +43,10 @@
       </a>
     </div>
 
-    <button class="btn-primary-full">
+    <button type="submit" class="btn-primary-full">
       Se connecter
     </button>
+    </form>
 
     <div class="divider">
       <hr /><span>ou</span><hr />
