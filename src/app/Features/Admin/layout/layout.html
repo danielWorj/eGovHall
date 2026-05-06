@@ -1,0 +1,17 @@
+<div class="portal-citoyen">
+<app-admin-navbar></app-admin-navbar>
+
+<div class="portal-layout">
+
+  <app-admin-sidebar></app-admin-sidebar>
+
+  <!-- MAIN -->
+  <main class="portal-main">
+        <router-outlet></router-outlet>
+  </main>
+</div>
+
+<button class="sidebar-toggle" onclick="document.getElementById('sidebarEl').classList.toggle('open')">
+  <i class="bi bi-list"></i>
+</button>
+</div>

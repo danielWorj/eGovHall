@@ -1,0 +1,63 @@
+<div class="login-page" style="background: var(--light-bg)">
+
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="login-logo-icon">M</div>
+      <h2>Mairie de Douala</h2>
+      <p class="subtitle">Connectez-vous à votre espace</p>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="mb-3">
+      <label style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:6px;display:block">
+        Adresse e-mail
+      </label>
+      <input
+        type="email"
+        class="form-control"
+        placeholder="exemple@email.com"
+        style="border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;width:100%"
+      />
+    </div>
+
+    <div class="mb-1">
+      <label style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:6px;display:block">
+        Mot de passe
+      </label>
+      <input
+        type="password"
+        class="form-control"
+        placeholder="••••••••"
+        style="border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;width:100%"
+      />
+    </div>
+
+    <div style="text-align:right;margin-bottom:24px;margin-top:8px">
+      <a routerLink="/reset-password" style="font-size:13px;color:var(--primary);font-weight:600">
+        Mot de passe oublié ?
+      </a>
+    </div>
+
+    <button class="btn-primary-full">
+      Se connecter
+    </button>
+
+    <div class="divider">
+      <hr /><span>ou</span><hr />
+    </div>
+
+    <button class="btn-primary-full" style="background:var(--white);color:var(--text-dark);border:1.5px solid var(--border);font-weight:600">
+      <i class="bi bi-person-badge me-2" style="color:var(--primary)"></i>
+      Continuer avec la CNI
+    </button>
+
+    <div class="login-extra">
+      Pas encore de compte ?
+      <a routerLink="/register">Créer un compte</a>
+    </div>
+
+  </div>
+
+</div>

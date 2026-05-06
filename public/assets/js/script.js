@@ -269,3 +269,49 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+
+  let currentStep = 1;
+  const totalSteps = 4;
+  const progressWidths = { 1: '25%', 2: '50%', 3: '75%', 4: '100%' };
+
+  function goStep(step) {
+    if (step < 1 || step > totalSteps) return;
+    // Hide current, show target
+    document.getElementById('panel-' + currentStep).classList.remove('active');
+    document.getElementById('panel-' + step).classList.add('active');
+    // Update wizard nav
+    for (let i = 1; i <= totalSteps; i++) {
+      const ws = document.getElementById('wstep-' + i);
+      const wn = document.getElementById('wnum-' + i);
+      ws.classList.remove('active', 'done');
+      if (i < step) { ws.classList.add('done'); wn.innerHTML = '<i class="bi bi-check"></i>'; }
+      else if (i === step) { ws.classList.add('active'); wn.textContent = i; }
+      else { wn.textContent = i; }
+    }
+    document.getElementById('progressFill').style.width = progressWidths[step];
+    currentStep = step;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Type card radio
+  document.querySelectorAll('.type-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      this.querySelector('input[type="radio"]').checked = true;
+    });
+  });
+
+  // File zone fill indicator
+  function markFilled(input) {
+    const zone = input.closest('.file-zone');
+    if (input.files && input.files.length > 0) {
+      zone.classList.add('filled');
+      const nameEl = zone.querySelector('.fz-text strong');
+      const name = input.files.length > 1 ? input.files.length + ' fichiers sélectionnés' : input.files[0].name;
+      nameEl.textContent = name.length > 28 ? name.substring(0, 26) + '…' : name;
+      const btn = zone.querySelector('.fz-btn');
+      if (btn) btn.innerHTML = '<i class="bi bi-check-circle" style="color:#198754"></i>';
+    }
+  }

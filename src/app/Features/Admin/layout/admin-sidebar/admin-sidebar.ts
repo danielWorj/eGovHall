@@ -1,0 +1,17 @@
+import { Component, signal } from '@angular/core';
+
+@Component({
+  selector: 'app-admin-sidebar',
+  imports: [],
+  templateUrl: './admin-sidebar.html',
+  styleUrl: './admin-sidebar.css',
+})
+export class AdminSidebar {
+  role = signal<number>(0); 
+
+  constructor(){
+    this.role.set(3); //pour les tests, à remplacer par la récupération du rôle de l'utilisateur connecté
+  }
+
+  
+}
