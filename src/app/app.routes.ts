@@ -2,14 +2,12 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     //PLatorme
-    {
-        path: '',
-        loadComponent: () => import('./Features/platform/acceuil/acceuil').then(m => m.Acceuil)
-    }, 
+    
     {
         path: 'site',
         loadComponent: () => import('./Features/platform/layout/layout').then(m => m.Layout), 
         children: [
+           
             { 
                 path: 'landing-page', 
                 loadComponent: () => import('./Features/platform/acceuil/acceuil').then(m => m.Acceuil) 
