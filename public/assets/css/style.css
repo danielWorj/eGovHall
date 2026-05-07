@@ -1916,3 +1916,45 @@ footer ul li a i { margin-right: 8px; color: var(--gold); }
     
 
 }
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   FIX SCROLL GLOBAL — Angular router + composants
+════════════════════════════════════════════════════════════════ */
+
+/* 1. Forcer le scroll sur html et body */
+html {
+  height: auto !important;
+  overflow-y: scroll !important;
+}
+
+body {
+  height: auto !important;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 2. Le composant racine Angular ne doit pas bloquer */
+app-root {
+  display: block;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* 3. Chaque composant routable ne doit pas bloquer */
+app-hopital,
+app-home,
+app-login {
+  display: block;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* 4. Le router-outlet lui-même ne génère pas de bloc,
+   mais son frère suivant (le composant rendu) peut en avoir */
+router-outlet + * {
+  display: block;
+  height: auto !important;
+  overflow: visible !important;
+}

@@ -15,7 +15,7 @@ export class ActeService {
   // Methode pour la declaration d'un acte de naissance
 
   getAllDeclarationByEtablissement(idEtablissement: number): Observable<Declaration[]> {
-    return this.http.get<Declaration[]>(`${eHAllSystemEndPoints.Acte.Declaration.allByStructure}/${idEtablissement}`);
+    return this.http.get<Declaration[]>(eHAllSystemEndPoints.Acte.Declaration.allByStructure+idEtablissement);
   }
   declarationActeNaissance(formData: FormData):Observable<ServerResponse> {
     return this.http.post<ServerResponse>(eHAllSystemEndPoints.Acte.Declaration.declare, formData);

@@ -17,7 +17,7 @@ import { Declaration } from '../../../Core/Model/Acte/Declaration';
   templateUrl: './hopital.html',
   styleUrl: './hopital.css',
 })
-export class Hopital implements OnInit {
+export class Hopital  {
 
   // ─── ID de l'établissement connecté ─────────────────────────────────────────
   idEtablissement = signal<number>(0);
@@ -71,11 +71,14 @@ export class Hopital implements OnInit {
       // ── Structure (injectée automatiquement) ────────────────────────────────
       structure:       new FormControl(this.idEtablissement()),
     });
+
+    this.loadPage(); 
   }
 
-  ngOnInit(): void {
+  loadPage(): void {
     this.getEtablissementById(this.idEtablissement());
     this.getAllSexes();
+    this.getAllDeclaration(); 
   }
 
   // ─── Chargement des données de référence ────────────────────────────────────
@@ -98,6 +101,7 @@ export class Hopital implements OnInit {
     this.acteService.getAllDeclarationByEtablissement(this.idEtablissement()).subscribe({
       next:(data:Declaration[])=>{
         this.listDeclaration.set(data); 
+        this.getNumbers()
       }, 
       error:()=>{
         console.log('Fecth list declaeation : failed');
@@ -268,6 +272,7 @@ export class Hopital implements OnInit {
       next: (response:ServerResponse) => {
         this.isLoading.set(false);
         if (response.status) {
+          this.loadPage(); 
           this.successMessage.set('Déclaration créée avec succès !');
           this.resetFormulaire();
         } else {
