@@ -1,4 +1,43 @@
-<!-- PORTAL HEADER -->
+<!-- ═══════════════════════════════════════════════════════════════
+     TOASTS — position fixe haut-droite, pilotés par les signals
+════════════════════════════════════════════════════════════════ -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:9999;min-width:340px">
+
+  @if (successMessage()) {
+    <div class="toast-custom toast-success d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap success">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong>Succès</strong>
+        <span>{{ successMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="successMessage.set(null)">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="toast-custom toast-error d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap error">
+        <i class="bi bi-x-circle-fill"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong>Erreur</strong>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="errorMessage.set(null)">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  }
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PORTAL HEADER
+════════════════════════════════════════════════════════════════ -->
 <header class="portal-header">
   <div class="portal-header-inner">
     <div class="portal-brand">
@@ -9,32 +48,54 @@
       </div>
     </div>
     <div class="d-flex align-items-center gap-3">
-      <span style="font-size:12px;color:var(--text-muted)"><i class="bi bi-circle-fill me-1" style="color:#198754;font-size:8px"></i>Connecté</span>
+      <span style="font-size:12px;color:var(--text-muted)">
+        <i class="bi bi-circle-fill me-1" style="color:#198754;font-size:8px"></i>Connecté
+      </span>
       <div class="portal-user-pill">
         <div class="portal-user-avatar"><i class="bi bi-hospital"></i></div>
-        Hôpital Laquintinie
+        @if (etablissementConnected()) {
+          {{ etablissementConnected()!.nom }}
+        } @else {
+          <span class="spinner-border spinner-border-sm"
+                style="width:12px;height:12px;border-width:2px"></span>
+          &nbsp;Chargement…
+        }
       </div>
-      <a href="login.html" style="font-size:13px;color:var(--text-muted);font-weight:600"><i class="bi bi-box-arrow-right me-1"></i>Déconnexion</a>
+      <a href="login.html" style="font-size:13px;color:var(--text-muted);font-weight:600">
+        <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+      </a>
     </div>
   </div>
 </header>
 
-<!-- MAIN CONTENT -->
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════════ -->
 <div class="container-fluid" style="max-width:1280px;padding:36px 24px">
 
   <!-- PAGE TITLE -->
   <div class="mb-4 fade-up visible">
-    <h1 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--primary);margin-bottom:4px">Déclarations de Naissance</h1>
-    <p style="color:var(--text-muted);font-size:14px"><i class="bi bi-calendar3 me-1"></i>Avril 2026 — Hôpital Laquintinie de Douala</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--primary);margin-bottom:4px">
+      Déclarations de Naissance
+    </h1>
+    <p style="color:var(--text-muted);font-size:14px">
+      <i class="bi bi-calendar3 me-1"></i>
+      @if (etablissementConnected()) {
+        {{ etablissementConnected()!.nom }} — Douala
+      } @else {
+        <span class="spinner-border spinner-border-sm"
+              style="width:10px;height:10px;border-width:2px"></span>
+      }
+    </p>
   </div>
 
-  <!-- STATS ROW -->
+  <!-- STATS ROW — alimentées par les signals -->
   <div class="row g-3 mb-4 fade-up visible">
     <div class="col-sm-6 col-lg-3">
       <div class="stat-card">
         <div class="stat-icon blue"><i class="bi bi-file-earmark-text"></i></div>
         <div>
-          <div class="stat-value">47</div>
+          <div class="stat-value">{{ numberOfDeclaration() }}</div>
           <div class="stat-label">Total déclarations</div>
         </div>
       </div>
@@ -43,8 +104,8 @@
       <div class="stat-card">
         <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
         <div>
-          <div class="stat-value">31</div>
-          <div class="stat-label">Validées ce mois</div>
+          <div class="stat-value">{{ listDeclaration().length }}</div>
+          <div class="stat-label">Ce mois</div>
         </div>
       </div>
     </div>
@@ -52,7 +113,7 @@
       <div class="stat-card">
         <div class="stat-icon blue"><i class="bi bi-gender-male"></i></div>
         <div>
-          <div class="stat-value">26</div>
+          <div class="stat-value">{{ numberOfDeclarationMale() }}</div>
           <div class="stat-label">Nouveau-nés masculins</div>
         </div>
       </div>
@@ -61,21 +122,24 @@
       <div class="stat-card">
         <div class="stat-icon rose"><i class="bi bi-gender-female"></i></div>
         <div>
-          <div class="stat-value">21</div>
+          <div class="stat-value">{{ numberOfDeclarationFemale() }}</div>
           <div class="stat-label">Nouveau-nées féminines</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TABLE + CHART ROW -->
+  <!-- TABLE + SIDE PANEL -->
   <div class="row g-4">
-    <!-- TABLE -->
+
+    <!-- ── TABLE ──────────────────────────────────────────────── -->
     <div class="col-lg-8">
       <div class="fade-up visible">
         <div class="section-header">
           <h2 class="section-title">Liste des déclarations</h2>
-          <button class="btn-add" data-bs-toggle="modal" data-bs-target="#modalDeclaration">
+          <button class="btn-add"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalDeclaration">
             <i class="bi bi-plus-lg"></i> Nouvelle déclaration
           </button>
         </div>
@@ -90,6 +154,7 @@
             <button class="filter-pill">En cours</button>
             <button class="filter-pill">Validés</button>
           </div>
+
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
@@ -99,70 +164,55 @@
                   <th>Sexe</th>
                   <th>Date naissance</th>
                   <th>Mère</th>
-                  <th>Statut</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0047</span></td>
-                  <td><strong>Mbida Jean-Pierre</strong></td>
-                  <td><span class="sex-badge m"><i class="bi bi-gender-male"></i> M</span></td>
-                  <td>12 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Sophie Mbida</td>
-                  <td><span class="status-pill traitement">En traitement</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0046</span></td>
-                  <td><strong>Ngono Célestine</strong></td>
-                  <td><span class="sex-badge f"><i class="bi bi-gender-female"></i> F</span></td>
-                  <td>10 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Marie Ngono</td>
-                  <td><span class="status-pill valide">Validée</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0045</span></td>
-                  <td><strong>Bello Hamidou</strong></td>
-                  <td><span class="sex-badge m"><i class="bi bi-gender-male"></i> M</span></td>
-                  <td>08 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Aïssatou Bello</td>
-                  <td><span class="status-pill valide">Validée</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0044</span></td>
-                  <td><strong>Ekotto Francine</strong></td>
-                  <td><span class="sex-badge f"><i class="bi bi-gender-female"></i> F</span></td>
-                  <td>05 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Lydie Ekotto</td>
-                  <td><span class="status-pill recu">Reçu</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0043</span></td>
-                  <td><strong>Nkoa Samuel</strong></td>
-                  <td><span class="sex-badge m"><i class="bi bi-gender-male"></i> M</span></td>
-                  <td>02 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Christine Nkoa</td>
-                  <td><span class="status-pill cloture">Clôturé</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
-                <tr>
-                  <td><span class="decl-num">DCL-2026-0042</span></td>
-                  <td><strong>Fouda Alice</strong></td>
-                  <td><span class="sex-badge f"><i class="bi bi-gender-female"></i> F</span></td>
-                  <td>01 avr. 2026</td>
-                  <td style="color:var(--text-muted);font-size:13px">Berthe Fouda</td>
-                  <td><span class="status-pill cloture">Clôturé</span></td>
-                  <td><button style="background:none;border:none;color:var(--primary);font-size:16px;cursor:pointer"><i class="bi bi-eye"></i></button></td>
-                </tr>
+                @if (listDeclaration().length === 0) {
+                  <tr>
+                    <td colspan="6" class="text-center py-4" style="color:var(--text-muted);font-size:14px">
+                      <span class="spinner-border spinner-border-sm me-2"
+                            style="width:14px;height:14px;border-width:2px"></span>
+                      Chargement des déclarations…
+                    </td>
+                  </tr>
+                } @else {
+                  @for (decl of listDeclaration(); track decl.id) {
+                    <tr>
+                      <td><span class="decl-num">{{ decl.id }}</span></td>
+                      <td><strong>{{ decl.enfant.prenom }} {{ decl.enfant.nom }}</strong></td>
+                      <td>
+                        @if (decl.enfant.sexe.id === 1) {
+                          <span class="sex-badge m">
+                            <i class="bi bi-gender-male"></i> M
+                          </span>
+                        } @else {
+                          <span class="sex-badge f">
+                            <i class="bi bi-gender-female"></i> F
+                          </span>
+                        }
+                      </td>
+                      <td>{{ decl.enfant.dateNaissance }}</td>
+                      <td style="color:var(--text-muted);font-size:13px">
+                        {{ decl.mere.prenom }} {{ decl.mere.nom }}
+                      </td>
+                      <td>
+                        <button style="background:none;border:none;color:var(--primary);
+                                       font-size:16px;cursor:pointer">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                }
               </tbody>
             </table>
           </div>
-          <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-muted)">
-            <span>Affichage 1–6 sur 47 déclarations</span>
+
+          <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;
+                      justify-content:space-between;align-items:center;
+                      font-size:13px;color:var(--text-muted)">
+            <span>{{ listDeclaration().length }} déclaration(s)</span>
             <div class="d-flex gap-2">
               <button class="filter-pill" style="padding:4px 12px">← Prec.</button>
               <button class="filter-pill active" style="padding:4px 12px">1</button>
@@ -175,195 +225,496 @@
       </div>
     </div>
 
-    <!-- SIDE PANEL -->
+    <!-- ── SIDE PANEL ──────────────────────────────────────────── -->
     <div class="col-lg-4">
-      <!-- GENDER CHART -->
+
+      <!-- Répartition par sexe -->
       <div class="gender-chart-card mb-4 fade-up visible">
         <h6><i class="bi bi-bar-chart-line me-2" style="color:var(--primary)"></i>Répartition par sexe</h6>
         <div class="gender-bar-wrap">
           <div class="gender-bar-label">
-            <span style="color:var(--primary);font-weight:700"><i class="bi bi-gender-male me-1"></i>Masculin</span>
-            <span style="color:var(--text-dark);font-weight:700">26 <span style="color:var(--text-muted);font-weight:400">(55%)</span></span>
+            <span style="color:var(--primary);font-weight:700">
+              <i class="bi bi-gender-male me-1"></i>Masculin
+            </span>
+            <span style="color:var(--text-dark);font-weight:700">
+              {{ numberOfDeclarationMale() }}
+              <span style="color:var(--text-muted);font-weight:400">
+                @if (numberOfDeclaration() > 0) {
+                  ({{ ((numberOfDeclarationMale() / numberOfDeclaration()) * 100) | number:'1.0-0' }}%)
+                }
+              </span>
+            </span>
           </div>
           <div class="gender-bar-track">
-            <div class="gender-bar-fill m" style="width:55%"></div>
+            <div class="gender-bar-fill m"
+                 [style.width.%]="numberOfDeclaration() > 0
+                   ? (numberOfDeclarationMale() / numberOfDeclaration()) * 100
+                   : 0">
+            </div>
           </div>
         </div>
         <div class="gender-bar-wrap">
           <div class="gender-bar-label">
-            <span style="color:var(--accent);font-weight:700"><i class="bi bi-gender-female me-1"></i>Féminin</span>
-            <span style="color:var(--text-dark);font-weight:700">21 <span style="color:var(--text-muted);font-weight:400">(45%)</span></span>
+            <span style="color:var(--accent);font-weight:700">
+              <i class="bi bi-gender-female me-1"></i>Féminin
+            </span>
+            <span style="color:var(--text-dark);font-weight:700">
+              {{ numberOfDeclarationFemale() }}
+              <span style="color:var(--text-muted);font-weight:400">
+                @if (numberOfDeclaration() > 0) {
+                  ({{ ((numberOfDeclarationFemale() / numberOfDeclaration()) * 100) | number:'1.0-0' }}%)
+                }
+              </span>
+            </span>
           </div>
           <div class="gender-bar-track">
-            <div class="gender-bar-fill f" style="width:45%"></div>
+            <div class="gender-bar-fill f"
+                 [style.width.%]="numberOfDeclaration() > 0
+                   ? (numberOfDeclarationFemale() / numberOfDeclaration()) * 100
+                   : 0">
+            </div>
           </div>
         </div>
         <div class="gender-legend">
           <div class="d-flex align-items-start gap-2">
             <div class="gender-dot" style="background:var(--primary)"></div>
             <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text-dark)">26 garçons</div>
-              <div style="font-size:12px;color:var(--text-muted)">55% du total</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark)">
+                {{ numberOfDeclarationMale() }} garçons
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">sexe masculin</div>
             </div>
           </div>
           <div class="d-flex align-items-start gap-2">
             <div class="gender-dot" style="background:var(--accent)"></div>
             <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text-dark)">21 filles</div>
-              <div style="font-size:12px;color:var(--text-muted)">45% du total</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark)">
+                {{ numberOfDeclarationFemale() }} filles
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">sexe féminin</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- MONTHLY PROGRESS -->
+      <!-- Évolution mensuelle (statique) -->
       <div class="gender-chart-card fade-up visible">
         <h6><i class="bi bi-calendar3 me-2" style="color:var(--primary)"></i>Évolution mensuelle</h6>
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;align-items:center;gap:12px;font-size:13px">
             <span style="width:30px;color:var(--text-muted);font-weight:600">Janv</span>
-            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden"><div style="width:70%;height:100%;background:var(--primary);border-radius:10px"></div></div>
+            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden">
+              <div style="width:70%;height:100%;background:var(--primary);border-radius:10px"></div>
+            </div>
             <span style="width:24px;text-align:right;font-weight:700;color:var(--text-dark)">33</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px;font-size:13px">
             <span style="width:30px;color:var(--text-muted);font-weight:600">Fév</span>
-            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden"><div style="width:55%;height:100%;background:var(--primary);border-radius:10px"></div></div>
+            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden">
+              <div style="width:55%;height:100%;background:var(--primary);border-radius:10px"></div>
+            </div>
             <span style="width:24px;text-align:right;font-weight:700;color:var(--text-dark)">26</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px;font-size:13px">
             <span style="width:30px;color:var(--text-muted);font-weight:600">Mar</span>
-            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden"><div style="width:85%;height:100%;background:var(--primary);border-radius:10px"></div></div>
+            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden">
+              <div style="width:85%;height:100%;background:var(--primary);border-radius:10px"></div>
+            </div>
             <span style="width:24px;text-align:right;font-weight:700;color:var(--text-dark)">40</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px;font-size:13px">
             <span style="width:30px;color:var(--text-muted);font-weight:600">Avr</span>
-            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden"><div style="width:100%;height:100%;background:var(--gold);border-radius:10px"></div></div>
+            <div style="flex:1;height:6px;background:var(--light-bg);border-radius:10px;overflow:hidden">
+              <div style="width:100%;height:100%;background:var(--gold);border-radius:10px"></div>
+            </div>
             <span style="width:24px;text-align:right;font-weight:700;color:var(--gold)">47</span>
           </div>
         </div>
-        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted)">
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);
+                    font-size:13px;color:var(--text-muted)">
           <i class="bi bi-arrow-up-right me-1" style="color:#198754"></i>
           <span style="color:#198754;font-weight:700">+17.5%</span> vs mois précédent
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<!-- MODAL — NOUVELLE DÉCLARATION -->
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL — NOUVELLE DÉCLARATION
+════════════════════════════════════════════════════════════════ -->
 <div class="modal fade" id="modalDeclaration" tabindex="-1">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content" style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+    <div class="modal-content"
+         style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+
+      <!-- En-tête modal -->
       <div class="modal-header-custom">
         <div>
           <h5><i class="bi bi-file-earmark-plus me-2"></i>Nouvelle Déclaration de Naissance</h5>
-          <small>Hôpital Laquintinie de Douala — Remplissez tous les champs obligatoires</small>
+          <small>
+            @if (etablissementConnected()) {
+              {{ etablissementConnected()!.nom }} — Remplissez tous les champs obligatoires
+            } @else {
+              <span class="spinner-border spinner-border-sm"
+                    style="width:10px;height:10px;border-width:2px"></span>
+              Chargement…
+            }
+          </small>
         </div>
-        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+        <button type="button"
+                class="btn-close btn-close-white ms-auto"
+                data-bs-dismiss="modal"
+                [disabled]="isLoading()">
+        </button>
       </div>
 
+      <!-- Corps modal -->
       <div class="modal-body-custom">
-        <form>
-          <!-- ENFANT -->
-          <div class="form-section-divider">Informations sur l'enfant</div>
+        <form [formGroup]="declarationFb" novalidate>
+
+          <!-- ═══ SECTION ENFANT ════════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-hearts me-2"></i>Informations sur l'enfant
+          </div>
           <div class="row g-3">
-            <div class="col-md-6">
+
+            <!-- Nom enfant -->
+            <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Nom complet de l'enfant <span style="color:var(--accent)">*</span></label>
-                <input type="text" class="form-control-custom" placeholder="Ex: Jean-Pierre Mbida" />
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nomEnfant"
+                       placeholder="Nom de famille"
+                       [class.is-invalid]="champInvalide('nomEnfant')" />
+                @if (champInvalide('nomEnfant')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
-            <div class="col-md-3">
+
+            <!-- Prénom enfant -->
+            <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Sexe <span style="color:var(--accent)">*</span></label>
-                <select class="form-control-custom">
-                  <option value="">— Sélectionner —</option>
-                  <option>Masculin</option>
-                  <option>Féminin</option>
-                </select>
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenomEnfant"
+                       placeholder="Prénom(s)"
+                       [class.is-invalid]="champInvalide('prenomEnfant')" />
+                @if (champInvalide('prenomEnfant')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
-            <div class="col-md-3">
+
+            <!-- Sexe avec spinner -->
+            <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Date de naissance <span style="color:var(--accent)">*</span></label>
-                <input type="date" class="form-control-custom" />
+                <label class="form-label-custom">Sexe <span class="req">*</span></label>
+
+                @if (listeSexes().length === 0) {
+                  <div class="form-control-custom d-flex align-items-center gap-2"
+                       style="color:var(--text-muted);cursor:default">
+                    <span class="spinner-border spinner-border-sm"
+                          style="width:14px;height:14px;border-width:2px"></span>
+                    Chargement…
+                  </div>
+                } @else {
+                  <select class="form-control-custom"
+                          formControlName="sexe"
+                          [class.is-invalid]="champInvalide('sexe')">
+                    <option value="">— Sélectionner —</option>
+                    @for (s of listeSexes(); track s.id) {
+                      <option [value]="s.id">{{ s.libelle }}</option>
+                    }
+                  </select>
+                }
+
+                @if (champInvalide('sexe')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
-            <div class="col-md-3">
+
+            <!-- Date de naissance -->
+            <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Heure de naissance <span style="color:var(--accent)">*</span></label>
-                <input type="time" class="form-control-custom" />
+                <label class="form-label-custom">Date de naissance <span class="req">*</span></label>
+                <input type="date" class="form-control-custom"
+                       formControlName="dateNaissance"
+                       [class.is-invalid]="champInvalide('dateNaissance')" />
+                @if (champInvalide('dateNaissance')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
-            <div class="col-md-9">
+
+            <!-- Lieu de naissance -->
+            <div class="col-md-8">
               <div class="form-group-custom">
-                <label class="form-label-custom">Lieu de naissance (salle / service) <span style="color:var(--accent)">*</span></label>
-                <input type="text" class="form-control-custom" placeholder="Ex: Salle de maternité — Bloc B" />
+                <label class="form-label-custom">
+                  Lieu de naissance (salle / service) <span class="req">*</span>
+                </label>
+                <input type="text" class="form-control-custom"
+                       formControlName="lieuNaissance"
+                       placeholder="Ex: Salle de maternité — Bloc B"
+                       [class.is-invalid]="champInvalide('lieuNaissance')" />
+                @if (champInvalide('lieuNaissance')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
+
           </div>
 
-          <!-- MÈRE -->
-          <div class="form-section-divider">Informations sur la mère</div>
+          <!-- ═══ SECTION MÈRE ══════════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Informations sur la mère
+          </div>
           <div class="row g-3">
+
+            <!-- Nom mère -->
             <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Nom de famille <span style="color:var(--accent)">*</span></label>
-                <input type="text" class="form-control-custom" placeholder="Nom" />
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nomParent"
+                       placeholder="Nom de famille"
+                       [class.is-invalid]="champInvalide('nomParent')" />
+                @if (champInvalide('nomParent')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
+
+            <!-- Prénom mère -->
             <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Prénom(s) <span style="color:var(--accent)">*</span></label>
-                <input type="text" class="form-control-custom" placeholder="Prénom(s)" />
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenomParent"
+                       placeholder="Prénom(s)"
+                       [class.is-invalid]="champInvalide('prenomParent')" />
+                @if (champInvalide('prenomParent')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
+
+            <!-- Téléphone -->
             <div class="col-md-4">
               <div class="form-group-custom">
-                <label class="form-label-custom">Téléphone <span style="color:var(--accent)">*</span></label>
-                <input type="tel" class="form-control-custom" placeholder="+237 6XX XXX XXX" />
+                <label class="form-label-custom">Téléphone <span class="req">*</span></label>
+                <input type="tel" class="form-control-custom"
+                       formControlName="telephone"
+                       placeholder="+237 6XX XXX XXX"
+                       [class.is-invalid]="champInvalide('telephone')" />
+                @if (champInvalide('telephone')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
               </div>
             </div>
+
+            <!-- Email -->
             <div class="col-md-6">
               <div class="form-group-custom">
-                <label class="form-label-custom">Adresse email</label>
-                <input type="email" class="form-control-custom" placeholder="exemple@email.com" />
+                <label class="form-label-custom">Adresse email <span class="req">*</span></label>
+                <input type="email" class="form-control-custom"
+                       formControlName="email"
+                       placeholder="exemple@email.com"
+                       [class.is-invalid]="champInvalide('email')" />
+                @if (champInvalide('email')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    @if (declarationFb.get('email')?.hasError('required')) {
+                      Champ obligatoire
+                    } @else {
+                      Adresse email invalide
+                    }
+                  </div>
+                }
               </div>
             </div>
+
+            <!-- Localisation -->
             <div class="col-md-6">
               <div class="form-group-custom">
-                <label class="form-label-custom">Localisation / Quartier de résidence <span style="color:var(--accent)">*</span></label>
-                <input type="text" class="form-control-custom" placeholder="Ex: Akwa, Douala" />
+                <label class="form-label-custom">Quartier de résidence</label>
+                <input type="text" class="form-control-custom"
+                       formControlName="localisation"
+                       placeholder="Ex: Akwa, Douala" />
               </div>
             </div>
+
           </div>
 
-          <!-- PIÈCE JOINTE -->
-          <div class="form-section-divider">Pièce d'identité de la mère</div>
-          <div class="form-group-custom">
-            <label class="form-label-custom">CNI / Carte nationale d'identité <span style="color:var(--accent)">*</span></label>
-            <div class="file-input-wrap">
-              <input type="file" accept="image/*,.pdf" id="cniFile" />
-              <div class="file-icon"><i class="bi bi-person-vcard"></i></div>
-              <div class="file-text">
-                <strong>Joindre la CNI</strong>
-                <span>PDF, JPG ou PNG — max 5 Mo</span>
+          <!-- ═══ SECTION PIÈCES JUSTIFICATIVES ════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-paperclip me-2"></i>Pièces justificatives
+          </div>
+          <div class="row g-3">
+
+            <!-- CNI de la mère -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  CNI de la mère <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="cniMere !== null"
+                     (click)="inputCni.click()">
+                  <input #inputCni type="file"
+                         accept="image/jpeg,image/png,application/pdf"
+                         style="display:none"
+                         (change)="onSelectCniMere($event)" />
+
+                  @if (!cniMere) {
+                    <i class="bi bi-person-vcard file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Joindre la CNI</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ cniMereNom() }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); supprimerCni()">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
               </div>
-              <span class="file-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
             </div>
+
+            <!-- Photo 4×4 -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Photo d'identité 4×4 <span class="req">*</span>
+                  <span class="fmt-hint">JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="photo4x4 !== null"
+                     (click)="inputPhoto.click()">
+                  <input #inputPhoto type="file"
+                         accept="image/jpeg,image/png"
+                         style="display:none"
+                         (change)="onSelectPhoto4x4($event)" />
+
+                  @if (!photo4x4) {
+                    <i class="bi bi-person-bounding-box file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Joindre la photo</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ photo4x4Nom() }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); supprimerPhoto()">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Certification de naissance -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Certification de naissance <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="certificationNaissance !== null"
+                     (click)="inputCertif.click()">
+                  <input #inputCertif type="file"
+                         accept="image/jpeg,image/png,application/pdf"
+                         style="display:none"
+                         (change)="onSelectCertificationNaissance($event)" />
+
+                  @if (!certificationNaissance) {
+                    <i class="bi bi-file-earmark-medical file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Joindre la certification</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ certificationNaissanceNom() }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); supprimerCertification()">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
           </div>
 
-          <div style="background:rgba(0,49,137,0.04);border-left:3px solid var(--primary);border-radius:0 4px 4px 0;padding:12px 16px;font-size:13px;color:var(--text-mid)">
+          <!-- Note -->
+          <div style="background:rgba(0,49,137,.04);border-left:3px solid var(--primary);
+                      border-radius:0 4px 4px 0;padding:12px 16px;font-size:13px;
+                      color:var(--text-mid);margin-top:20px">
             <i class="bi bi-info-circle me-1" style="color:var(--primary)"></i>
-            Un numéro de déclaration unique sera généré automatiquement. La mairie recevra une notification et un accusé de réception sera envoyé à la mère.
+            Un numéro de déclaration unique sera généré automatiquement. La mairie recevra
+            une notification et un accusé de réception sera envoyé à la mère par email.
           </div>
+
         </form>
       </div>
 
+      <!-- Pied modal -->
       <div class="modal-footer-custom">
-        <button class="btn-cancel" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn-submit"><i class="bi bi-send me-2"></i>Soumettre la déclaration</button>
+        <button class="btn-cancel"
+                data-bs-dismiss="modal"
+                [disabled]="isLoading()">
+          Annuler
+        </button>
+
+        <button class="btn-submit"
+                (click)="soumettre()"
+                [disabled]="isLoading()">
+          @if (isLoading()) {
+            <span class="spinner-border spinner-border-sm me-2"
+                  style="width:15px;height:15px;border-width:2px"></span>
+            Envoi en cours…
+          } @else {
+            <i class="bi bi-send me-2"></i>Soumettre la déclaration
+          }
+        </button>
       </div>
+
     </div>
   </div>
 </div>
+

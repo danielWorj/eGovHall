@@ -30,9 +30,10 @@ export class Auth {
 
   roleRoutes: Record<number, string> = {
     1: '/admin/home',
-    2: '/admin/mairie-home',
-    3: '/admin/citoyen-home',
-    4: '/admin/hopital-home'
+    2: '/portail-hopital',
+    3: '/admin/mairie-home',
+    4: '/admin/citoyen-home',
+    
   };
 
   login(): void {
@@ -52,7 +53,13 @@ export class Auth {
           this.statut.emit(true);
           localStorage.setItem('id', `${data.id}`);
           localStorage.setItem('role', `${data.role}`);
+          localStorage.setItem('etablissement', `${data.etablissement}`);
 
+          console.log('Données stockées dans localStorage:', {
+            id: localStorage.getItem('id'),
+            role: localStorage.getItem('role'),
+            etablissement: localStorage.getItem('etablissement')
+          });
           // ← Lecture du returnUrl + sécurité Open Redirect
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           console.log('Return URL:', returnUrl);
