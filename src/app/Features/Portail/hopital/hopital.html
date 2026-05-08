@@ -515,6 +515,57 @@
                 }
               </div>
             </div>
+            <!-- Date de naissance  -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Date de naissance <span class="req">*</span></label>
+                <input type="date" class="form-control-custom"
+                       formControlName="dateNaissanceM"
+                       [class.is-invalid]="champInvalide('dateNaissanceM')" />
+                @if (champInvalide('dateNaissanceM')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Lieu de naissance -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Lieu de naissance  <span class="req">*</span>
+                </label>
+                <input type="text" class="form-control-custom"
+                       formControlName="lieuNaissanceM"
+                       placeholder="Ex: Salle de maternité — Bloc B"
+                       [class.is-invalid]="champInvalide('lieuNaissanceM')" />
+                @if (champInvalide('lieuNaissanceM')) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
+            </div>
+             <!-- Localisation -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Quartier de résidence</label>
+                <input type="text" class="form-control-custom"
+                       formControlName="localisation"
+                       placeholder="Ex: Akwa, Douala" />
+              </div>
+            </div>
+            <!-- Profession -->
+             <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Profession <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="profession"
+                       placeholder="Commercant , Enseignant , Militaire"?>
+              </div>
+            </div>
+
 
             <!-- Téléphone -->
             <div class="col-md-4">
@@ -533,7 +584,7 @@
             </div>
 
             <!-- Email -->
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-group-custom">
                 <label class="form-label-custom">Adresse email <span class="req">*</span></label>
                 <input type="email" class="form-control-custom"
@@ -553,16 +604,7 @@
               </div>
             </div>
 
-            <!-- Localisation -->
-            <div class="col-md-6">
-              <div class="form-group-custom">
-                <label class="form-label-custom">Quartier de résidence</label>
-                <input type="text" class="form-control-custom"
-                       formControlName="localisation"
-                       placeholder="Ex: Akwa, Douala" />
-              </div>
-            </div>
-
+           
           </div>
 
           <!-- ═══ SECTION PIÈCES JUSTIFICATIVES ════════════════ -->

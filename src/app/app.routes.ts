@@ -31,11 +31,51 @@ export const routes: Routes = [
         path: 'login', 
         loadComponent: () => import('./Features/Admin/Auth/auth/auth').then(m => m.Auth) 
     }, 
+    //Mairie 
+    {
+      path: 'mairie', 
+      loadComponent: ()=>import('./Features/Admin/layout/layout').then(m=>m.Layout), 
+      canActivate: [authGuard],
+      children:[
+          { 
+            path: 'home', 
+            loadComponent: () => import('./Features/Admin/Mairie/dashboard/dashboard').then(m => m.Dashboard) 
+          }, 
+          { 
+            path: 'naissance', 
+            loadComponent: () => import('./Features/Admin/Mairie/naissance/naissance').then(m => m.Naissance) 
+          },
+          { 
+            path: 'mariage', 
+            loadComponent: () => import('./Features/Admin/Mairie/mariage/mariage').then(m => m.Mariage) 
+          },
+          { 
+            path: 'permis', 
+            loadComponent: () => import('./Features/Admin/Mairie/permis-batir/permis-batir').then(m => m.PermisBatir) 
+          },
+          { 
+            path: 'paiements', 
+            loadComponent: () => import('./Features/Admin/Mairie/paiements/paiements').then(m => m.Paiements) 
+          },
+          { 
+            path: 'mairie-documentation', 
+            loadComponent: () => import('./Features/Admin/Mairie/documentation/documentation').then(m => m.Documentation) 
+          },
+          { 
+            path: 'rdv', 
+            loadComponent: () => import('./Features/Admin/Mairie/rdv/rdv').then(m => m.Rdv) 
+          },
+          { 
+            path: 'mairie-notifications', 
+            loadComponent: () => import('./Features/Admin/Mairie/notifications/notifications').then(m => m.Notifications) 
+          },
+      ]
+    }, 
     //ADMIN
     {
      path: 'admin',
      loadComponent: () => import('./Features/Admin/layout/layout').then(m => m.Layout),
-     canActivate: [authGuard],
+     canActivate: [authGuard], 
      children: [
 
       //SUPER ADMIN

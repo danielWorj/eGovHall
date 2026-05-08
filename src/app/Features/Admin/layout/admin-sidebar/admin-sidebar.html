@@ -5,54 +5,54 @@
     
   <nav class="sidebar" id="sidebarEl">
     <div class="sidebar-section-label">Tableau de bord</div>
-    <a class="sidebar-item active" data-panel="dashboard" href="#">
+    <a class="sidebar-item active" data-panel="dashboard" >
       <i class="bi bi-speedometer2"></i> Vue d'ensemble
     </a>
 
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">État Civil</div>
-    <a class="sidebar-item" data-panel="naissances" href="#">
+    <a class="sidebar-item" data-panel="naissances" >
       <i class="bi bi-hospital"></i> Actes de Naissance
       <span class="sidebar-badge">7</span>
     </a>
-    <a class="sidebar-item" data-panel="mariages" href="#">
+    <a class="sidebar-item" data-panel="mariages" >
       <i class="bi bi-suit-heart"></i> Actes de Mariage
       <span class="sidebar-badge gold">3</span>
     </a>
 
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Urbanisme</div>
-    <a class="sidebar-item" data-panel="permis" href="#">
+    <a class="sidebar-item" data-panel="permis" >
       <i class="bi bi-building"></i> Permis de Bâtir
       <span class="sidebar-badge">5</span>
     </a>
 
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Finances</div>
-    <a class="sidebar-item" data-panel="paiements" href="#">
+    <a class="sidebar-item" data-panel="paiements" >
       <i class="bi bi-credit-card"></i> Paiements
       <span class="sidebar-badge green">12</span>
     </a>
 
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Agenda</div>
-    <a class="sidebar-item" data-panel="rendezVous" href="#">
+    <a class="sidebar-item" data-panel="rendezVous" >
       <i class="bi bi-calendar3"></i> Rendez-vous
     </a>
 
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Administration</div>
-    <a class="sidebar-item" data-panel="utilisateurs" href="#">
+    <a class="sidebar-item" data-panel="utilisateurs" >
       <i class="bi bi-people"></i> Utilisateurs
     </a>
-    <a class="sidebar-item" data-panel="notifications" href="#">
+    <a class="sidebar-item" data-panel="notifications" >
       <i class="bi bi-bell"></i> Notifications
       <span class="sidebar-badge">4</span>
     </a>
-    <a class="sidebar-item" data-panel="ged" href="#">
+    <a class="sidebar-item" data-panel="ged" >
       <i class="bi bi-folder2-open"></i> GED Documents
     </a>
-    <a class="sidebar-item" data-panel="reporting" href="#">
+    <a class="sidebar-item" data-panel="reporting" >
       <i class="bi bi-bar-chart-line"></i> Reporting
     </a>
   </nav>
@@ -61,59 +61,57 @@
   <!-- AGENT MAIRIE -->
   @if(role()==3){
     
-  <nav class="sidebar" id="sidebarEl">
-    <div class="sidebar-section-label">Tableau de bord</div>
-    <a class="sidebar-item active" data-panel="dashboard" href="#">
-      <i class="bi bi-speedometer2"></i> Vue d'ensemble
-    </a>
+    <nav class="sidebar" id="sidebarEl">
+      <div class="sidebar-section-label">Tableau de bord</div>
+      <a class="sidebar-item active" data-panel="dashboard" >
+        <i class="bi bi-speedometer2"></i> Vue d'ensemble
+      </a>
 
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">État Civil</div>
-    <a class="sidebar-item" data-panel="naissances" href="#">
-      <i class="bi bi-hospital"></i> Actes de Naissance
-      <span class="sidebar-badge">7</span>
-    </a>
-    <a class="sidebar-item" data-panel="mariages" href="#">
-      <i class="bi bi-suit-heart"></i> Actes de Mariage
-      <span class="sidebar-badge gold">3</span>
-    </a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">État Civil</div>
+      <a routerLink="naissance" routerLinkActive="active" class="sidebar-item" data-panel="naissances" >
+        <i class="bi bi-hospital"></i> Actes de Naissance
+        <span class="sidebar-badge">7</span>
+      </a>
+      <a  routerLink="mariage" routerLinkActive="active" class="sidebar-item" data-panel="mariages" >
+        <i class="bi bi-suit-heart"></i> Actes de Mariage
+        <span class="sidebar-badge gold">3</span>
+      </a>
 
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Urbanisme</div>
-    <a class="sidebar-item" data-panel="permis" href="#">
-      <i class="bi bi-building"></i> Permis de Bâtir
-      <span class="sidebar-badge">5</span>
-    </a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Urbanisme</div>
+      <a  routerLink="permis" routerLinkActive="active" class="sidebar-item" data-panel="permis" >
+        <i class="bi bi-building"></i> Permis de Bâtir
+        <span class="sidebar-badge">5</span>
+      </a>
 
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Finances</div>
-    <a class="sidebar-item" data-panel="paiements" href="#">
-      <i class="bi bi-credit-card"></i> Paiements
-      <span class="sidebar-badge green">12</span>
-    </a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Finances</div>
+      <a routerLink="paiements" routerLinkActive="active" class="sidebar-item" data-panel="paiements" >
+        <i class="bi bi-credit-card"></i> Paiements
+        <span class="sidebar-badge green">12</span>
+      </a>
 
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Agenda</div>
-    <a class="sidebar-item" data-panel="rendezVous" href="#">
-      <i class="bi bi-calendar3"></i> Rendez-vous
-    </a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Agenda</div>
+      <a routerLink="rdv" routerLinkActive="active" class="sidebar-item" data-panel="rendezVous" >
+        <i class="bi bi-calendar3"></i> Rendez-vous
+      </a>
 
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Administration</div>
-    <a class="sidebar-item" data-panel="utilisateurs" href="#">
-      <i class="bi bi-people"></i> Utilisateurs
-    </a>
-    <a class="sidebar-item" data-panel="notifications" href="#">
-      <i class="bi bi-bell"></i> Notifications
-      <span class="sidebar-badge">4</span>
-    </a>
-    <a class="sidebar-item" data-panel="ged" href="#">
-      <i class="bi bi-folder2-open"></i> GED Documents
-    </a>
-    <a class="sidebar-item" data-panel="reporting" href="#">
-      <i class="bi bi-bar-chart-line"></i> Reporting
-    </a>
-  </nav>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Administration</div>
+      
+      <a  routerLink="notification" routerLinkActive="active" class="sidebar-item" data-panel="notifications" >
+        <i class="bi bi-bell"></i> Notifications
+        <span class="sidebar-badge">4</span>
+      </a>
+      <a class="sidebar-item" data-panel="ged" >
+        <i class="bi bi-folder2-open"></i> GED Documents
+      </a>
+      <a class="sidebar-item" data-panel="reporting" >
+        <i class="bi bi-bar-chart-line"></i> Reporting
+      </a>
+    </nav>
    }
 
    <!-- CITOYEN -->
@@ -171,11 +169,11 @@
     <a routerLink="rdv" routerLinkActive="active" class="sidebar-item">
       <i class="bi bi-calendar3"></i> Mes Rendez-vous
     </a>
-    <a href="#" class="sidebar-item">
+    <a  class="sidebar-item">
       <i class="bi bi-bell"></i> Notifications
       <span class="sidebar-badge">3</span>
     </a>
-    <a href="#" class="sidebar-item">
+    <a  class="sidebar-item">
       <i class="bi bi-gear"></i> Paramètres
     </a>
    }

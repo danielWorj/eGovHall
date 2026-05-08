@@ -1,217 +1,629 @@
-<div class="portal-panel" id="panel-naissances">
+<!-- ═══════════════════════════════════════════════════════════════
+     TOASTS — position fixe haut-droite, pilotés par les signals
+════════════════════════════════════════════════════════════════ -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:9999;min-width:340px">
 
-  <!-- ── Toast notifications ────────────────────────────────────────────── -->
   @if (successMessage()) {
-    <div class="toast-msg success">
-      <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage() }}
-    </div>
-  }
-  @if (errorMessage()) {
-    <div class="toast-msg error">
-      <i class="bi bi-x-circle-fill me-2"></i>{{ errorMessage() }}
-    </div>
-  }
-
-  <!-- ── Panel header ───────────────────────────────────────────────────── -->
-  <div class="panel-header">
-    <h1 class="panel-title">Actes de Naissance</h1>
-    <p class="panel-subtitle">Gestion des actes reçus et traitement des dossiers.</p>
-  </div>
-
-  <!-- ── Toolbar ────────────────────────────────────────────────────────── -->
-  <div class="table-toolbar">
-    <div class="search-input-wrap">
-      <i class="bi bi-search"></i>
-      <input type="text" placeholder="Rechercher par nom, numéro d'acte…"
-             (input)="onSearch($event)" />
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-add" (click)="openModalAdd()">
-        <i class="bi bi-plus-lg"></i>Nouvel acte
+    <div class="toast-custom toast-success d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap success">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong>Succès</strong>
+        <span>{{ successMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="successMessage.set('')">
+        <i class="bi bi-x-lg"></i>
       </button>
     </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="toast-custom toast-error d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap error">
+        <i class="bi bi-x-circle-fill"></i>
+      </div>
+      <div class="toast-body-text">
+        <strong>Erreur</strong>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="errorMessage.set('')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  }
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════════ -->
+<div class="container-fluid" style="max-width:1280px;padding:36px 24px">
+
+  <!-- PAGE TITLE -->
+  <div class="mb-4">
+    <h1 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--primary);margin-bottom:4px">
+      Actes de Naissance
+    </h1>
+    <p style="color:var(--text-muted);font-size:14px">
+      <i class="bi bi-building me-1"></i>
+      Gestion des actes reçus et traitement des dossiers.
+    </p>
   </div>
 
-  <!-- ── Data table ─────────────────────────────────────────────────────── -->
-  <div class="data-table-wrap">
-    <table class="data-table" id="tbl-naissances">
-      <thead>
-        <tr>
-          <th>N° Acte</th>
-          <th>Enfant</th>
-          <th>Père</th>
-          <th>Mère</th>
-          <th>Établissement</th>
-          <th>Date acte</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
+  <!-- STATS ROW -->
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-file-earmark-text"></i></div>
+        <div>
+          <div class="stat-value">{{ listActeNaissance().length }}</div>
+          <div class="stat-label">Total actes</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+        <div>
+          <div class="stat-value">{{ filteredList().length }}</div>
+          <div class="stat-label">Actes filtrés</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-file-earmark-plus"></i></div>
+        <div>
+          <div class="stat-value">{{ paginatedList().length }}</div>
+          <div class="stat-label">Affichés / page</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon rose"><i class="bi bi-layers"></i></div>
+        <div>
+          <div class="stat-value">{{ totalPages() }}</div>
+          <div class="stat-label">Pages totales</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE + SIDE PANEL -->
+  <div class="row g-4">
+
+    <!-- ── TABLE ──────────────────────────────────────────────── -->
+    <div class="col-lg-8">
+      <div class="section-header">
+        <h2 class="section-title">Liste des actes de naissance</h2>
+        <button class="btn-add" (click)="openModalAdd()">
+          <i class="bi bi-plus-lg"></i> Nouvel acte
+        </button>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="search-bar" style="flex:1">
+            <i class="bi bi-search"></i>
+            <input type="text"
+                   placeholder="Rechercher par nom, numéro d'acte…"
+                   (input)="onSearch($event)" />
+          </div>
+        </div>
 
         <!-- Loading skeleton -->
         @if (isLoading()) {
-          @for (_ of [1,2,3,4]; track $index) {
-            <tr class="skeleton-row">
-              <td colspan="8"><div class="skeleton-bar"></div></td>
-            </tr>
-          }
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                @for (_ of [1,2,3,4]; track $index) {
+                  <tr>
+                    <td colspan="7">
+                      <div style="height:16px;background:var(--light-bg);border-radius:4px;
+                                  animation:pulse 1.4s ease-in-out infinite"></div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         }
 
-        <!-- Empty state -->
-        @if (!isLoading() && filteredList().length === 0) {
-          <tr>
-            <td colspan="8" class="empty-state">
-              <i class="bi bi-folder2-open" style="font-size:2rem;opacity:.4"></i>
-              <p>Aucun acte de naissance trouvé.</p>
-            </td>
-          </tr>
-        }
-
-        <!-- Data rows -->
+        <!-- Table data -->
         @if (!isLoading()) {
-          @for (acte of paginatedList(); track acte.id) {
-            <tr>
-              <td><span class="ref">{{ acte.numeroActe ?? '—' }}</span></td>
-              <td>
-                <strong>{{ acte.declaration?.enfant?.prenom }} {{ acte.declaration?.enfant?.nom }}</strong>
-                <small>{{ acte.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }} — {{ acte.declaration?.hopital?.nom }}</small>
-              </td>
-              <td>{{ acte.pere?.prenom }} {{ acte.pere?.nom }}</td>
-              <td>{{ acte.declaration?.mere?.prenom }} {{ acte.declaration?.mere?.nom }}</td>
-              <td><span style="font-size:12px">{{ acte.declaration?.mairie?.nom }}</span></td>
-              <td><small>{{ acte.date | date:'dd/MM/yyyy' }}</small></td>
-              <td>
-                <div class="tbl-actions">
-                  <!-- Voir -->
-                  <button class="tbl-btn" (click)="openModalView(acte)" title="Voir le dossier">
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  <!-- Modifier -->
-                  <button class="tbl-btn success" (click)="openModalEdit(acte)" title="Modifier l'acte">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <!-- Supprimer -->
-                  <button class="tbl-btn danger" (click)="deleteActe(acte, $event)" title="Supprimer">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        }
-      </tbody>
-    </table>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>N° Acte</th>
+                  <th>Enfant</th>
+                  <th>Père</th>
+                  <th>Mère</th>
+                  <th>Établissement</th>
+                  <th>Date acte</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
 
-    <!-- Footer / Pagination -->
-    <div class="table-footer">
-      <span>
-        Affichage de {{ paginatedList().length }} sur {{ filteredList().length }} résultats
-      </span>
-      <div class="pagination-btns">
-        <button class="page-btn" [disabled]="currentPage() === 1" (click)="setPage(currentPage() - 1)">
-          <i class="bi bi-chevron-left"></i>
-        </button>
-        @for (p of pages(); track p) {
-          <button class="page-btn" [class.active]="p === currentPage()" (click)="setPage(p)">{{ p }}</button>
+                @if (filteredList().length === 0) {
+                  <tr>
+                    <td colspan="7" class="text-center py-5"
+                        style="color:var(--text-muted);font-size:14px">
+                      <i class="bi bi-folder2-open"
+                         style="font-size:2rem;opacity:.4;display:block;margin-bottom:8px"></i>
+                      Aucun acte de naissance trouvé.
+                    </td>
+                  </tr>
+                }
+
+                @for (acte of paginatedList(); track acte.id) {
+                  <tr (click)="openModalView(acte)" style="cursor:pointer">
+                    <td><span class="decl-num">{{ acte.numeroActe ?? '—' }}</span></td>
+                    <td>
+                      <strong>{{ acte.declaration?.enfant?.prenom }} {{ acte.declaration?.enfant?.nom }}</strong>
+                      <br>
+                      <small style="color:var(--text-muted)">
+                        {{ acte.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }}
+                      </small>
+                    </td>
+                    <td style="font-size:13px">{{ acte.pere?.prenom }} {{ acte.pere?.nom }}</td>
+                    <td style="font-size:13px;color:var(--text-muted)">
+                      {{ acte.declaration?.mere?.prenom }} {{ acte.declaration?.mere?.nom }}
+                    </td>
+                    <td style="font-size:12px;color:var(--text-muted)">
+                      {{ acte.declaration?.hopital?.nom }}
+                    </td>
+                    <td><small>{{ acte.date | date:'dd/MM/yyyy' }}</small></td>
+                    <td>
+                      <div style="display:flex;gap:6px">
+                        <button class="tbl-icon-btn"
+                                (click)="openModalView(acte);$event.stopPropagation()"
+                                title="Voir">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="tbl-icon-btn success"
+                                (click)="openModalEdit(acte);$event.stopPropagation()"
+                                title="Modifier">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="tbl-icon-btn danger"
+                                (click)="deleteActe(acte,$event)"
+                                title="Supprimer">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div style="padding:14px 20px;border-top:1px solid var(--border);
+                      display:flex;justify-content:space-between;align-items:center;
+                      font-size:13px;color:var(--text-muted)">
+            <span>Affichage de {{ paginatedList().length }} sur {{ filteredList().length }} résultats</span>
+            <div class="d-flex gap-2">
+              <button class="filter-pill"
+                      [disabled]="currentPage() === 1"
+                      (click)="setPage(currentPage() - 1)">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              @for (p of pages(); track p) {
+                <button class="filter-pill"
+                        [class.active]="p === currentPage()"
+                        (click)="setPage(p)">{{ p }}</button>
+              }
+              <button class="filter-pill"
+                      [disabled]="currentPage() === totalPages()"
+                      (click)="setPage(currentPage() + 1)">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </div>
         }
-        <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="setPage(currentPage() + 1)">
-          <i class="bi bi-chevron-right"></i>
-        </button>
+
       </div>
     </div>
+
+    <!-- ── SIDE PANEL ──────────────────────────────────────────── -->
+    <div class="col-lg-4">
+
+      <!-- Évolution mensuelle (statique) -->
+      <div class="gender-chart-card mb-4">
+        <h6>
+          <i class="bi bi-calendar3 me-2" style="color:var(--primary)"></i>
+          Actes récents
+        </h6>
+        @if (listActeNaissance().length === 0) {
+          <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">
+            Aucun acte enregistré.
+          </p>
+        } @else {
+          <div style="display:flex;flex-direction:column;gap:10px">
+            @for (acte of listActeNaissance().slice(0, 5); track acte.id) {
+              <div style="display:flex;align-items:center;gap:12px;font-size:13px;
+                          padding:8px 0;border-bottom:1px solid var(--border)">
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,49,137,.08);
+                            display:flex;align-items:center;justify-content:center;
+                            flex-shrink:0;color:var(--primary)">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;color:var(--text-dark);
+                              white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                    {{ acte.declaration?.enfant?.prenom }} {{ acte.declaration?.enfant?.nom }}
+                  </div>
+                  <div style="color:var(--text-muted);font-size:11px">
+                    {{ acte.numeroActe ?? 'N° —' }} · {{ acte.date | date:'dd/MM/yy' }}
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Aide rapide -->
+      <div class="gender-chart-card">
+        <h6><i class="bi bi-info-circle me-2" style="color:var(--primary)"></i>Aide rapide</h6>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;font-size:13px;
+                    color:var(--text-mid)">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-1-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Saisissez l'<strong>ID de la déclaration</strong> liée pour rattacher l'acte au dossier.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-2-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Joignez la <strong>CNI du père</strong> et sa <strong>photo 4×4</strong> obligatoirement.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-3-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Le <strong>numéro d'acte</strong> est généré automatiquement après validation.</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+                    font-size:12px;color:var(--text-muted)">
+          <i class="bi bi-shield-check me-1" style="color:#198754"></i>
+          Données sécurisées — accès restreint mairie
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════════
      MODAL — Créer un acte de naissance
-══════════════════════════════════════════════════════════════════════════ -->
+════════════════════════════════════════════════════════════════ -->
 @if (showModalAdd()) {
-  <div class="modal-backdrop" (click)="closeModalAdd()"></div>
-  <div class="modal show d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content" [formGroup]="acteNaissanceFb">
+  <div class="modal-overlay" (click)="closeModalAdd()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
 
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <i class="bi bi-file-earmark-plus me-2"></i>Nouvel acte de naissance
-          </h5>
-          <button type="button" class="btn-close btn-close-white" (click)="closeModalAdd()"></button>
+        <!-- En-tête modal -->
+        <div class="modal-header-custom">
+          <div>
+            <h5><i class="bi bi-file-earmark-plus me-2"></i>Nouvel acte de naissance</h5>
+            <small>Remplissez tous les champs obligatoires marqués d'un <span class="req">*</span></small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalAdd()"
+                  [disabled]="isSubmitting()">
+          </button>
         </div>
 
-        <div class="modal-body">
+        <!-- Corps modal -->
+        <div class="modal-body-custom" [formGroup]="acteNaissanceFb">
 
-          <!-- Liaison déclaration -->
-          <div class="modal-section-title">Déclaration liée</div>
+          <!-- ═══ DÉCLARATION LIÉE ══════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-link-45deg me-2"></i>Déclaration liée
+          </div>
           <div class="row g-3">
+
             <div class="col-md-6">
-              <label class="fld-label">ID Déclaration <span class="required">*</span></label>
-              <input type="number" class="fld-ctrl" formControlName="declaration"
-                     placeholder="Ex : 42"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'declaration').invalid && ctrl(acteNaissanceFb,'declaration').touched" />
-              @if (ctrl(acteNaissanceFb,'declaration').invalid && ctrl(acteNaissanceFb,'declaration').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Declaration <span class="req">*</span></label>
+
+                @if (listDeclaration().length === 0) {
+                  <div class="form-control-custom d-flex align-items-center gap-2"
+                       style="color:var(--text-muted);cursor:default">
+                    <span class="spinner-border spinner-border-sm"
+                          style="width:14px;height:14px;border-width:2px"></span>
+                    Chargement…
+                  </div>
+                } @else {
+                  <select class="form-control-custom"
+                          formControlName="declaration"
+                          [class.is-invalid]="ctrl(acteNaissanceFb,'declaration').invalid
+                                        && ctrl(acteNaissanceFb,'declaration').touched" >
+                    <option value="">— Sélectionner —</option>
+                    @for (s of listDeclaration(); track s.id) {
+                      <option [value]="s.id">{{ s.enfant.nom }} -- {{ s.enfant.prenom }}</option>
+                    }
+                  </select>
+                }
+
+                @if (ctrl(acteNaissanceFb,'declaration').invalid
+                  && ctrl(acteNaissanceFb,'declaration').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
+
             <div class="col-md-6">
-              <label class="fld-label">Date de l'acte <span class="required">*</span></label>
-              <input type="date" class="fld-ctrl" formControlName="date"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'date').invalid && ctrl(acteNaissanceFb,'date').touched" />
-              @if (ctrl(acteNaissanceFb,'date').invalid && ctrl(acteNaissanceFb,'date').touched) {
-                <div class="invalid-feedback d-block">Date obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Date de l'acte <span class="req">*</span></label>
+                <input type="date" class="form-control-custom"
+                       formControlName="date"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'date').invalid
+                                        && ctrl(acteNaissanceFb,'date').touched" />
+                @if (ctrl(acteNaissanceFb,'date').invalid && ctrl(acteNaissanceFb,'date').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Date obligatoire
+                  </div>
+                }
+              </div>
             </div>
+
           </div>
 
-          <!-- Informations du père -->
-          <div class="modal-section-title">Informations du père</div>
+          <!-- ═══ INFORMATIONS DU PÈRE ══════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Informations du père
+          </div>
           <div class="row g-3">
-            <div class="col-md-6">
-              <label class="fld-label">Nom <span class="required">*</span></label>
-              <input type="text" class="fld-ctrl" formControlName="nomPere" placeholder="Kamga"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'nomPere').invalid && ctrl(acteNaissanceFb,'nomPere').touched" />
-              @if (ctrl(acteNaissanceFb,'nomPere').invalid && ctrl(acteNaissanceFb,'nomPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nomPere"
+                       placeholder="Kamga"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'nomPere').invalid
+                                        && ctrl(acteNaissanceFb,'nomPere').touched" />
+                @if (ctrl(acteNaissanceFb,'nomPere').invalid && ctrl(acteNaissanceFb,'nomPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
-            <div class="col-md-6">
-              <label class="fld-label">Prénom(s) <span class="required">*</span></label>
-              <input type="text" class="fld-ctrl" formControlName="prenomPere" placeholder="Jean-Marie"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'prenomPere').invalid && ctrl(acteNaissanceFb,'prenomPere').touched" />
-              @if (ctrl(acteNaissanceFb,'prenomPere').invalid && ctrl(acteNaissanceFb,'prenomPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenomPere"
+                       placeholder="Jean-Marie"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'prenomPere').invalid
+                                        && ctrl(acteNaissanceFb,'prenomPere').touched" />
+                @if (ctrl(acteNaissanceFb,'prenomPere').invalid
+                  && ctrl(acteNaissanceFb,'prenomPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
-            <div class="col-md-6">
-              <label class="fld-label">Téléphone <span class="required">*</span></label>
-              <input type="tel" class="fld-ctrl" formControlName="telephonePere" placeholder="+237 6XX XXX XXX"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'telephonePere').invalid && ctrl(acteNaissanceFb,'telephonePere').touched" />
-              @if (ctrl(acteNaissanceFb,'telephonePere').invalid && ctrl(acteNaissanceFb,'telephonePere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+
+            <!-- Date de naissance  -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Date de naissance <span class="req">*</span></label>
+                <input type="date" class="form-control-custom"
+                       formControlName="dateNaissance"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'dateNaissance').invalid
+                                        && ctrl(acteNaissanceFb,'dateNaissance').touched" />
+                @if (ctrl(acteNaissanceFb,'dateNaissance').invalid
+                  && ctrl(acteNaissanceFb,'dateNaissance').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
-            <div class="col-md-6">
-              <label class="fld-label">Email <span class="required">*</span></label>
-              <input type="email" class="fld-ctrl" formControlName="emailPere" placeholder="jean@example.com"
-                     [class.is-invalid]="ctrl(acteNaissanceFb,'emailPere').invalid && ctrl(acteNaissanceFb,'emailPere').touched" />
-              @if (ctrl(acteNaissanceFb,'emailPere').errors?.['required'] && ctrl(acteNaissanceFb,'emailPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
-              @if (ctrl(acteNaissanceFb,'emailPere').errors?.['email'] && ctrl(acteNaissanceFb,'emailPere').touched) {
-                <div class="invalid-feedback d-block">Email invalide.</div>
-              }
+
+            <!-- Lieu de naissance -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Lieu de naissance  <span class="req">*</span>
+                </label>
+                <input type="text" class="form-control-custom"
+                       formControlName="lieuNaissance"
+                       placeholder="Ex: Salle de maternité — Bloc B"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'lieuNaissance').invalid
+                                        && ctrl(acteNaissanceFb,'lieuNaissance').touched" />
+                @if (ctrl(acteNaissanceFb,'lieuNaissance').invalid
+                    && ctrl(acteNaissanceFb,'lieuNaissance').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
+             <!-- Localisation -->
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Quartier de résidence</label>
+                <input type="text" class="form-control-custom"
+                       formControlName="localisation"
+                       placeholder="Ex: Akwa, Douala" />
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Profession <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="profession"
+                       placeholder="Jean-Marie"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'profession').invalid
+                                        && ctrl(acteNaissanceFb,'profession').touched" />
+                @if (ctrl(acteNaissanceFb,'profession').invalid
+                  && ctrl(acteNaissanceFb,'profession').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Téléphone <span class="req">*</span></label>
+                <input type="tel" class="form-control-custom"
+                       formControlName="telephonePere"
+                       placeholder="+237 6XX XXX XXX"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'telephonePere').invalid
+                                        && ctrl(acteNaissanceFb,'telephonePere').touched" />
+                @if (ctrl(acteNaissanceFb,'telephonePere').invalid
+                  && ctrl(acteNaissanceFb,'telephonePere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Adresse email <span class="req">*</span></label>
+                <input type="email" class="form-control-custom"
+                       formControlName="emailPere"
+                       placeholder="jean@example.com"
+                       [class.is-invalid]="ctrl(acteNaissanceFb,'emailPere').invalid
+                                        && ctrl(acteNaissanceFb,'emailPere').touched" />
+                @if (ctrl(acteNaissanceFb,'emailPere').invalid
+                  && ctrl(acteNaissanceFb,'emailPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    @if (ctrl(acteNaissanceFb,'emailPere').hasError('required')) {
+                      Champ obligatoire
+                    } @else {
+                      Adresse email invalide
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
           </div>
 
-        </div><!-- /modal-body -->
+          <!-- ═══ PIÈCES JUSTIFICATIVES ══════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-paperclip me-2"></i>Pièces justificatives du père
+          </div>
+          <div class="row g-3">
 
-        <div class="modal-footer">
-          <button class="btn-modal-cancel" (click)="closeModalAdd()">Annuler</button>
-          <button class="btn-modal-save" (click)="createActe()" [disabled]="isSubmitting()">
+            <!-- CNI du père -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  CNI du père <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="cniPere !== null"
+                     (click)="inputCniPere.click()">
+                  <input #inputCniPere type="file"
+                         accept="image/jpeg,image/png,application/pdf"
+                         style="display:none"
+                         (change)="onSelectCniPere($event)" />
+                  @if (!cniPere) {
+                    <i class="bi bi-person-vcard file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Joindre la CNI</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ cniPereNom() }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); supprimerCniPere()">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Photo 4×4 du père -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Photo d'identité 4×4 <span class="req">*</span>
+                  <span class="fmt-hint">JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="photo4x4Pere !== null"
+                     (click)="inputPhoto.click()">
+                  <input #inputPhoto type="file"
+                         accept="image/jpeg,image/png"
+                         style="display:none"
+                         (change)="onSelectPhoto4x4Pere($event)" />
+                  @if (!photo4x4Pere) {
+                    <i class="bi bi-person-bounding-box file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Joindre la photo</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ photo4x4PereNom() }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); supprimerPhoto4x4Pere()">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Note -->
+          <div style="background:rgba(0,49,137,.04);border-left:3px solid var(--primary);
+                      border-radius:0 4px 4px 0;padding:12px 16px;font-size:13px;
+                      color:var(--text-mid);margin-top:20px">
+            <i class="bi bi-info-circle me-1" style="color:var(--primary)"></i>
+            Le numéro d'acte sera généré automatiquement. L'acte sera rattaché à la déclaration
+            correspondante via l'identifiant fourni.
+          </div>
+
+        </div>
+
+        <!-- Pied modal -->
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalAdd()" [disabled]="isSubmitting()">
+            Annuler
+          </button>
+          <button class="btn-submit" (click)="createActe()" [disabled]="isSubmitting()">
             @if (isSubmitting()) {
-              <span class="spinner-border spinner-border-sm me-1"></span>Enregistrement…
+              <span class="spinner-border spinner-border-sm me-2"
+                    style="width:15px;height:15px;border-width:2px"></span>
+              Enregistrement…
             } @else {
-              <i class="bi bi-check-lg me-1"></i>Enregistrer
+              <i class="bi bi-check-lg me-2"></i>Enregistrer l'acte
             }
           </button>
         </div>
@@ -222,91 +634,140 @@
 }
 
 
-<!-- ══════════════════════════════════════════════════════════════════════════
-     MODAL — Voir le dossier de l'acte
-══════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL — Voir un acte de naissance
+════════════════════════════════════════════════════════════════ -->
 @if (showModalView() && acteSelected()) {
-  <div class="modal-backdrop" (click)="closeModalView()"></div>
-  <div class="modal show d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content">
+  <div class="modal-overlay" (click)="closeModalView()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
 
-        <div class="modal-header" style="background:#198754">
-          <h5 class="modal-title">
-            <i class="bi bi-file-earmark-text me-2"></i>
-            Acte — {{ acteSelected()!.numeroActe ?? 'Nouveau' }}
-          </h5>
-          <button type="button" class="btn-close btn-close-white" (click)="closeModalView()"></button>
+        <div class="modal-header-custom modal-header-custom--view">
+          <div>
+            <h5><i class="bi bi-file-earmark-text me-2"></i>Détail de l'acte</h5>
+            <small>{{ acteSelected()!.numeroActe ?? 'N° non généré' }}</small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalView()">
+          </button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body-custom">
 
           <!-- Enfant -->
-          <div class="modal-section-title">Enfant</div>
-          <dl class="detail-row">
-            <dt>Nom complet</dt>
-            <dd><strong>{{ acteSelected()!.declaration?.enfant?.prenom }} {{ acteSelected()!.declaration?.enfant?.nom }}</strong></dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Date de naissance</dt>
-            <dd>{{ acteSelected()!.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Lieu de naissance</dt>
-            <dd>{{ acteSelected()!.declaration?.enfant?.lieuNaissance ?? '—' }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Sexe</dt>
-            <dd>{{ acteSelected()!.declaration?.enfant?.sexe?.libelle ?? '—' }}</dd>
-          </dl>
+          <div class="form-section-divider">
+            <i class="bi bi-person-hearts me-2"></i>Enfant
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Nom complet</span>
+              <span class="detail-value">
+                <strong>{{ acteSelected()!.declaration?.enfant?.prenom }}
+                         {{ acteSelected()!.declaration?.enfant?.nom }}</strong>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date de naissance</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Lieu de naissance</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.enfant?.lieuNaissance ?? '—' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Sexe</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.enfant?.sexe?.libelle ?? '—' }}
+              </span>
+            </div>
+          </div>
 
           <!-- Parents -->
-          <div class="modal-section-title">Parents</div>
-          <dl class="detail-row">
-            <dt>Père</dt>
-            <dd>{{ acteSelected()!.pere?.prenom }} {{ acteSelected()!.pere?.nom }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Contact père</dt>
-            <dd>{{ acteSelected()!.pere?.telephone ?? '—' }} — {{ acteSelected()!.pere?.email ?? '—' }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Mère</dt>
-            <dd>{{ acteSelected()!.declaration?.mere?.prenom }} {{ acteSelected()!.declaration?.mere?.nom }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Contact mère</dt>
-            <dd>{{ acteSelected()!.declaration?.mere?.telephone ?? '—' }} — {{ acteSelected()!.declaration?.mere?.email ?? '—' }}</dd>
-          </dl>
+          <div class="form-section-divider">
+            <i class="bi bi-people-fill me-2"></i>Parents
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Père</span>
+              <span class="detail-value">
+                {{ acteSelected()!.pere?.prenom }} {{ acteSelected()!.pere?.nom }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Contact père</span>
+              <span class="detail-value">
+                {{ acteSelected()!.pere?.telephone ?? '—' }}
+                &nbsp;·&nbsp;
+                {{ acteSelected()!.pere?.email ?? '—' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Mère</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.mere?.prenom }}
+                {{ acteSelected()!.declaration?.mere?.nom }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Contact mère</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.mere?.telephone ?? '—' }}
+                &nbsp;·&nbsp;
+                {{ acteSelected()!.declaration?.mere?.email ?? '—' }}
+              </span>
+            </div>
+          </div>
 
           <!-- Établissement -->
-          <div class="modal-section-title">Établissement déclarant</div>
-          <dl class="detail-row">
-            <dt>Hôpital / Clinique</dt>
-            <dd>{{ acteSelected()!.declaration?.hopital?.nom ?? '—' }}</dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Mairie responsable</dt>
-            <dd>{{ acteSelected()!.declaration?.mairie?.nom ?? '—' }}</dd>
-          </dl>
+          <div class="form-section-divider">
+            <i class="bi bi-hospital me-2"></i>Établissement déclarant
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Hôpital / Clinique</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.hopital?.nom ?? '—' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Mairie responsable</span>
+              <span class="detail-value">
+                {{ acteSelected()!.declaration?.mairie?.nom ?? '—' }}
+              </span>
+            </div>
+          </div>
 
-          <!-- Acte info -->
-          <div class="modal-section-title">Informations de l'acte</div>
-          <dl class="detail-row">
-            <dt>Numéro d'acte</dt>
-            <dd><span class="ref">{{ acteSelected()!.numeroActe ?? '—' }}</span></dd>
-          </dl>
-          <dl class="detail-row">
-            <dt>Date d'établissement</dt>
-            <dd>{{ acteSelected()!.date | date:'dd/MM/yyyy' }}</dd>
-          </dl>
+          <!-- Acte -->
+          <div class="form-section-divider">
+            <i class="bi bi-file-earmark-text me-2"></i>Informations de l'acte
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Numéro d'acte</span>
+              <span class="detail-value">
+                <span class="decl-num">{{ acteSelected()!.numeroActe ?? '—' }}</span>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date d'établissement</span>
+              <span class="detail-value">
+                {{ acteSelected()!.date | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+          </div>
 
-        </div><!-- /modal-body -->
+        </div>
 
-        <div class="modal-footer">
-          <button class="btn-modal-cancel" (click)="closeModalView()">Fermer</button>
-          <button class="btn-modal-save" (click)="openModalEdit(acteSelected()!)">
-            <i class="bi bi-pencil me-1"></i>Modifier l'acte
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalView()">Fermer</button>
+          <button class="btn-submit" (click)="openModalEdit(acteSelected()!)">
+            <i class="bi bi-pencil me-2"></i>Modifier l'acte
           </button>
         </div>
 
@@ -316,102 +777,163 @@
 }
 
 
-<!-- ══════════════════════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════════════
      MODAL — Modifier un acte de naissance
-══════════════════════════════════════════════════════════════════════════ -->
+════════════════════════════════════════════════════════════════ -->
 @if (showModalEdit() && acteSelected()) {
-  <div class="modal-backdrop" (click)="closeModalEdit()"></div>
-  <div class="modal show d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content" [formGroup]="acteEditFb">
+  <div class="modal-overlay" (click)="closeModalEdit()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
 
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <i class="bi bi-pencil-square me-2"></i>
-            Modifier — {{ acteSelected()!.numeroActe ?? 'Acte' }}
-          </h5>
-          <button type="button" class="btn-close btn-close-white" (click)="closeModalEdit()"></button>
+        <div class="modal-header-custom modal-header-custom--edit">
+          <div>
+            <h5>
+              <i class="bi bi-pencil-square me-2"></i>
+              Modifier — {{ acteSelected()!.numeroActe ?? 'Acte' }}
+            </h5>
+            <small>Seuls les champs modifiables sont affichés</small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalEdit()">
+          </button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body-custom" [formGroup]="acteEditFb">
 
-          <!-- Récap enfant (lecture seule) -->
-          <div class="modal-section-title">Enfant (lecture seule)</div>
-          <div class="row g-2 mb-3">
+          <!-- Enfant lecture seule -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-hearts me-2"></i>Enfant (lecture seule)
+          </div>
+          <div class="row g-3 mb-2">
             <div class="col-md-6">
-              <label class="fld-label">Nom complet</label>
-              <input type="text" class="fld-ctrl" readonly
-                     value="{{ acteSelected()!.declaration?.enfant?.prenom }} {{ acteSelected()!.declaration?.enfant?.nom }}" />
+              <div class="form-group-custom">
+                <label class="form-label-custom">Nom complet</label>
+                <input type="text" class="form-control-custom" readonly
+                       value="{{ acteSelected()!.declaration?.enfant?.prenom }}
+                              {{ acteSelected()!.declaration?.enfant?.nom }}" />
+              </div>
             </div>
             <div class="col-md-6">
-              <label class="fld-label">Date de naissance</label>
-              <input type="text" class="fld-ctrl" readonly
-                     value="{{ acteSelected()!.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }}" />
+              <div class="form-group-custom">
+                <label class="form-label-custom">Date de naissance</label>
+                <input type="text" class="form-control-custom" readonly
+                       value="{{ acteSelected()!.declaration?.enfant?.dateNaissance | date:'dd/MM/yyyy' }}" />
+              </div>
             </div>
           </div>
 
-          <!-- Date acte modifiable -->
-          <div class="modal-section-title">Informations de l'acte</div>
+          <!-- Date de l'acte -->
+          <div class="form-section-divider">
+            <i class="bi bi-calendar3 me-2"></i>Informations de l'acte
+          </div>
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="fld-label">Date de l'acte <span class="required">*</span></label>
-              <input type="date" class="fld-ctrl" formControlName="date"
-                     [class.is-invalid]="ctrl(acteEditFb,'date').invalid && ctrl(acteEditFb,'date').touched" />
-              @if (ctrl(acteEditFb,'date').invalid && ctrl(acteEditFb,'date').touched) {
-                <div class="invalid-feedback d-block">Date obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Date de l'acte <span class="req">*</span></label>
+                <input type="date" class="form-control-custom"
+                       formControlName="date"
+                       [class.is-invalid]="ctrl(acteEditFb,'date').invalid
+                                        && ctrl(acteEditFb,'date').touched" />
+                @if (ctrl(acteEditFb,'date').invalid && ctrl(acteEditFb,'date').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Date obligatoire
+                  </div>
+                }
+              </div>
             </div>
           </div>
 
           <!-- Informations du père -->
-          <div class="modal-section-title">Informations du père</div>
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Informations du père
+          </div>
           <div class="row g-3">
+
             <div class="col-md-6">
-              <label class="fld-label">Nom <span class="required">*</span></label>
-              <input type="text" class="fld-ctrl" formControlName="nomPere"
-                     [class.is-invalid]="ctrl(acteEditFb,'nomPere').invalid && ctrl(acteEditFb,'nomPere').touched" />
-              @if (ctrl(acteEditFb,'nomPere').invalid && ctrl(acteEditFb,'nomPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nomPere"
+                       [class.is-invalid]="ctrl(acteEditFb,'nomPere').invalid
+                                        && ctrl(acteEditFb,'nomPere').touched" />
+                @if (ctrl(acteEditFb,'nomPere').invalid && ctrl(acteEditFb,'nomPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
+
             <div class="col-md-6">
-              <label class="fld-label">Prénom(s) <span class="required">*</span></label>
-              <input type="text" class="fld-ctrl" formControlName="prenomPere"
-                     [class.is-invalid]="ctrl(acteEditFb,'prenomPere').invalid && ctrl(acteEditFb,'prenomPere').touched" />
-              @if (ctrl(acteEditFb,'prenomPere').invalid && ctrl(acteEditFb,'prenomPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenomPere"
+                       [class.is-invalid]="ctrl(acteEditFb,'prenomPere').invalid
+                                        && ctrl(acteEditFb,'prenomPere').touched" />
+                @if (ctrl(acteEditFb,'prenomPere').invalid && ctrl(acteEditFb,'prenomPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
+
             <div class="col-md-6">
-              <label class="fld-label">Téléphone <span class="required">*</span></label>
-              <input type="tel" class="fld-ctrl" formControlName="telephonePere"
-                     [class.is-invalid]="ctrl(acteEditFb,'telephonePere').invalid && ctrl(acteEditFb,'telephonePere').touched" />
-              @if (ctrl(acteEditFb,'telephonePere').invalid && ctrl(acteEditFb,'telephonePere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Téléphone <span class="req">*</span></label>
+                <input type="tel" class="form-control-custom"
+                       formControlName="telephonePere"
+                       [class.is-invalid]="ctrl(acteEditFb,'telephonePere').invalid
+                                        && ctrl(acteEditFb,'telephonePere').touched" />
+                @if (ctrl(acteEditFb,'telephonePere').invalid
+                  && ctrl(acteEditFb,'telephonePere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+              </div>
             </div>
+
             <div class="col-md-6">
-              <label class="fld-label">Email <span class="required">*</span></label>
-              <input type="email" class="fld-ctrl" formControlName="emailPere"
-                     [class.is-invalid]="ctrl(acteEditFb,'emailPere').invalid && ctrl(acteEditFb,'emailPere').touched" />
-              @if (ctrl(acteEditFb,'emailPere').errors?.['required'] && ctrl(acteEditFb,'emailPere').touched) {
-                <div class="invalid-feedback d-block">Champ obligatoire.</div>
-              }
-              @if (ctrl(acteEditFb,'emailPere').errors?.['email'] && ctrl(acteEditFb,'emailPere').touched) {
-                <div class="invalid-feedback d-block">Email invalide.</div>
-              }
+              <div class="form-group-custom">
+                <label class="form-label-custom">Email <span class="req">*</span></label>
+                <input type="email" class="form-control-custom"
+                       formControlName="emailPere"
+                       [class.is-invalid]="ctrl(acteEditFb,'emailPere').invalid
+                                        && ctrl(acteEditFb,'emailPere').touched" />
+                @if (ctrl(acteEditFb,'emailPere').errors?.['required']
+                  && ctrl(acteEditFb,'emailPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+                @if (ctrl(acteEditFb,'emailPere').errors?.['email']
+                  && ctrl(acteEditFb,'emailPere').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Email invalide
+                  </div>
+                }
+              </div>
             </div>
+
           </div>
 
-        </div><!-- /modal-body -->
+        </div>
 
-        <div class="modal-footer">
-          <button class="btn-modal-cancel" (click)="closeModalEdit()">Annuler</button>
-          <button class="btn-modal-save green" (click)="updateActe()" [disabled]="isSubmitting()">
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalEdit()" [disabled]="isSubmitting()">
+            Annuler
+          </button>
+          <button class="btn-submit btn-submit--green" (click)="updateActe()" [disabled]="isSubmitting()">
             @if (isSubmitting()) {
-              <span class="spinner-border spinner-border-sm me-1"></span>Sauvegarde…
+              <span class="spinner-border spinner-border-sm me-2"
+                    style="width:15px;height:15px;border-width:2px"></span>
+              Sauvegarde…
             } @else {
-              <i class="bi bi-check-lg me-1"></i>Sauvegarder
+              <i class="bi bi-check-lg me-2"></i>Sauvegarder
             }
           </button>
         </div>

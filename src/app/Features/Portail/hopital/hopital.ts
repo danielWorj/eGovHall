@@ -66,8 +66,11 @@ export class HopitalC  {
       nomParent:       new FormControl('', [Validators.required]),
       prenomParent:    new FormControl('', [Validators.required]),
       telephone:       new FormControl('', [Validators.required]),
+      profession:       new FormControl('', [Validators.required]),
       email:           new FormControl('', [Validators.required, Validators.email]),
       localisation:    new FormControl(''),
+      dateNaissanceM:    new FormControl(''),
+      lieuNaissanceM:    new FormControl(''),
 
       // ── Structure (injectée automatiquement) ────────────────────────────────
       hopital:       new FormControl(),
