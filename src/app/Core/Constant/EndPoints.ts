@@ -40,6 +40,7 @@ export const eHAllSystemEndPoints ={
             declare : `${acteBaseUrl}/acte/create`, 
             update : `${acteBaseUrl}/acte/update`, 
             delete : `${acteBaseUrl}/acte/delete`, 
+            download : `${acteBaseUrl}/acte/download/`
         }
     }, 
     Utilisateur:{

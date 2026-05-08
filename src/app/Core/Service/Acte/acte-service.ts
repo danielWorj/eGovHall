@@ -83,4 +83,11 @@ export class ActeService {
       eHAllSystemEndPoints.Acte.ActeNaissance.delete + id
     );
   }
+
+  downloadActeNaissance(id: number): Observable<Blob> {
+  return this.http.get(
+    eHAllSystemEndPoints.Acte.ActeNaissance.download + id,
+    { responseType: 'blob' }
+  );
+}
 }

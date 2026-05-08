@@ -180,6 +180,11 @@
                     <td>
                       <div style="display:flex;gap:6px">
                         <button class="tbl-icon-btn"
+                              (click)="downloadActe(acte, $event)"
+                              title="Télécharger le PDF">
+                        <i class="bi bi-file-earmark-arrow-down"></i>
+                      </button>
+                        <button class="tbl-icon-btn"
                                 (click)="openModalView(acte);$event.stopPropagation()"
                                 title="Voir">
                           <i class="bi bi-eye"></i>
@@ -455,12 +460,12 @@
                 }
               </div>
             </div>
-             <!-- Localisation -->
+             <!-- Domicile -->
             <div class="col-md-4">
               <div class="form-group-custom">
                 <label class="form-label-custom">Quartier de résidence</label>
                 <input type="text" class="form-control-custom"
-                       formControlName="localisation"
+                       formControlName="domicile"
                        placeholder="Ex: Akwa, Douala" />
               </div>
             </div>

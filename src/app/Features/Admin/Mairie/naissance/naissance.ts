@@ -322,6 +322,22 @@ export class Naissance {
     });
   }
 
+
+  downloadActe(acte: ActeNaissance, event: Event): void {
+  event.stopPropagation();
+  this.acteService.downloadActeNaissance(acte.id!).subscribe({
+    next: (blob: Blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `acte_naissance_${acte.numeroActe}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+    error: () => this.notify('error', 'Erreur lors du téléchargement du PDF.')
+  });
+}
+
   // ── Search / pagination ───────────────────────────────────────────────────
   onSearch(event: Event): void {
     this.searchTerm.set((event.target as HTMLInputElement).value);
