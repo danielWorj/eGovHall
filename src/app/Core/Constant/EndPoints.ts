@@ -9,18 +9,37 @@ export const eHAllSystemEndPoints ={
     Auth : {
         login : `${authBaseUrl}/login`
     }, 
-    Etablissement : {
-        all : `${etablissementBaseUrl}/all`, 
-        byId : `${etablissementBaseUrl}/byId/`, 
-        create : `${etablissementBaseUrl}/create`, 
-        update : `${etablissementBaseUrl}/update`, 
-        delete : `${etablissementBaseUrl}/delete/`, 
+    structure : {
+        Mairie : {
+            all: `${etablissementBaseUrl}/mairie/all`,
+            byid: `${etablissementBaseUrl}/mairie/byId/`,
+            create: `${etablissementBaseUrl}/mairie/create`,
+            update: `${etablissementBaseUrl}/mairie/update`,
+            delete: `${etablissementBaseUrl}/mairie/delete/`,
+        }, 
+        Hopital : {
+            all: `${etablissementBaseUrl}/hopital/all`,
+            byid: `${etablissementBaseUrl}/hopital/byId/`,
+            create: `${etablissementBaseUrl}/hopital/create`,
+            update: `${etablissementBaseUrl}/hopital/update`,
+            delete: `${etablissementBaseUrl}/hopital/delete/`,
+        }
+
+
     }, 
     Acte : {
         Declaration : {
             all : `${acteBaseUrl}/all`,
-            allByStructure : `${acteBaseUrl}/all/bystructure/`,
-            declare : `${acteBaseUrl}/create`
+            allHopital : `${acteBaseUrl}/all/byhopital/`,
+            allMairie : `${acteBaseUrl}/all/bymairie/`,
+            declare : `${acteBaseUrl}/create`,
+            update : `${acteBaseUrl}/update`,
+        }, 
+        ActeNaissance :{
+            allMairie : `${acteBaseUrl}/acte/all/bymairie/`,
+            declare : `${acteBaseUrl}/acte/create`, 
+            update : `${acteBaseUrl}/acte/update`, 
+            delete : `${acteBaseUrl}/acte/delete`, 
         }
     }, 
     Utilisateur:{

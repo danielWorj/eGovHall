@@ -1,7 +1,6 @@
 import { Component, signal, OnInit } from '@angular/core';
-import { EtablissementService } from '../../../Core/Service/Etablissement/etablissement-service';
 
-import { Etablissement } from '../../../Core/Model/Etablissement/Etablissement';
+
 import { Sexe } from '../../../Core/Model/Enfant/Sexe';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +8,8 @@ import { ActeService } from '../../../Core/Service/Acte/acte-service';
 import { UtilisateurService } from '../../../Core/Service/Utilisateur/utilisateur-service';
 import { ServerResponse } from '../../../Core/Model/Server/ServerResponse';
 import { Declaration } from '../../../Core/Model/Acte/Declaration';
+import { EtablissementService } from '../../../Core/Service/Etablissement/etablissement-service';
+import { Hopital } from '../../../Core/Model/Etablissement/Hopital';
 
 @Component({
   selector: 'app-hopital',
@@ -17,11 +18,11 @@ import { Declaration } from '../../../Core/Model/Acte/Declaration';
   templateUrl: './hopital.html',
   styleUrl: './hopital.css',
 })
-export class Hopital  {
+export class HopitalC  {
 
   // ─── ID de l'établissement connecté ─────────────────────────────────────────
-  idEtablissement = signal<number>(0);
-  etablissementConnected = signal<Etablissement | null>(null);
+  idHopital = signal<number>(0);
+  hopitalConnected = signal<Hopital | null>(null);
   listeSexes = signal<Sexe[]>([]);
 
   // ─── État de la soumission ───────────────────────────────────────────────────
@@ -51,7 +52,7 @@ export class Hopital  {
     private utilisateurService : UtilisateurService
   ) {
     const idStored = localStorage.getItem('etablissement');
-    this.idEtablissement.set(idStored ? parseInt(idStored) : 0);
+    this.idHopital.set(idStored ? parseInt(idStored) : 0);
 
     this.declarationFb = this.fb.group({
       // ── Enfant ──────────────────────────────────────────────────────────────
@@ -69,28 +70,30 @@ export class Hopital  {
       localisation:    new FormControl(''),
 
       // ── Structure (injectée automatiquement) ────────────────────────────────
-      structure:       new FormControl(this.idEtablissement()),
+      hopital:       new FormControl(),
+      mairie:       new FormControl(),
     });
 
     this.loadPage(); 
   }
 
   loadPage(): void {
-    this.getEtablissementById(this.idEtablissement());
+    this.getHopitalById(this.idHopital());
     this.getAllSexes();
     this.getAllDeclaration(); 
   }
 
   // ─── Chargement des données de référence ────────────────────────────────────
 
-  getEtablissementById(id: number): void {
-    this.etablissementService.getEtablissementByid(id).subscribe({
-      next: (response: Etablissement) => {
-        this.etablissementConnected.set(response);
+  getHopitalById(id: number): void {
+    this.etablissementService.getHopitalByid(id).subscribe({
+      next: (response: Hopital) => {
+        this.hopitalConnected.set(response);
         // Injecter l'ID de la structure dans le formulaire
         this.declarationFb.get('structure')?.setValue(response.id);
+        
       },
-      error: (error) => {
+      error: (error:any) => {
         console.error('Erreur chargement établissement :', error);
       }
     });
@@ -98,7 +101,7 @@ export class Hopital  {
 
   listDeclaration = signal<Declaration[]>([]); 
   getAllDeclaration(){
-    this.acteService.getAllDeclarationByEtablissement(this.idEtablissement()).subscribe({
+    this.acteService.getAllDeclarationByHopital(this.idHopital()).subscribe({
       next:(data:Declaration[])=>{
         this.listDeclaration.set(data); 
         this.getNumbers()
@@ -256,12 +259,18 @@ export class Hopital  {
 
     // Construction du DTO (partie JSON)
     // typesPiecesJointes correspond aux IDs TypePieceDeclaration dans le même ordre que les fichiers
+    // Construction du FormData (JSON + fichiers)
+    this.declarationFb.controls['hopital'].setValue(this.hopitalConnected()?.id); 
+    this.declarationFb.controls['mairie'].setValue(this.hopitalConnected()?.mairie.id);
+    
     const dto = {
       ...this.declarationFb.value,
       typesPiecesJointes: [1, 2, 3]  // 1=CNI | 2=Photo4x4 | 3=Certification
     };
 
-    // Construction du FormData (JSON + fichiers)
+     
+
+    console.log('data a creer:', this.declarationFb.value)
     const formData = new FormData();
     formData.append('declaration', JSON.stringify(dto));
     formData.append('fichiers', this.cniMere!);
@@ -291,7 +300,7 @@ export class Hopital  {
 
   resetFormulaire(): void {
     this.declarationFb.reset();
-    this.declarationFb.get('structure')?.setValue(this.idEtablissement());
+    this.declarationFb.get('structure')?.setValue(this.idHopital());
     this.supprimerCni();
     this.supprimerPhoto();
     this.supprimerCertification();

@@ -124,6 +124,6 @@ export const routes: Routes = [
     {
         path: 'portail-hopital',
         canActivate: [authGuard],
-        loadComponent: () => import('./Features/Portail/hopital/hopital').then(m => m.Hopital)
+        loadComponent: () => import('./Features/Portail/hopital/hopital').then(m => m.HopitalC)
     }
 ];
