@@ -4,6 +4,7 @@ const authBaseUrl = `${baseUrl}/auth`;
 const etablissementBaseUrl = `${baseUrl}/domaine`;
 const acteBaseUrl = `${baseUrl}/declaration`;
 const userBaseUrl = `${baseUrl}/user`;
+const permisBaseUrl = `${baseUrl}/permis`;
 
 export const eHAllSystemEndPoints ={
     Auth : {
@@ -41,6 +42,17 @@ export const eHAllSystemEndPoints ={
             update : `${acteBaseUrl}/acte/update`, 
             delete : `${acteBaseUrl}/acte/delete`, 
             download : `${acteBaseUrl}/acte/download/`
+        }
+    }, 
+    Permis : {
+        Dossier : {
+            all : `${permisBaseUrl}/dossier/all`,
+            allbyMairie : `${permisBaseUrl}/dossier/allbymairie/`,
+            allbyUser : `${permisBaseUrl}/dossier/allbyuser/`,
+            byId : `${permisBaseUrl}/dossier/byId/`,
+            create : `${permisBaseUrl}/dossier/create`,
+            update : `${permisBaseUrl}/dossier/update`,
+            delete : `${permisBaseUrl}/dossier/delete/`,
         }
     }, 
     Utilisateur:{

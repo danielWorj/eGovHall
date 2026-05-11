@@ -1,0 +1,472 @@
+<!-- MAIN CONTENT -->
+<section class="section section-light">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- FORM COLUMN -->
+      <div class="col-lg-8">
+
+        <!-- ══ STEP 1 : PROJET ══ -->
+        <div class="form-panel active" id="panel-1">
+          <span class="section-label">Étape 1 sur 4</span>
+          <h2 class="section-title">Description du projet</h2>
+          <p class="text-muted mb-4">Décrivez votre projet de construction pour que nos agents urbanisme puissent instruire votre dossier.</p>
+
+          <!-- Type de permis -->
+          <div class="fsec-label">Type de permis</div>
+          <div class="type-grid mb-4">
+            <label class="type-card selected">
+              <input type="radio" name="typePermis" value="construction" checked />
+              <div class="type-card-icon"><i class="bi bi-building-add"></i></div>
+              <strong>Construction neuve</strong>
+              <span>Bâtiment à édifier</span>
+            </label>
+            <label class="type-card">
+              <input type="radio" name="typePermis" value="extension" />
+              <div class="type-card-icon"><i class="bi bi-arrows-expand"></i></div>
+              <strong>Extension</strong>
+              <span>Agrandissement existant</span>
+            </label>
+            <label class="type-card">
+              <input type="radio" name="typePermis" value="renovation">
+              <input type="radio" name="typePermis" value="renovation" />
+              <div class="type-card-icon"><i class="bi bi-tools"></i></div>
+              <strong>Rénovation lourde</strong>
+              <span>Modification structurelle</span>
+            </label>
+            <label class="type-card">
+              <input type="radio" name="typePermis" value="demolition" />
+              <div class="type-card-icon"><i class="bi bi-trash3"></i></div>
+              <strong>Démolition</strong>
+              <span>Destruction partielle ou totale</span>
+            </label>
+          </div>
+
+          <!-- Usage -->
+          <div class="fsec-label">Usage du bâtiment</div>
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Usage principal <span style="color:var(--accent)">*</span></label>
+              <select class="form-select">
+                <option value="">— Sélectionner —</option>
+                <option>Résidentiel (villa / maison)</option>
+                <option>Résidentiel collectif (immeuble)</option>
+                <option>Commercial</option>
+                <option>Industriel / Entrepôt</option>
+                <option>Mixte (résidentiel + commercial)</option>
+                <option>Équipement public</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Nombre de niveaux <span style="color:var(--accent)">*</span></label>
+              <select class="form-select">
+                <option>R (rez-de-chaussée)</option>
+                <option selected>R+1</option>
+                <option>R+2</option>
+                <option>R+3</option>
+                <option>R+4 et plus</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Surface (m²) <span style="color:var(--accent)">*</span></label>
+              <input type="number" class="form-control" placeholder="Ex : 250" min="1">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description du projet <span style="color:var(--accent)">*</span></label>
+              <textarea class="form-control" rows="4" placeholder="Décrivez votre projet : type de construction, matériaux envisagés, nombre de pièces, destination précise…"></textarea>
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <div></div>
+            <button class="btn-next" onclick="goStep(2)">Étape suivante <i class="bi bi-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ══ STEP 2 : IDENTITÉ ══ -->
+        <div class="form-panel" id="panel-2">
+          <span class="section-label">Étape 2 sur 4</span>
+          <h2 class="section-title">Identité & localisation</h2>
+          <p class="text-muted mb-4">Renseignez les informations du demandeur, du propriétaire et les références cadastrales du terrain.</p>
+
+          <!-- Demandeur -->
+          <div class="fsec-label">Informations du demandeur</div>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Qualité <span style="color:var(--accent)">*</span></label>
+              <select class="form-select">
+                <option>Particulier</option>
+                <option>Architecte</option>
+                <option>Entreprise</option>
+                <option>Représentant légal</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Nom <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control" placeholder="Nom de famille">
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Prénom(s) <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control" placeholder="Prénom(s)">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Téléphone <span style="color:var(--accent)">*</span></label>
+              <input type="tel" class="form-control" placeholder="+237 6XX XXX XXX">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email <span style="color:var(--accent)">*</span></label>
+              <input type="email" class="form-control" placeholder="contact@exemple.cm">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">N° CNI / Passeport <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control" placeholder="Numéro de pièce d'identité">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Numéro d'ordre (Architecte)</label>
+              <input type="text" class="form-control" placeholder="Facultatif — si architecte">
+            </div>
+          </div>
+
+          <!-- Propriétaire -->
+          <div class="fsec-label">Propriétaire du terrain <small style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-muted)">(si différent du demandeur)</small></div>
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Nom & Prénom</label>
+              <input type="text" class="form-control" placeholder="Nom complet du propriétaire">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Téléphone</label>
+              <input type="tel" class="form-control" placeholder="+237 6XX XXX XXX">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">N° CNI</label>
+              <input type="text" class="form-control" placeholder="Pièce d'identité">
+            </div>
+          </div>
+
+          <!-- Terrain -->
+          <div class="fsec-label">Localisation & cadastre du terrain</div>
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">Adresse précise du terrain <span style="color:var(--accent)">*</span></label>
+              <input type="text" class="form-control" placeholder="Rue, quartier, arrondissement">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Arrondissement <span style="color:var(--accent)">*</span></label>
+              <select class="form-select">
+                <option value="">— Choisir —</option>
+                <option>Douala 1er</option>
+                <option>Douala 2ème</option>
+                <option>Douala 3ème</option>
+                <option>Douala 4ème</option>
+                <option>Douala 5ème</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Référence cadastrale</label>
+              <input type="text" class="form-control" placeholder="Ex: DLA-3-0042">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">N° Titre Foncier</label>
+              <input type="text" class="form-control" placeholder="Ex: TF/12345/DLA">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Superficie du terrain (m²) <span style="color:var(--accent)">*</span></label>
+              <input type="number" class="form-control" placeholder="Ex: 800" min="1">
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-prev" onclick="goStep(1)"><i class="bi bi-arrow-left"></i> Retour</button>
+            <button class="btn-next" onclick="goStep(3)">Étape suivante <i class="bi bi-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ══ STEP 3 : DOCUMENTS ══ -->
+        <div class="form-panel" id="panel-3">
+          <span class="section-label">Étape 3 sur 4</span>
+          <h2 class="section-title">Documents & plans</h2>
+          <p class="text-muted mb-4">Joignez tous les plans et pièces administratives. Les fichiers acceptés sont PDF, JPG, PNG — max 10 Mo par fichier.</p>
+
+          <!-- Plans techniques -->
+          <div class="fsec-label">Plans architecturaux <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span></div>
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <label class="form-label">Plan de masse <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-map"></i></div>
+                <div class="fz-text"><strong>Plan de masse</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Plan de situation <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-geo"></i></div>
+                <div class="fz-text"><strong>Plan de situation</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Plans de façades <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-border-all"></i></div>
+                <div class="fz-text"><strong>Façades (4 côtés)</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Plans de coupe <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-layout-split"></i></div>
+                <div class="fz-text"><strong>Coupes transversale & longitudinale</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Plans de fondations</label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-layers"></i></div>
+                <div class="fz-text"><strong>Fondations & structure</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Photos du terrain</label>
+              <div class="file-zone">
+                <input type="file" accept=".jpg,.png" multiple onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-camera"></i></div>
+                <div class="fz-text"><strong>Photos actuelles du terrain</strong><span>JPG/PNG — plusieurs fichiers</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pièces admin -->
+          <div class="fsec-label">Pièces administratives <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span></div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Titre Foncier ou Contrat de bail <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="fz-text"><strong>Titre de propriété</strong><span>PDF ou image — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">CNI du demandeur <span style="color:var(--accent)">*</span></label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-person-vcard"></i></div>
+                <div class="fz-text"><strong>Carte Nationale d'Identité</strong><span>PDF ou image — max 5 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Devis estimatif des travaux</label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-calculator"></i></div>
+                <div class="fz-text"><strong>Devis / budget prévisionnel</strong><span>PDF — max 5 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Note de calcul de structure</label>
+              <div class="file-zone">
+                <input type="file" accept=".pdf" onchange="markFilled(this)" />
+                <div class="fz-icon"><i class="bi bi-file-earmark-ruled"></i></div>
+                <div class="fz-text"><strong>Note de calcul (si disponible)</strong><span>PDF — max 10 Mo</span></div>
+                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-prev" onclick="goStep(2)"><i class="bi bi-arrow-left"></i> Retour</button>
+            <button class="btn-next" onclick="goStep(4)">Vérifier le dossier <i class="bi bi-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- ══ STEP 4 : RÉCAPITULATIF ══ -->
+        <div class="form-panel" id="panel-4">
+          <span class="section-label">Étape 4 sur 4</span>
+          <h2 class="section-title">Récapitulatif & envoi</h2>
+          <p class="text-muted mb-4">Vérifiez les informations avant de soumettre. Un numéro de dossier vous sera attribué à la soumission.</p>
+
+          <div class="recap-section">
+            <div class="recap-section-title"><i class="bi bi-building me-2"></i>Projet</div>
+            <div class="recap-row"><span class="recap-label">Type de permis</span><span class="recap-value">Construction neuve</span></div>
+            <div class="recap-row"><span class="recap-label">Usage</span><span class="recap-value">Résidentiel (villa / maison)</span></div>
+            <div class="recap-row"><span class="recap-label">Niveaux</span><span class="recap-value">R+1</span></div>
+            <div class="recap-row"><span class="recap-label">Surface projetée</span><span class="recap-value">250 m²</span></div>
+          </div>
+
+          <div class="recap-section">
+            <div class="recap-section-title"><i class="bi bi-person me-2"></i>Demandeur</div>
+            <div class="recap-row"><span class="recap-label">Qualité</span><span class="recap-value">Particulier</span></div>
+            <div class="recap-row"><span class="recap-label">Nom complet</span><span class="recap-value">Jean Mbida</span></div>
+            <div class="recap-row"><span class="recap-label">Téléphone</span><span class="recap-value">+237 690 123 456</span></div>
+            <div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">jean.mbida@email.cm</span></div>
+          </div>
+
+          <div class="recap-section">
+            <div class="recap-section-title"><i class="bi bi-geo-alt me-2"></i>Terrain</div>
+            <div class="recap-row"><span class="recap-label">Adresse</span><span class="recap-value">Rue des Bananiers, Akwa</span></div>
+            <div class="recap-row"><span class="recap-label">Arrondissement</span><span class="recap-value">Douala 1er</span></div>
+            <div class="recap-row"><span class="recap-label">Superficie terrain</span><span class="recap-value">800 m²</span></div>
+          </div>
+
+          <div class="recap-section">
+            <div class="recap-section-title"><i class="bi bi-paperclip me-2"></i>Documents joints</div>
+            <div class="recap-row"><span class="recap-label">Plans architecturaux</span><span class="recap-value" style="color:#198754"><i class="bi bi-check-circle-fill me-1"></i>4 fichiers</span></div>
+            <div class="recap-row"><span class="recap-label">Pièces admin.</span><span class="recap-value" style="color:#198754"><i class="bi bi-check-circle-fill me-1"></i>2 fichiers</span></div>
+          </div>
+
+          <!-- Déclaration sur l'honneur -->
+          <div class="form-check mb-4" style="padding-left:0;display:flex;gap:12px;align-items:flex-start">
+            <input type="checkbox" id="honneur" class="form-check-input mt-1" style="flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px">
+            <label for="honneur" class="form-check-label" style="font-size:14px;color:var(--text-mid)">
+              Je certifie sur l'honneur l'exactitude des informations fournies et avoir pris connaissance des dispositions légales relatives au permis de bâtir à Douala. Je reconnais qu'une fausse déclaration entraîne l'annulation de la demande.
+            </label>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn-prev" onclick="goStep(3)"><i class="bi bi-arrow-left"></i> Modifier</button>
+            <button class="btn-submit-final" data-bs-toggle="modal" data-bs-target="#successModal">
+              <i class="bi bi-send-fill me-1"></i> Soumettre le dossier
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="col-lg-4">
+
+        <!-- Tarifs -->
+        <div class="info-card">
+          <div class="info-card-title"><i class="bi bi-cash-stack"></i>Tarifs & Délais</div>
+          <div class="tarif-row">
+            <span class="label">Frais d'instruction</span>
+            <span class="value" style="color:var(--primary)">À calculer</span>
+          </div>
+          <div class="tarif-row">
+            <span class="label">Villa / maison (m²)</span>
+            <span class="value">500 FCFA/m²</span>
+          </div>
+          <div class="tarif-row">
+            <span class="label">Immeuble (m²)</span>
+            <span class="value">1 000 FCFA/m²</span>
+          </div>
+          <div class="tarif-row">
+            <span class="label">Usage commercial</span>
+            <span class="value">1 500 FCFA/m²</span>
+          </div>
+          <div class="tarif-row">
+            <span class="label">Délai d'instruction</span>
+            <span class="value" style="color:var(--gold)">30 jours ouvrés</span>
+          </div>
+          <div class="tarif-row">
+            <span class="label">Validité du permis</span>
+            <span class="value">2 ans (renouvelable)</span>
+          </div>
+          <div class="alert-info-custom mt-3" style="border-color:var(--gold);background:rgba(200,168,75,0.06);font-size:13px">
+            <i class="bi bi-star-fill me-1" style="color:var(--gold)"></i>
+            Dossiers déposés avant le <strong>1er juin 2026</strong> bénéficient du tarif 2025.
+          </div>
+        </div>
+
+        <!-- Pièces requises -->
+        <div class="info-card">
+          <div class="info-card-title"><i class="bi bi-paperclip"></i>Pièces obligatoires</div>
+          <ul class="doc-list">
+            <li><i class="bi bi-check-circle-fill"></i>Plan de masse (échelle 1/500 min.)</li>
+            <li><i class="bi bi-check-circle-fill"></i>Plan de situation (1/2000)</li>
+            <li><i class="bi bi-check-circle-fill"></i>Plans de façades (4 côtés)</li>
+            <li><i class="bi bi-check-circle-fill"></i>Plans de coupe</li>
+            <li><i class="bi bi-check-circle-fill"></i>Titre foncier ou bail</li>
+            <li><i class="bi bi-check-circle-fill"></i>CNI du demandeur</li>
+            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>Note de calcul (recommandée)</li>
+            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>Devis estimatif (recommandé)</li>
+          </ul>
+        </div>
+
+        <!-- Processus -->
+        <div class="info-card">
+          <div class="info-card-title"><i class="bi bi-diagram-3"></i>Processus d'instruction</div>
+          <div class="step-item" style="margin-bottom:18px">
+            <div class="step-badge" style="width:28px;height:28px;font-size:12px">1</div>
+            <div class="step-content">
+              <h6 style="font-size:13px;margin-bottom:2px">Réception & vérification</h6>
+              <p style="font-size:12px">Contrôle de complétude du dossier (48h)</p>
+            </div>
+          </div>
+          <div class="step-item" style="margin-bottom:18px">
+            <div class="step-badge" style="width:28px;height:28px;font-size:12px">2</div>
+            <div class="step-content">
+              <h6 style="font-size:13px;margin-bottom:2px">Instruction urbanisme</h6>
+              <p style="font-size:12px">Analyse technique par l'agent (15–25 jours)</p>
+            </div>
+          </div>
+          <div class="step-item" style="margin-bottom:18px">
+            <div class="step-badge" style="width:28px;height:28px;font-size:12px">3</div>
+            <div class="step-content">
+              <h6 style="font-size:13px;margin-bottom:2px">Décision officielle</h6>
+              <p style="font-size:12px">Accordé, refusé ou complément demandé</p>
+            </div>
+          </div>
+          <div class="step-item" style="margin-bottom:0">
+            <div class="step-badge" style="width:28px;height:28px;font-size:12px">4</div>
+            <div class="step-content">
+              <h6 style="font-size:13px;margin-bottom:2px">Remise du permis</h6>
+              <p style="font-size:12px">RDV + paiement + remise originale signée</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="info-card" style="background:rgba(0,49,137,0.03)">
+          <div class="info-card-title"><i class="bi bi-telephone"></i>Assistance</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Pour toute question sur votre dossier :</p>
+          <div style="font-weight:700;font-size:15px;color:var(--primary)"><i class="bi bi-telephone-fill me-1"></i>+237 233 42 10 02</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px">Service Urbanisme — Lun–Ven 8h–15h</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS MODAL -->
+<div class="modal fade" id="successModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border:none;border-radius:16px;overflow:hidden">
+      <div class="modal-header" style="background:var(--primary);color:white;border:none;padding:24px 28px">
+        <h5 class="modal-title" style="font-family:'Playfair Display',serif"><i class="bi bi-check-circle me-2"></i>Dossier soumis avec succès</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <div style="width:80px;height:80px;background:rgba(25,135,84,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#198754">
+          <i class="bi bi-building-check"></i>
+        </div>
+        <h5 style="color:var(--primary);margin-bottom:8px">Permis en cours d'instruction</h5>
+        <p style="color:var(--text-muted);margin-bottom:12px;font-size:14px">Votre numéro de dossier :</p>
+        <div style="background:var(--light-bg);border-radius:8px;padding:14px;font-size:20px;font-weight:900;color:var(--primary);letter-spacing:2px;font-family:'Playfair Display',serif">PB-2026-00089</div>
+        <p class="mt-3" style="font-size:13px;color:var(--text-muted)">Un email de confirmation a été envoyé. Un agent prendra contact avec vous sous <strong>48h ouvrées</strong> pour confirmer la réception et vous informer des prochaines étapes.</p>
+      </div>
+      <div class="modal-footer border-0 p-4 pt-0 d-flex gap-2 justify-content-center">
+        <a href="portail-citoyen.html" class="btn" style="background:var(--primary);color:white;font-weight:700;padding:10px 28px">
+          <i class="bi bi-person-circle me-1"></i>Suivre mon dossier
+        </a>
+        <button class="btn" style="border:1px solid var(--border);color:var(--text-mid);padding:10px 28px" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

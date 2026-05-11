@@ -1,356 +1,753 @@
-<!-- MAIN CONTENT -->
+<!--
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │  permis-batir.html  —  Template Angular adapté au composant TS      │
+  │                                                                     │
+  │  ⚠️  MODIFICATION REQUISE dans permis-batir.ts :                    │
+  │      Ajouter le signal de navigation wizard :                       │
+  │        etapeActive = signal<number>(1);                             │
+  │                                                                     │
+  │  ⚠️  Peupler les listes via le service dans ngOnInit :              │
+  │      mairies  (pour mairieId)                                       │
+  │      typesPlans (pour les plans d'exécution → TypePlan[])          │
+  └─────────────────────────────────────────────────────────────────────┘
+-->
+
+<!-- ══════════════════════════════ FEEDBACK GLOBAL ══════════════════════════════ -->
+@if (messageRetour()) {
+  <div
+    class="alert d-flex align-items-center gap-2 mb-4 mx-3"
+    [class.alert-success]="estSucces()"
+    [class.alert-danger]="!estSucces()"
+    role="alert">
+    <i
+      class="bi fs-5"
+      [class.bi-check-circle-fill]="estSucces()"
+      [class.bi-exclamation-triangle-fill]="!estSucces()">
+    </i>
+    <span>{{ messageRetour() }}</span>
+  </div>
+}
+
+<!-- ══════════════════════════════ MAIN CONTENT ══════════════════════════════════ -->
 <section class="section section-light">
   <div class="container">
     <div class="row g-5">
 
-      <!-- FORM COLUMN -->
+      <!-- ══════════════════ FORM COLUMN ══════════════════ -->
       <div class="col-lg-8">
+        <form [formGroup]="dossierPermisFb" (ngSubmit)="soumettreDossier()" novalidate>
 
-        <!-- ══ STEP 1 : PROJET ══ -->
-        <div class="form-panel active" id="panel-1">
-          <span class="section-label">Étape 1 sur 4</span>
-          <h2 class="section-title">Description du projet</h2>
-          <p class="text-muted mb-4">Décrivez votre projet de construction pour que nos agents urbanisme puissent instruire votre dossier.</p>
+          <!-- ══ STEP 1 : PROJET ══════════════════════════════════════ -->
+          <div class="form-panel" [class.active]="etapeActive() === 1" id="panel-1">
+            <span class="section-label">Étape 1 sur 4</span>
+            <h2 class="section-title">Description du projet</h2>
+            <p class="text-muted mb-4">
+              Décrivez votre projet de construction pour que nos agents urbanisme puissent
+              instruire votre dossier.
+            </p>
 
-          <!-- Type de permis -->
-          <div class="fsec-label">Type de permis</div>
-          <div class="type-grid mb-4">
-            <label class="type-card selected">
-              <input type="radio" name="typePermis" value="construction" checked />
-              <div class="type-card-icon"><i class="bi bi-building-add"></i></div>
-              <strong>Construction neuve</strong>
-              <span>Bâtiment à édifier</span>
-            </label>
-            <label class="type-card">
-              <input type="radio" name="typePermis" value="extension" />
-              <div class="type-card-icon"><i class="bi bi-arrows-expand"></i></div>
-              <strong>Extension</strong>
-              <span>Agrandissement existant</span>
-            </label>
-            <label class="type-card">
-              <input type="radio" name="typePermis" value="renovation">
-              <input type="radio" name="typePermis" value="renovation" />
-              <div class="type-card-icon"><i class="bi bi-tools"></i></div>
-              <strong>Rénovation lourde</strong>
-              <span>Modification structurelle</span>
-            </label>
-            <label class="type-card">
-              <input type="radio" name="typePermis" value="demolition" />
-              <div class="type-card-icon"><i class="bi bi-trash3"></i></div>
-              <strong>Démolition</strong>
-              <span>Destruction partielle ou totale</span>
-            </label>
-          </div>
+            <!-- Raccourcis type de projet → pré-remplit le champ raison -->
+            <div class="fsec-label">Nature du projet</div>
+            <div class="type-grid mb-4">
 
-          <!-- Usage -->
-          <div class="fsec-label">Usage du bâtiment</div>
-          <div class="row g-3 mb-2">
-            <div class="col-md-6">
-              <label class="form-label">Usage principal <span style="color:var(--accent)">*</span></label>
-              <select class="form-select">
-                <option value="">— Sélectionner —</option>
-                <option>Résidentiel (villa / maison)</option>
-                <option>Résidentiel collectif (immeuble)</option>
-                <option>Commercial</option>
-                <option>Industriel / Entrepôt</option>
-                <option>Mixte (résidentiel + commercial)</option>
-                <option>Équipement public</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">Nombre de niveaux <span style="color:var(--accent)">*</span></label>
-              <select class="form-select">
-                <option>R (rez-de-chaussée)</option>
-                <option selected>R+1</option>
-                <option>R+2</option>
-                <option>R+3</option>
-                <option>R+4 et plus</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">Surface (m²) <span style="color:var(--accent)">*</span></label>
-              <input type="number" class="form-control" placeholder="Ex : 250" min="1">
-            </div>
-            <div class="col-12">
-              <label class="form-label">Description du projet <span style="color:var(--accent)">*</span></label>
-              <textarea class="form-control" rows="4" placeholder="Décrivez votre projet : type de construction, matériaux envisagés, nombre de pièces, destination précise…"></textarea>
-            </div>
-          </div>
+              <label
+                class="type-card"
+                [class.selected]="dossierPermisFb.get('raison')?.value?.startsWith('Construction neuve')"
+                (click)="dossierPermisFb.get('raison')?.setValue('Construction neuve — ')">
+                <div class="type-card-icon"><i class="bi bi-building-add"></i></div>
+                <strong>Construction neuve</strong>
+                <span>Bâtiment à édifier</span>
+              </label>
 
-          <div class="wizard-footer">
-            <div></div>
-            <button class="btn-next" onclick="goStep(2)">Étape suivante <i class="bi bi-arrow-right"></i></button>
-          </div>
-        </div>
+              <label
+                class="type-card"
+                [class.selected]="dossierPermisFb.get('raison')?.value?.startsWith('Extension')"
+                (click)="dossierPermisFb.get('raison')?.setValue('Extension — ')">
+                <div class="type-card-icon"><i class="bi bi-arrows-expand"></i></div>
+                <strong>Extension</strong>
+                <span>Agrandissement existant</span>
+              </label>
 
-        <!-- ══ STEP 2 : IDENTITÉ ══ -->
-        <div class="form-panel" id="panel-2">
-          <span class="section-label">Étape 2 sur 4</span>
-          <h2 class="section-title">Identité & localisation</h2>
-          <p class="text-muted mb-4">Renseignez les informations du demandeur, du propriétaire et les références cadastrales du terrain.</p>
+              <label
+                class="type-card"
+                [class.selected]="dossierPermisFb.get('raison')?.value?.startsWith('Rénovation')"
+                (click)="dossierPermisFb.get('raison')?.setValue('Rénovation lourde — ')">
+                <div class="type-card-icon"><i class="bi bi-tools"></i></div>
+                <strong>Rénovation lourde</strong>
+                <span>Modification structurelle</span>
+              </label>
 
-          <!-- Demandeur -->
-          <div class="fsec-label">Informations du demandeur</div>
-          <div class="row g-3">
-            <div class="col-md-3">
-              <label class="form-label">Qualité <span style="color:var(--accent)">*</span></label>
-              <select class="form-select">
-                <option>Particulier</option>
-                <option>Architecte</option>
-                <option>Entreprise</option>
-                <option>Représentant légal</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Nom <span style="color:var(--accent)">*</span></label>
-              <input type="text" class="form-control" placeholder="Nom de famille">
-            </div>
-            <div class="col-md-5">
-              <label class="form-label">Prénom(s) <span style="color:var(--accent)">*</span></label>
-              <input type="text" class="form-control" placeholder="Prénom(s)">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Téléphone <span style="color:var(--accent)">*</span></label>
-              <input type="tel" class="form-control" placeholder="+237 6XX XXX XXX">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Email <span style="color:var(--accent)">*</span></label>
-              <input type="email" class="form-control" placeholder="contact@exemple.cm">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">N° CNI / Passeport <span style="color:var(--accent)">*</span></label>
-              <input type="text" class="form-control" placeholder="Numéro de pièce d'identité">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Numéro d'ordre (Architecte)</label>
-              <input type="text" class="form-control" placeholder="Facultatif — si architecte">
-            </div>
-          </div>
+              <label
+                class="type-card"
+                [class.selected]="dossierPermisFb.get('raison')?.value?.startsWith('Démolition')"
+                (click)="dossierPermisFb.get('raison')?.setValue('Démolition — ')">
+                <div class="type-card-icon"><i class="bi bi-trash3"></i></div>
+                <strong>Démolition</strong>
+                <span>Destruction partielle ou totale</span>
+              </label>
 
-          <!-- Propriétaire -->
-          <div class="fsec-label">Propriétaire du terrain <small style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-muted)">(si différent du demandeur)</small></div>
-          <div class="row g-3">
-            <div class="col-md-5">
-              <label class="form-label">Nom & Prénom</label>
-              <input type="text" class="form-control" placeholder="Nom complet du propriétaire">
             </div>
-            <div class="col-md-4">
-              <label class="form-label">Téléphone</label>
-              <input type="tel" class="form-control" placeholder="+237 6XX XXX XXX">
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">N° CNI</label>
-              <input type="text" class="form-control" placeholder="Pièce d'identité">
-            </div>
-          </div>
 
-          <!-- Terrain -->
-          <div class="fsec-label">Localisation & cadastre du terrain</div>
-          <div class="row g-3">
-            <div class="col-md-8">
-              <label class="form-label">Adresse précise du terrain <span style="color:var(--accent)">*</span></label>
-              <input type="text" class="form-control" placeholder="Rue, quartier, arrondissement">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Arrondissement <span style="color:var(--accent)">*</span></label>
-              <select class="form-select">
-                <option value="">— Choisir —</option>
-                <option>Douala 1er</option>
-                <option>Douala 2ème</option>
-                <option>Douala 3ème</option>
-                <option>Douala 4ème</option>
-                <option>Douala 5ème</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Référence cadastrale</label>
-              <input type="text" class="form-control" placeholder="Ex: DLA-3-0042">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">N° Titre Foncier</label>
-              <input type="text" class="form-control" placeholder="Ex: TF/12345/DLA">
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Superficie du terrain (m²) <span style="color:var(--accent)">*</span></label>
-              <input type="number" class="form-control" placeholder="Ex: 800" min="1">
-            </div>
-          </div>
+            <!-- Raison (champ principal) + Raison sociale -->
+            <div class="row g-3 mb-2">
+              <div class="col-12">
+                <label class="form-label">
+                  Raison / description détaillée du projet
+                  <span style="color:var(--accent)">*</span>
+                </label>
+                <textarea
+                  class="form-control"
+                  [class.is-invalid]="champInvalide('raison')"
+                  formControlName="raison"
+                  rows="4"
+                  placeholder="Ex : Construction neuve — villa R+1, usage résidentiel, surface 250 m², matériaux béton armé…"></textarea>
+                @if (champInvalide('raison')) {
+                  <div class="invalid-feedback">La description du projet est requise.</div>
+                }
+              </div>
 
-          <div class="wizard-footer">
-            <button class="btn-prev" onclick="goStep(1)"><i class="bi bi-arrow-left"></i> Retour</button>
-            <button class="btn-next" onclick="goStep(3)">Étape suivante <i class="bi bi-arrow-right"></i></button>
-          </div>
-        </div>
-
-        <!-- ══ STEP 3 : DOCUMENTS ══ -->
-        <div class="form-panel" id="panel-3">
-          <span class="section-label">Étape 3 sur 4</span>
-          <h2 class="section-title">Documents & plans</h2>
-          <p class="text-muted mb-4">Joignez tous les plans et pièces administratives. Les fichiers acceptés sont PDF, JPG, PNG — max 10 Mo par fichier.</p>
-
-          <!-- Plans techniques -->
-          <div class="fsec-label">Plans architecturaux <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span></div>
-          <div class="row g-3 mb-2">
-            <div class="col-md-6">
-              <label class="form-label">Plan de masse <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-map"></i></div>
-                <div class="fz-text"><strong>Plan de masse</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              <div class="col-12">
+                <label class="form-label">
+                  Raison sociale
+                  <small class="text-muted fw-normal">(si entreprise ou bureau d'études)</small>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="raisonSociale"
+                  placeholder="Nom de la société / bureau d'études — laisser vide si particulier">
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Plan de situation <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-geo"></i></div>
-                <div class="fz-text"><strong>Plan de situation</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+            <div class="wizard-footer">
+              <div></div>
+              <button type="button" class="btn-next" (click)="etapeActive.set(2)">
+                Étape suivante <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div><!-- /panel-1 -->
+
+
+          <!-- ══ STEP 2 : IDENTITÉ ════════════════════════════════════ -->
+          <div class="form-panel" [class.active]="etapeActive() === 2" id="panel-2">
+            <span class="section-label">Étape 2 sur 4</span>
+            <h2 class="section-title">Identité & localisation</h2>
+            <p class="text-muted mb-4">
+              Renseignez les informations du demandeur et la mairie compétente
+              pour le terrain concerné.
+            </p>
+
+            <!-- Informations du demandeur -->
+            <div class="fsec-label">Informations du demandeur</div>
+            <div class="row g-3">
+
+              <!-- Nom -->
+              <div class="col-md-6">
+                <label class="form-label">Nom <span style="color:var(--accent)">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="champInvalide('nom')"
+                  formControlName="nom"
+                  placeholder="Nom de famille">
+                @if (champInvalide('nom')) {
+                  <div class="invalid-feedback">Au moins 2 caractères requis.</div>
+                }
+              </div>
+
+              <!-- Prénom -->
+              <div class="col-md-6">
+                <label class="form-label">Prénom(s) <span style="color:var(--accent)">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [class.is-invalid]="champInvalide('prenom')"
+                  formControlName="prenom"
+                  placeholder="Prénom(s)">
+                @if (champInvalide('prenom')) {
+                  <div class="invalid-feedback">Au moins 2 caractères requis.</div>
+                }
+              </div>
+
+              <!-- Téléphone -->
+              <div class="col-md-6">
+                <label class="form-label">Téléphone <span style="color:var(--accent)">*</span></label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  [class.is-invalid]="champInvalide('telephone')"
+                  formControlName="telephone"
+                  placeholder="+237 6XX XXX XXX">
+                @if (champInvalide('telephone')) {
+                  <div class="invalid-feedback">
+                    Numéro invalide — saisir 8 à 15 chiffres (ex : +237690123456).
+                  </div>
+                }
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <label class="form-label">Email <span style="color:var(--accent)">*</span></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  [class.is-invalid]="champInvalide('email')"
+                  formControlName="email"
+                  placeholder="contact@exemple.cm">
+                @if (champInvalide('email')) {
+                  <div class="invalid-feedback">Adresse email invalide.</div>
+                }
+              </div>
+
+            </div><!-- /row demandeur -->
+
+            <!-- Mairie compétente -->
+            <div class="fsec-label mt-4">Mairie compétente</div>
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">
+                  Mairie d'arrondissement
+                  <span style="color:var(--accent)">*</span>
+                </label>
+                <select
+                  class="form-select"
+                  [class.is-invalid]="champInvalide('mairieId')"
+                  formControlName="mairieId">
+                  <option [ngValue]="null">— Sélectionner la mairie —</option>
+                  <!--
+                    ⚠️ Peupler dynamiquement via le service :
+                    @for (m of mairies(); track m.id) {
+                      <option [ngValue]="m.id">{{ m.nom }}</option>
+                    }
+                  -->
+                  <option [ngValue]="1">Mairie de Douala 1er</option>
+                  <option [ngValue]="2">Mairie de Douala 2ème</option>
+                  <option [ngValue]="3">Mairie de Douala 3ème</option>
+                  <option [ngValue]="4">Mairie de Douala 4ème</option>
+                  <option [ngValue]="5">Mairie de Douala 5ème</option>
+                </select>
+                @if (champInvalide('mairieId')) {
+                  <div class="invalid-feedback">Veuillez sélectionner une mairie.</div>
+                }
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Plans de façades <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-border-all"></i></div>
-                <div class="fz-text"><strong>Façades (4 côtés)</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+            <div class="wizard-footer">
+              <button type="button" class="btn-prev" (click)="etapeActive.set(1)">
+                <i class="bi bi-arrow-left"></i> Retour
+              </button>
+              <button type="button" class="btn-next" (click)="etapeActive.set(3)">
+                Étape suivante <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div><!-- /panel-2 -->
+
+
+          <!-- ══ STEP 3 : DOCUMENTS ════════════════════════════════════ -->
+          <div class="form-panel" [class.active]="etapeActive() === 3" id="panel-3">
+            <span class="section-label">Étape 3 sur 4</span>
+            <h2 class="section-title">Documents & plans</h2>
+            <p class="text-muted mb-4">
+              Joignez tous les plans et pièces administratives.
+              Fichiers acceptés : PDF, JPG, PNG — max 10 Mo par fichier.
+            </p>
+
+            <!-- ─── Plans fixes obligatoires ─────────────────────────── -->
+            <div class="fsec-label">
+              Plans architecturaux
+              <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span>
+            </div>
+            <div class="row g-3 mb-2">
+
+              <!-- Plan de masse -->
+              <div class="col-md-6">
+                <label class="form-label">Plan de masse <span style="color:var(--accent)">*</span></label>
+                <div class="file-zone" [class.filled]="planMasse()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'planMasse')" />
+                  <div class="fz-icon"><i class="bi bi-map"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(planMasse(), 'Plan de masse') }}</strong>
+                    <span>PDF ou image — max 10 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Plan de situation terrain -->
+              <div class="col-md-6">
+                <label class="form-label">Plan de situation du terrain <span style="color:var(--accent)">*</span></label>
+                <div class="file-zone" [class.filled]="planSituationTerrain()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'planSituationTerrain')" />
+                  <div class="fz-icon"><i class="bi bi-geo"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(planSituationTerrain(), 'Plan de situation') }}</strong>
+                    <span>PDF ou image — max 10 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ─── Plans d'exécution dynamiques ─────────────────────── -->
+            <div class="fsec-label mt-3">
+              Plans d'exécution
+              <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0">
+                — ajoutez autant que nécessaire
+              </span>
+              @if (nombrePlans() > 0) {
+                <span
+                  class="badge ms-2"
+                  style="background:var(--primary);font-size:11px;vertical-align:middle">
+                  {{ nombrePlans() }} plan(s)
+                </span>
+              }
+            </div>
+
+            <!-- Liste des plans déjà ajoutés -->
+            @if (nombrePlans() > 0) {
+              <div class="mb-3">
+                @for (plan of plansExecution(); track $index) {
+                  <div
+                    class="d-flex align-items-center gap-3 p-2 mb-2 rounded"
+                    style="background:var(--light-bg,#f8f9fa);border:1px solid var(--border,#dee2e6)">
+                    <i class="bi bi-file-earmark-check fs-5" style="color:#198754;flex-shrink:0"></i>
+                    <div class="flex-grow-1 overflow-hidden">
+                      <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                        {{ plan.preview }}
+                      </div>
+                      <div style="font-size:12px;color:var(--text-muted)">
+                        Type plan ID : {{ plan.typePlanId }}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger flex-shrink-0"
+                      (click)="supprimerPlan($index)"
+                      title="Supprimer ce plan">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Formulaire d'ajout d'un plan -->
+            <div
+              class="row g-3 mb-4 p-3 rounded"
+              style="background:rgba(0,49,137,0.03);border:1px dashed var(--border,#dee2e6)">
+
+              <div class="col-12">
+                <span style="font-size:13px;font-weight:600;color:var(--text-mid)">
+                  <i class="bi bi-plus-circle me-1" style="color:var(--primary)"></i>
+                  Ajouter un plan d'exécution
+                </span>
+              </div>
+
+              <!-- Type de plan -->
+              <div class="col-md-5">
+                <label class="form-label">Type de plan</label>
+                <select
+                  class="form-select"
+                  #typePlanSelect
+                  (change)="onTypePlanChange(+typePlanSelect.value)">
+                  <option value="0">— Choisir le type —</option>
+                  <!--
+                    ⚠️ Peupler dynamiquement via le service TypePlan :
+                    @for (tp of typesPlans(); track tp.id) {
+                      <option [value]="tp.id">{{ tp.intitule }}</option>
+                    }
+                  -->
+                  <option value="1">Plan de façade</option>
+                  <option value="2">Plan de coupe transversale</option>
+                  <option value="3">Plan de fondations</option>
+                  <option value="4">Plan de toiture</option>
+                  <option value="5">Plan électrique</option>
+                  <option value="6">Plan plomberie / sanitaire</option>
+                  <option value="7">Note de calcul de structure</option>
+                </select>
+              </div>
+
+              <!-- Fichier du plan -->
+              <div class="col-md-5">
+                <label class="form-label">Fichier du plan</label>
+                <div class="file-zone" [class.filled]="planEnCours()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onPlanFileChange($event)" />
+                  <div class="fz-icon"><i class="bi bi-file-earmark-image"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(planEnCours(), 'Choisir un plan') }}</strong>
+                    <span>PDF ou image</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Bouton Ajouter -->
+              <div class="col-md-2 d-flex align-items-end">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary w-100"
+                  [disabled]="!planEnCours() || typePlanIdEnCours() === null || typePlanIdEnCours() === 0"
+                  (click)="ajouterPlan()">
+                  <i class="bi bi-plus-lg"></i><br>
+                  <span style="font-size:12px">Ajouter</span>
+                </button>
+              </div>
+
+            </div><!-- /ajout plan -->
+
+            <!-- ─── Pièces administratives ─────────────────────────── -->
+            <div class="fsec-label">
+              Pièces administratives
+              <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span>
+            </div>
+            <div class="row g-3">
+
+              <!-- CNI -->
+              <div class="col-md-6">
+                <label class="form-label">CNI du demandeur <span style="color:var(--accent)">*</span></label>
+                <div class="file-zone" [class.filled]="cni()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'cni')" />
+                  <div class="fz-icon"><i class="bi bi-person-vcard"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(cni(), 'Carte Nationale d\'Identité') }}</strong>
+                    <span>PDF ou image — max 5 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Certificat de propriété -->
+              <div class="col-md-6">
+                <label class="form-label">Certificat de propriété / Titre Foncier <span style="color:var(--accent)">*</span></label>
+                <div class="file-zone" [class.filled]="certificatPropriete()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'certificatPropriete')" />
+                  <div class="fz-icon"><i class="bi bi-file-earmark-text"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(certificatPropriete(), 'Titre de propriété') }}</strong>
+                    <span>PDF ou image — max 10 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Certificat d'urbanisme -->
+              <div class="col-md-6">
+                <label class="form-label">Certificat d'urbanisme</label>
+                <div class="file-zone" [class.filled]="certificatUrbanisme()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'certificatUrbanisme')" />
+                  <div class="fz-icon"><i class="bi bi-building"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(certificatUrbanisme(), 'Certificat d\'urbanisme') }}</strong>
+                    <span>PDF ou image — max 10 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Demande de timbre -->
+              <div class="col-md-6">
+                <label class="form-label">Demande de timbre fiscal</label>
+                <div class="file-zone" [class.filled]="demandeTimbre()">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    (change)="onFileChange($event, 'demandeTimbre')" />
+                  <div class="fz-icon"><i class="bi bi-stamp"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(demandeTimbre(), 'Timbre fiscal') }}</strong>
+                    <span>PDF ou image — max 5 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+              <!-- Devis -->
+              <div class="col-md-6">
+                <label class="form-label">Devis estimatif des travaux</label>
+                <div class="file-zone" [class.filled]="devis()">
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    (change)="onFileChange($event, 'devis')" />
+                  <div class="fz-icon"><i class="bi bi-calculator"></i></div>
+                  <div class="fz-text">
+                    <strong>{{ nomFichier(devis(), 'Devis / budget prévisionnel') }}</strong>
+                    <span>PDF — max 5 Mo</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                </div>
+              </div>
+
+            </div><!-- /pièces admin -->
+
+            <div class="wizard-footer">
+              <button type="button" class="btn-prev" (click)="etapeActive.set(2)">
+                <i class="bi bi-arrow-left"></i> Retour
+              </button>
+              <button type="button" class="btn-next" (click)="etapeActive.set(4)">
+                Vérifier le dossier <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+          </div><!-- /panel-3 -->
+
+
+          <!-- ══ STEP 4 : RÉCAPITULATIF ════════════════════════════════ -->
+          <div class="form-panel" [class.active]="etapeActive() === 4" id="panel-4">
+            <span class="section-label">Étape 4 sur 4</span>
+            <h2 class="section-title">Récapitulatif & envoi</h2>
+            <p class="text-muted mb-4">
+              Vérifiez les informations avant de soumettre.
+              Un numéro de dossier vous sera attribué à la soumission.
+            </p>
+
+            <!-- Badge mode édition -->
+            @if (modeEdition()) {
+              <div class="alert alert-warning d-flex align-items-center gap-2 mb-4" role="alert">
+                <i class="bi bi-pencil-square fs-5"></i>
+                <span>
+                  Vous <strong>modifiez</strong> un dossier existant
+                  (réf. interne : <strong>{{ dossierEditId() }}</strong>).
+                </span>
+              </div>
+            }
+
+            <!-- Projet -->
+            <div class="recap-section">
+              <div class="recap-section-title"><i class="bi bi-building me-2"></i>Projet</div>
+              <div class="recap-row">
+                <span class="recap-label">Raison / description</span>
+                <span class="recap-value">
+                  {{ dossierPermisFb.get('raison')?.value || '—' }}
+                </span>
+              </div>
+              @if (dossierPermisFb.get('raisonSociale')?.value) {
+                <div class="recap-row">
+                  <span class="recap-label">Raison sociale</span>
+                  <span class="recap-value">{{ dossierPermisFb.get('raisonSociale')?.value }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Demandeur -->
+            <div class="recap-section">
+              <div class="recap-section-title"><i class="bi bi-person me-2"></i>Demandeur</div>
+              <div class="recap-row">
+                <span class="recap-label">Nom complet</span>
+                <span class="recap-value">
+                  {{ dossierPermisFb.get('nom')?.value || '—' }}
+                  {{ dossierPermisFb.get('prenom')?.value || '' }}
+                </span>
+              </div>
+              <div class="recap-row">
+                <span class="recap-label">Téléphone</span>
+                <span class="recap-value">{{ dossierPermisFb.get('telephone')?.value || '—' }}</span>
+              </div>
+              <div class="recap-row">
+                <span class="recap-label">Email</span>
+                <span class="recap-value">{{ dossierPermisFb.get('email')?.value || '—' }}</span>
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Plans de coupe <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-layout-split"></i></div>
-                <div class="fz-text"><strong>Coupes transversale & longitudinale</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+            <!-- Mairie -->
+            <div class="recap-section">
+              <div class="recap-section-title"><i class="bi bi-geo-alt me-2"></i>Mairie</div>
+              <div class="recap-row">
+                <span class="recap-label">Mairie compétente</span>
+                <span class="recap-value">
+                  @if (dossierPermisFb.get('mairieId')?.value) {
+                    <!-- ⚠️ Remplacer par le libellé réel de la mairie via lookup -->
+                    Mairie ID {{ dossierPermisFb.get('mairieId')?.value }}
+                  } @else {
+                    <span style="color:var(--accent)">Non sélectionnée</span>
+                  }
+                </span>
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Plans de fondations</label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-layers"></i></div>
-                <div class="fz-text"><strong>Fondations & structure</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+            <!-- Documents joints -->
+            <div class="recap-section">
+              <div class="recap-section-title"><i class="bi bi-paperclip me-2"></i>Documents joints</div>
+
+              <div class="recap-row">
+                <span class="recap-label">Plan de masse</span>
+                <span class="recap-value" [style.color]="planMasse() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="planMasse()"
+                    [class.bi-dash-circle]="!planMasse()"></i>
+                  {{ nomFichier(planMasse(), 'Non fourni') }}
+                </span>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Photos du terrain</label>
-              <div class="file-zone">
-                <input type="file" accept=".jpg,.png" multiple onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-camera"></i></div>
-                <div class="fz-text"><strong>Photos actuelles du terrain</strong><span>JPG/PNG — plusieurs fichiers</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+              <div class="recap-row">
+                <span class="recap-label">Plan de situation</span>
+                <span class="recap-value" [style.color]="planSituationTerrain() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="planSituationTerrain()"
+                    [class.bi-dash-circle]="!planSituationTerrain()"></i>
+                  {{ nomFichier(planSituationTerrain(), 'Non fourni') }}
+                </span>
               </div>
-            </div>
-          </div>
 
-          <!-- Pièces admin -->
-          <div class="fsec-label">Pièces administratives <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0"> — obligatoires</span></div>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">Titre Foncier ou Contrat de bail <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-file-earmark-text"></i></div>
-                <div class="fz-text"><strong>Titre de propriété</strong><span>PDF ou image — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+              <div class="recap-row">
+                <span class="recap-label">Plans d'exécution</span>
+                <span class="recap-value" [style.color]="nombrePlans() > 0 ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="nombrePlans() > 0"
+                    [class.bi-dash-circle]="nombrePlans() === 0"></i>
+                  {{ nombrePlans() > 0 ? (nombrePlans() + ' plan(s) joint(s)') : 'Aucun plan ajouté' }}
+                </span>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">CNI du demandeur <span style="color:var(--accent)">*</span></label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf,.jpg,.png" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-person-vcard"></i></div>
-                <div class="fz-text"><strong>Carte Nationale d'Identité</strong><span>PDF ou image — max 5 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+              <div class="recap-row">
+                <span class="recap-label">CNI du demandeur</span>
+                <span class="recap-value" [style.color]="cni() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="cni()"
+                    [class.bi-dash-circle]="!cni()"></i>
+                  {{ nomFichier(cni(), 'Non fourni') }}
+                </span>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Devis estimatif des travaux</label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-calculator"></i></div>
-                <div class="fz-text"><strong>Devis / budget prévisionnel</strong><span>PDF — max 5 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+              <div class="recap-row">
+                <span class="recap-label">Certificat de propriété</span>
+                <span class="recap-value" [style.color]="certificatPropriete() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="certificatPropriete()"
+                    [class.bi-dash-circle]="!certificatPropriete()"></i>
+                  {{ nomFichier(certificatPropriete(), 'Non fourni') }}
+                </span>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Note de calcul de structure</label>
-              <div class="file-zone">
-                <input type="file" accept=".pdf" onchange="markFilled(this)" />
-                <div class="fz-icon"><i class="bi bi-file-earmark-ruled"></i></div>
-                <div class="fz-text"><strong>Note de calcul (si disponible)</strong><span>PDF — max 10 Mo</span></div>
-                <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+
+              <div class="recap-row">
+                <span class="recap-label">Certificat d'urbanisme</span>
+                <span class="recap-value" [style.color]="certificatUrbanisme() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="certificatUrbanisme()"
+                    [class.bi-dash-circle]="!certificatUrbanisme()"></i>
+                  {{ nomFichier(certificatUrbanisme(), 'Non fourni') }}
+                </span>
               </div>
+
+              <div class="recap-row">
+                <span class="recap-label">Demande de timbre</span>
+                <span class="recap-value" [style.color]="demandeTimbre() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="demandeTimbre()"
+                    [class.bi-dash-circle]="!demandeTimbre()"></i>
+                  {{ nomFichier(demandeTimbre(), 'Non fourni') }}
+                </span>
+              </div>
+
+              <div class="recap-row">
+                <span class="recap-label">Devis estimatif</span>
+                <span class="recap-value" [style.color]="devis() ? '#198754' : 'var(--text-muted)'">
+                  <i class="bi me-1"
+                    [class.bi-check-circle-fill]="devis()"
+                    [class.bi-dash-circle]="!devis()"></i>
+                  {{ nomFichier(devis(), 'Non fourni') }}
+                </span>
+              </div>
+
+            </div><!-- /recap documents -->
+
+            <!-- Déclaration sur l'honneur -->
+            <div class="form-check mb-4"
+              style="padding-left:0;display:flex;gap:12px;align-items:flex-start">
+              <input
+                type="checkbox"
+                id="honneur"
+                #declarationHonneur
+                class="form-check-input mt-1"
+                style="flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px">
+              <label
+                for="honneur"
+                class="form-check-label"
+                style="font-size:14px;color:var(--text-mid)">
+                Je certifie sur l'honneur l'exactitude des informations fournies et avoir pris
+                connaissance des dispositions légales relatives au permis de bâtir à Douala.
+                Je reconnais qu'une fausse déclaration entraîne l'annulation de la demande.
+              </label>
             </div>
-          </div>
 
-          <div class="wizard-footer">
-            <button class="btn-prev" onclick="goStep(2)"><i class="bi bi-arrow-left"></i> Retour</button>
-            <button class="btn-next" onclick="goStep(4)">Vérifier le dossier <i class="bi bi-arrow-right"></i></button>
-          </div>
-        </div>
+            <!-- Alerte formulaire invalide -->
+            @if (dossierPermisFb.invalid && dossierPermisFb.touched) {
+              <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Des champs obligatoires sont incomplets. Revenez aux étapes précédentes pour les corriger.</span>
+              </div>
+            }
 
-        <!-- ══ STEP 4 : RÉCAPITULATIF ══ -->
-        <div class="form-panel" id="panel-4">
-          <span class="section-label">Étape 4 sur 4</span>
-          <h2 class="section-title">Récapitulatif & envoi</h2>
-          <p class="text-muted mb-4">Vérifiez les informations avant de soumettre. Un numéro de dossier vous sera attribué à la soumission.</p>
+            <div class="wizard-footer">
+              <button type="button" class="btn-prev" (click)="etapeActive.set(3)">
+                <i class="bi bi-arrow-left"></i> Modifier
+              </button>
+              <button
+                type="submit"
+                class="btn-submit-final"
+                [disabled]="!formulaireValide() || !declarationHonneur.checked">
+                @if (enCoursEnvoi()) {
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true">
+                  </span>
+                } @else {
+                  <i class="bi bi-send-fill me-1"></i>
+                }
+                {{ libelleAction() }}
+              </button>
+            </div>
 
-          <div class="recap-section">
-            <div class="recap-section-title"><i class="bi bi-building me-2"></i>Projet</div>
-            <div class="recap-row"><span class="recap-label">Type de permis</span><span class="recap-value">Construction neuve</span></div>
-            <div class="recap-row"><span class="recap-label">Usage</span><span class="recap-value">Résidentiel (villa / maison)</span></div>
-            <div class="recap-row"><span class="recap-label">Niveaux</span><span class="recap-value">R+1</span></div>
-            <div class="recap-row"><span class="recap-label">Surface projetée</span><span class="recap-value">250 m²</span></div>
-          </div>
+          </div><!-- /panel-4 -->
 
-          <div class="recap-section">
-            <div class="recap-section-title"><i class="bi bi-person me-2"></i>Demandeur</div>
-            <div class="recap-row"><span class="recap-label">Qualité</span><span class="recap-value">Particulier</span></div>
-            <div class="recap-row"><span class="recap-label">Nom complet</span><span class="recap-value">Jean Mbida</span></div>
-            <div class="recap-row"><span class="recap-label">Téléphone</span><span class="recap-value">+237 690 123 456</span></div>
-            <div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">jean.mbida@email.cm</span></div>
-          </div>
+        </form>
+      </div><!-- /col-lg-8 -->
 
-          <div class="recap-section">
-            <div class="recap-section-title"><i class="bi bi-geo-alt me-2"></i>Terrain</div>
-            <div class="recap-row"><span class="recap-label">Adresse</span><span class="recap-value">Rue des Bananiers, Akwa</span></div>
-            <div class="recap-row"><span class="recap-label">Arrondissement</span><span class="recap-value">Douala 1er</span></div>
-            <div class="recap-row"><span class="recap-label">Superficie terrain</span><span class="recap-value">800 m²</span></div>
-          </div>
 
-          <div class="recap-section">
-            <div class="recap-section-title"><i class="bi bi-paperclip me-2"></i>Documents joints</div>
-            <div class="recap-row"><span class="recap-label">Plans architecturaux</span><span class="recap-value" style="color:#198754"><i class="bi bi-check-circle-fill me-1"></i>4 fichiers</span></div>
-            <div class="recap-row"><span class="recap-label">Pièces admin.</span><span class="recap-value" style="color:#198754"><i class="bi bi-check-circle-fill me-1"></i>2 fichiers</span></div>
-          </div>
-
-          <!-- Déclaration sur l'honneur -->
-          <div class="form-check mb-4" style="padding-left:0;display:flex;gap:12px;align-items:flex-start">
-            <input type="checkbox" id="honneur" class="form-check-input mt-1" style="flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px">
-            <label for="honneur" class="form-check-label" style="font-size:14px;color:var(--text-mid)">
-              Je certifie sur l'honneur l'exactitude des informations fournies et avoir pris connaissance des dispositions légales relatives au permis de bâtir à Douala. Je reconnais qu'une fausse déclaration entraîne l'annulation de la demande.
-            </label>
-          </div>
-
-          <div class="wizard-footer">
-            <button class="btn-prev" onclick="goStep(3)"><i class="bi bi-arrow-left"></i> Modifier</button>
-            <button class="btn-submit-final" data-bs-toggle="modal" data-bs-target="#successModal">
-              <i class="bi bi-send-fill me-1"></i> Soumettre le dossier
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- SIDEBAR -->
+      <!-- ════════════════════════════ SIDEBAR ════════════════════════════════ -->
       <div class="col-lg-4">
 
-        <!-- Tarifs -->
+        <!-- Indicateur de progression wizard -->
+        <div class="info-card mb-3 p-2">
+          <div class="d-flex gap-1">
+            @for (n of [1,2,3,4]; track n) {
+              <div
+                class="flex-fill text-center py-2 rounded"
+                style="font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;user-select:none"
+                [style.background]="etapeActive() === n ? 'var(--primary)' : etapeActive() > n ? 'rgba(25,135,84,.12)' : 'var(--light-bg,#f8f9fa)'"
+                [style.color]="etapeActive() === n ? 'white' : etapeActive() > n ? '#198754' : 'var(--text-muted)'"
+                (click)="etapeActive.set(n)">
+                @if (etapeActive() > n) {
+                  <i class="bi bi-check-lg d-block mb-1 fs-6"></i>
+                } @else {
+                  <span class="d-block mb-1 fs-6">{{ n }}</span>
+                }
+                {{ ['Projet','Identité','Docs','Envoi'][n - 1] }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Tarifs & Délais -->
         <div class="info-card">
           <div class="info-card-title"><i class="bi bi-cash-stack"></i>Tarifs & Délais</div>
           <div class="tarif-row">
@@ -377,28 +774,49 @@
             <span class="label">Validité du permis</span>
             <span class="value">2 ans (renouvelable)</span>
           </div>
-          <div class="alert-info-custom mt-3" style="border-color:var(--gold);background:rgba(200,168,75,0.06);font-size:13px">
+          <div class="alert-info-custom mt-3"
+            style="border-color:var(--gold);background:rgba(200,168,75,0.06);font-size:13px">
             <i class="bi bi-star-fill me-1" style="color:var(--gold)"></i>
             Dossiers déposés avant le <strong>1er juin 2026</strong> bénéficient du tarif 2025.
           </div>
         </div>
 
-        <!-- Pièces requises -->
+        <!-- Pièces obligatoires -->
         <div class="info-card">
           <div class="info-card-title"><i class="bi bi-paperclip"></i>Pièces obligatoires</div>
           <ul class="doc-list">
-            <li><i class="bi bi-check-circle-fill"></i>Plan de masse (échelle 1/500 min.)</li>
-            <li><i class="bi bi-check-circle-fill"></i>Plan de situation (1/2000)</li>
-            <li><i class="bi bi-check-circle-fill"></i>Plans de façades (4 côtés)</li>
-            <li><i class="bi bi-check-circle-fill"></i>Plans de coupe</li>
-            <li><i class="bi bi-check-circle-fill"></i>Titre foncier ou bail</li>
-            <li><i class="bi bi-check-circle-fill"></i>CNI du demandeur</li>
-            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>Note de calcul (recommandée)</li>
-            <li><i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>Devis estimatif (recommandé)</li>
+            <li [style.color]="planMasse() ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="planMasse()" [class.bi-check-circle]="!planMasse()"></i>
+              Plan de masse (échelle 1/500 min.)
+            </li>
+            <li [style.color]="planSituationTerrain() ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="planSituationTerrain()" [class.bi-check-circle]="!planSituationTerrain()"></i>
+              Plan de situation (1/2000)
+            </li>
+            <li [style.color]="nombrePlans() > 0 ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="nombrePlans() > 0" [class.bi-check-circle]="nombrePlans() === 0"></i>
+              Plans de façades &amp; coupes
+            </li>
+            <li [style.color]="certificatPropriete() ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="certificatPropriete()" [class.bi-check-circle]="!certificatPropriete()"></i>
+              Titre foncier ou bail
+            </li>
+            <li [style.color]="cni() ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="cni()" [class.bi-check-circle]="!cni()"></i>
+              CNI du demandeur
+            </li>
+            <li>
+              <i class="bi bi-dash-circle" style="color:var(--text-muted)"></i>
+              Note de calcul (recommandée)
+            </li>
+            <li [style.color]="devis() ? '#198754' : ''">
+              <i class="bi" [class.bi-dash-circle]="!devis()" [class.bi-check-circle-fill]="devis()"></i>
+              Devis estimatif (recommandé)
+            </li>
           </ul>
         </div>
 
-        <!-- Processus -->
+        <!-- Processus d'instruction -->
         <div class="info-card">
           <div class="info-card-title"><i class="bi bi-diagram-3"></i>Processus d'instruction</div>
           <div class="step-item" style="margin-bottom:18px">
@@ -434,39 +852,19 @@
         <!-- Contact -->
         <div class="info-card" style="background:rgba(0,49,137,0.03)">
           <div class="info-card-title"><i class="bi bi-telephone"></i>Assistance</div>
-          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Pour toute question sur votre dossier :</p>
-          <div style="font-weight:700;font-size:15px;color:var(--primary)"><i class="bi bi-telephone-fill me-1"></i>+237 233 42 10 02</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:4px">Service Urbanisme — Lun–Ven 8h–15h</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+            Pour toute question sur votre dossier :
+          </p>
+          <div style="font-weight:700;font-size:15px;color:var(--primary)">
+            <i class="bi bi-telephone-fill me-1"></i>+237 233 42 10 02
+          </div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px">
+            Service Urbanisme — Lun–Ven 8h–15h
+          </div>
         </div>
 
-      </div>
-    </div>
-  </div>
+      </div><!-- /col-lg-4 sidebar -->
+
+    </div><!-- /row -->
+  </div><!-- /container -->
 </section>
-
-<!-- SUCCESS MODAL -->
-<div class="modal fade" id="successModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border:none;border-radius:16px;overflow:hidden">
-      <div class="modal-header" style="background:var(--primary);color:white;border:none;padding:24px 28px">
-        <h5 class="modal-title" style="font-family:'Playfair Display',serif"><i class="bi bi-check-circle me-2"></i>Dossier soumis avec succès</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body p-4 text-center">
-        <div style="width:80px;height:80px;background:rgba(25,135,84,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#198754">
-          <i class="bi bi-building-check"></i>
-        </div>
-        <h5 style="color:var(--primary);margin-bottom:8px">Permis en cours d'instruction</h5>
-        <p style="color:var(--text-muted);margin-bottom:12px;font-size:14px">Votre numéro de dossier :</p>
-        <div style="background:var(--light-bg);border-radius:8px;padding:14px;font-size:20px;font-weight:900;color:var(--primary);letter-spacing:2px;font-family:'Playfair Display',serif">PB-2026-00089</div>
-        <p class="mt-3" style="font-size:13px;color:var(--text-muted)">Un email de confirmation a été envoyé. Un agent prendra contact avec vous sous <strong>48h ouvrées</strong> pour confirmer la réception et vous informer des prochaines étapes.</p>
-      </div>
-      <div class="modal-footer border-0 p-4 pt-0 d-flex gap-2 justify-content-center">
-        <a href="portail-citoyen.html" class="btn" style="background:var(--primary);color:white;font-weight:700;padding:10px 28px">
-          <i class="bi bi-person-circle me-1"></i>Suivre mon dossier
-        </a>
-        <button class="btn" style="border:1px solid var(--border);color:var(--text-mid);padding:10px 28px" data-bs-dismiss="modal">Fermer</button>
-      </div>
-    </div>
-  </div>
-</div>
