@@ -1,25 +1,129 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   admin-sidebar.css
+   ══════════════════════════════════════════════════════════════════════════ */
+
 :host {
   display: block;
-  height: 100%;
+  /* Sur desktop : prend sa place normale dans le flex layout */
+  height: calc(100vh - 71px);
+  position: sticky;
+  top: 71px;
+  flex-shrink: 0;
 }
 
+/* ── Sidebar principale ─────────────────────────────────────────────────── */
 .sidebar {
+  width: 264px;
   height: 100%;
+  background: white;
+  border-right: 1px solid var(--border);
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  padding-bottom: 24px;
+  padding: 20px 0 32px;
 }
 
-/* Scrollbar fine et discrète */
-.sidebar::-webkit-scrollbar {
-  width: 4px;
+/* Scrollbar fine ─────────────────────────────────────────────── */
+.sidebar::-webkit-scrollbar       { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Carte profil citoyen ───────────────────────────────────────────────── */
+.sidebar-profil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 16px 20px;
+  padding: 14px 16px;
+  background: rgba(0,49,137,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
-.sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+.sidebar-profil-avatar {
+  width: 40px; height: 40px;
+  background: var(--primary); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px; flex-shrink: 0;
 }
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
+.sidebar-profil-nom    { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+.sidebar-profil-statut { font-size: 11px; color: var(--text-muted); }
+.sidebar-profil-check  { margin-left: auto; color: #198754; font-size: 16px; flex-shrink: 0; }
+
+/* ── Overlay mobile ─────────────────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+}
+
+/* ── Bouton toggle flottant (masqué sur desktop) ────────────────────────── */
+.sidebar-toggle {
+  display: none;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px; height: 48px;
+  font-size: 22px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 500;
+  box-shadow: var(--shadow-md);
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.sidebar-toggle:hover { background: var(--primary-dark); transform: scale(1.08); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — <= 991px
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+
+  :host {
+    /* Sur mobile l'host ne prend plus de place dans le flux */
+    position: static;
+    height: auto;
+  }
+
+  /* Sidebar masquée par défaut, positionnée en fixed */
+  .sidebar {
+    position: fixed;
+    top: 71px; left: 0;
+    height: calc(100vh - 71px);
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Sidebar ouverte */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay visible quand sidebar ouverte */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: 71px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 299;
+    animation: overlayIn .2s ease;
+  }
+
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Bouton toggle visible */
+  .sidebar-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 575px) {
+  .sidebar { width: 100%; }
 }
