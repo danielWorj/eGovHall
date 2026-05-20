@@ -1,4 +1,9 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,383 +12,310 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PermisService } from '../../../../Core/Service/Permis/permis-service';
-import { ConstructDossierPermis, DossierPermisBatir } from '../../../../Core/Model/Permis/DossierPermis';
-import { TypePlan } from '../../../../Core/Model/Permis/TypePlan';
-import { PlanExecution } from '../../../../Core/Model/Permis/PlanExecution';
-import { ServerResponse } from '../../../../Core/Model/Server/ServerResponse';
+import { PermisService }        from '../../../../Core/Service/Permis/permis-service';
+import { ServerResponse }       from '../../../../Core/Model/Server/ServerResponse';
+import { DossierPermisBatir, ConstructDossierPermis } from '../../../../Core/Model/Permis/DossierPermis';
+import { StatutDossier }        from '../../../../Core/Model/Permis/StatutDossier';
+import { PlanExecution }        from '../../../../Core/Model/Permis/PlanExecution';
 
+/* ══════════════════════════════════════════════════════════════
+   Toast
+══════════════════════════════════════════════════════════════ */
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+export interface Toast {
+  id      : number;
+  type    : ToastType;
+  title   : string;
+  message : string;
+  duration: number;
+}
 
-// ──────────────────────────────────────────────────────────────────────────────
-
+/* ══════════════════════════════════════════════════════════════
+   Composant CRUD — Permis de Bâtir (côté plateforme / agent)
+══════════════════════════════════════════════════════════════ */
 @Component({
-  selector: 'app-permis-batir',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './permis-batir.html',
-  styleUrl: './permis-batir.css',
+  selector    : 'app-permis-batir',
+  standalone  : true,
+  imports     : [CommonModule, ReactiveFormsModule],
+  templateUrl : './permis-batir.html',
+  styleUrl    : './permis-batir.css',
 })
 export class PermisBatir {
 
-  // ── DI ────────────────────────────────────────────────────────────────────
-  private fb            = inject(FormBuilder);
-  private permisService = inject(PermisService);
-
-  // ── Identité mairie ───────────────────────────────────────────────────────
   idMairie = signal<number>(0);
 
-  // ── Données ───────────────────────────────────────────────────────────────
-  listDossiers    = signal<DossierPermisBatir[]>([]);
-  dossierSelected = signal<DossierPermisBatir | null>(null);
-  dossierSelectedDetails = signal<ConstructDossierPermis | null>(null);
-  listTypePlan    = signal<TypePlan[]>([]);
-
-  // ── UI ────────────────────────────────────────────────────────────────────
-  isLoading      = signal(false);
-  isSubmitting   = signal(false);
-  successMessage = signal('');
-  errorMessage   = signal('');
-
-  // ── Recherche / pagination ────────────────────────────────────────────────
-  searchTerm       = signal('');
-  currentPage      = signal(1);
-  readonly pageSize = 10;
-
-  // ── Modals ────────────────────────────────────────────────────────────────
-  showModalAdd  = signal(false);
-  showModalView = signal(false);
-  showModalEdit = signal(false);
-
-  // ── Fichiers — création / édition ─────────────────────────────────────────
-  fileCni                   = signal<File | null>(null);
-  fileDemandeTimbre         = signal<File | null>(null);
-  fileCertificatUrbanisme   = signal<File | null>(null);
-  fileCertificatPropriete   = signal<File | null>(null);
-  fileDevis                 = signal<File | null>(null);
-  filePlanMasse             = signal<File | null>(null);
-  filePlanSituationTerrain  = signal<File | null>(null);
-
-  // ── Plans d'exécution ─────────────────────────────────────────────────────
-  plansExecution    = signal<PlanExecution[]>([]);
-  planEnCours       = signal<File | null>(null);
-  typePlanIdEnCours = signal<number | null>(null);
-
-  // ── Computed ──────────────────────────────────────────────────────────────
-  filteredList = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-    return this.listDossiers().filter(d => {
-      if (!term) return true;
-      const demandeur  = `${d.demandeur?.nom ?? ''} ${d.demandeur?.prenom ?? ''}`.toLowerCase();
-      const numero     = (d.numeroDossier ?? '').toLowerCase();
-      const statut     = (d.statut?.intitule ?? '').toLowerCase();
-      const raison     = (d.raison ?? '').toLowerCase();
-      return demandeur.includes(term) || numero.includes(term)
-          || statut.includes(term)    || raison.includes(term);
-    });
-  });
-
-  paginatedList = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize;
-    return this.filteredList().slice(start, start + this.pageSize);
-  });
-
-  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredList().length / this.pageSize)));
-  pages      = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
-
-  // ── Stats ─────────────────────────────────────────────────────────────────
-  totalEnEvaluation = computed(() =>
-    this.listDossiers().filter(d => d.statut?.intitule?.toUpperCase() === 'EN EVALUATION').length);
-  totalValides = computed(() =>
-    this.listDossiers().filter(d => d.statut?.intitule?.toUpperCase() === 'VALIDE').length);
-  totalRejetes = computed(() =>
-    this.listDossiers().filter(d => d.statut?.intitule?.toUpperCase() === 'REJETE').length);
-
-  // ── Formulaires ───────────────────────────────────────────────────────────
-  dossierFb!:     FormGroup;
-  dossierEditFb!: FormGroup;
-
-  // ─────────────────────────────────────────────────────────────────────────
   constructor() {
     const idStored = localStorage.getItem('etablissement');
     this.idMairie.set(idStored ? parseInt(idStored) : 0);
-    this.initForms();
-    this.loadPage();
+    this.chargerDossiers();
+    this.chargerStatuts();
+    
+
   }
 
-  loadPage(): void {
-    this.getAllDossiers();
-    this.getAllTypePlan();
+  private fb            = inject(FormBuilder);
+  private permisService = inject(PermisService);
+
+  /* ── Données ──────────────────────────────────────────────── */
+  listDossiers   = signal<DossierPermisBatir[]>([]);
+  listStatuts    = signal<StatutDossier[]>([]);
+  enChargement   = signal<boolean>(false);
+
+  /* ── Recherche & pagination ───────────────────────────────── */
+  recherche      = signal<string>('');
+  pageCourante   = signal<number>(1);
+  readonly PAR_PAGE = 10;
+
+  dossiersFiltres = computed(() => {
+    const q = this.recherche().toLowerCase().trim();
+    if (!q) return this.listDossiers();
+    return this.listDossiers().filter(d =>
+      d.numeroDossier?.toLowerCase().includes(q) ||
+      d.demandeur?.nom?.toLowerCase().includes(q) ||
+      d.demandeur?.prenom?.toLowerCase().includes(q) ||
+      d.raison?.toLowerCase().includes(q)
+    );
+  });
+
+  dossiersPage = computed(() => {
+    const debut = (this.pageCourante() - 1) * this.PAR_PAGE;
+    return this.dossiersFiltres().slice(debut, debut + this.PAR_PAGE);
+  });
+
+  totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.dossiersFiltres().length / this.PAR_PAGE))
+  );
+
+  pages = computed(() =>
+    Array.from({ length: this.totalPages() }, (_, i) => i + 1)
+  );
+
+  onRecherche(event: Event): void {
+    this.recherche.set((event.target as HTMLInputElement).value);
+    this.pageCourante.set(1);
   }
 
-  // ── Initialisation formulaires ────────────────────────────────────────────
-  private champsDemandeur() {
-    return {
-      nom      : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
-      prenom   : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
-      telephone: new FormControl<string>('', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]),
-      email    : new FormControl<string>('', [Validators.required, Validators.email]),
-      raison   : new FormControl<string>('', Validators.required),
-    };
+  allerPage(p: number): void {
+    if (p >= 1 && p <= this.totalPages()) this.pageCourante.set(p);
   }
 
-  private initForms(): void {
-    this.dossierFb     = this.fb.group({ id: new FormControl(null), ...this.champsDemandeur() });
-    this.dossierEditFb = this.fb.group({ id: new FormControl(null), ...this.champsDemandeur() });
+  /* ── Stats ────────────────────────────────────────────────── */
+  statTotal      = computed(() => this.listDossiers().length);
+  statEvaluation = computed(() =>
+    this.listDossiers().filter(d => d.statut?.intitule === 'EN EVALUATION').length);
+  statValide     = computed(() =>
+    this.listDossiers().filter(d => d.statut?.intitule === 'VALIDE').length);
+  statRejete     = computed(() =>
+    this.listDossiers().filter(d => d.statut?.intitule === 'REJETE').length);
+
+  dossiersRecents = computed(() =>
+    [...this.listDossiers()]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 5)
+  );
+
+  /* ── Toasts ───────────────────────────────────────────────── */
+  toasts = signal<Toast[]>([]);
+  private _toastCounter = 0;
+
+  afficherToast(type: ToastType, title: string, message: string, duration = 5000): void {
+    const id = ++this._toastCounter;
+    this.toasts.update(l => [...l, { id, type, title, message, duration }]);
+    if (duration > 0) setTimeout(() => this.fermerToast(id), duration);
   }
 
-  // ── Chargement des données ────────────────────────────────────────────────
-  getAllDossiers(): void {
-    this.isLoading.set(true);
-    this.permisService.findAllDossierPermisByMairie(this.idMairie()).subscribe({
-      next: (data: DossierPermisBatir[]) => {
-        this.listDossiers.set(data);
-        this.isLoading.set(false);
-        this.currentPage.set(1);
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.notify('error', 'Impossible de charger les dossiers de permis de bâtir.');
-      },
-    });
+  fermerToast(id: number): void {
+    this.toasts.update(l => l.filter(t => t.id !== id));
   }
 
-  getAllTypePlan(): void {
-    this.permisService.findAllTypePlan().subscribe({
-      next: (data: TypePlan[]) => this.listTypePlan.set(data),
-      error: () => console.error('Erreur chargement types de plan'),
-    });
-  }
-
-  // ── Gestion des modals ────────────────────────────────────────────────────
-  openModalAdd(): void {
-    this.dossierFb.reset();
-    this.resetFichiers();
-    this.plansExecution.set([]);
-    this.showModalAdd.set(true);
-  }
-
-  closeModalAdd(): void {
-    this.resetFichiers();
-    this.plansExecution.set([]);
-    this.showModalAdd.set(false);
-  }
-
-  openModalView(dossier: DossierPermisBatir): void {
-    this.dossierSelected.set(dossier);
-    this.showModalView.set(true);
-  }
-
-  closeModalView(): void {
-    this.showModalView.set(false);
-  }
-
-  openModalEdit(dossier: DossierPermisBatir): void {
-    this.dossierSelected.set(dossier);
-    this.dossierEditFb.patchValue({
-      id       : dossier.id,
-      nom      : dossier.demandeur?.nom        ?? '',
-      prenom   : dossier.demandeur?.prenom     ?? '',
-      telephone: dossier.demandeur?.telephone  ?? '',
-      email    : dossier.demandeur?.email      ?? '',
-      raison   : dossier.raison                ?? '',
-    });
-    this.resetFichiers();
-    this.plansExecution.set([]);
-    this.showModalView.set(false);
-    this.showModalEdit.set(true);
-  }
-
-  closeModalEdit(): void {
-    this.showModalEdit.set(false);
-  }
-
-  // ── Gestion des fichiers ──────────────────────────────────────────────────
-  onFileChange(
-    event: Event,
-    cible: 'fileCni' | 'fileDemandeTimbre' | 'fileCertificatUrbanisme' |
-           'fileCertificatPropriete' | 'fileDevis' | 'filePlanMasse' | 'filePlanSituationTerrain'
-  ): void {
-    const input = event.target as HTMLInputElement;
-    this[cible].set(input.files?.[0] ?? null);
-  }
-
-  onPlanFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.planEnCours.set(input.files?.[0] ?? null);
-  }
-
-  onTypePlanChange(valeur: string): void {
-    this.typePlanIdEnCours.set(+valeur);
-  }
-
-  ajouterPlan(): void {
-   
-  }
-
-  supprimerPlan(index: number): void {
-    this.plansExecution.update(plans => plans.filter((_, i) => i !== index));
-  }
-
-  private resetFichiers(): void {
-    this.fileCni.set(null);
-    this.fileDemandeTimbre.set(null);
-    this.fileCertificatUrbanisme.set(null);
-    this.fileCertificatPropriete.set(null);
-    this.fileDevis.set(null);
-    this.filePlanMasse.set(null);
-    this.filePlanSituationTerrain.set(null);
-    this.planEnCours.set(null);
-    this.typePlanIdEnCours.set(null);
-  }
-
-  // ── CRUD ──────────────────────────────────────────────────────────────────
-  createDossier(): void {
-    if (this.dossierFb.invalid) {
-      this.dossierFb.markAllAsTouched();
-      this.notify('error', 'Veuillez remplir tous les champs obligatoires.');
-      return;
-    }
-    this.isSubmitting.set(true);
-    this.permisService.creationDossierPermis(this.construireFormData(this.dossierFb)).subscribe({
-      next: (res: ServerResponse) => {
-        this.isSubmitting.set(false);
-        if (res.status) {
-          this.notify('success', 'Dossier de permis créé avec succès !');
-          this.closeModalAdd();
-          this.getAllDossiers();
-        } else {
-          this.notify('error', res.message ?? 'Erreur lors de la création.');
-        }
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.notify('error', 'Erreur serveur lors de la création.');
-      },
-    });
-  }
-
-  updateDossier(): void {
-    if (this.dossierEditFb.invalid) {
-      this.dossierEditFb.markAllAsTouched();
-      this.notify('error', 'Veuillez remplir tous les champs obligatoires.');
-      return;
-    }
-    this.isSubmitting.set(true);
-    this.permisService.updateDossierPermis(this.construireFormData(this.dossierEditFb)).subscribe({
-      next: (res: ServerResponse) => {
-        this.isSubmitting.set(false);
-        if (res.status) {
-          this.notify('success', 'Dossier mis à jour avec succès !');
-          this.closeModalEdit();
-          this.getAllDossiers();
-        } else {
-          this.notify('error', res.message ?? 'Erreur lors de la mise à jour.');
-        }
-      },
-      error: () => {
-        this.isSubmitting.set(false);
-        this.notify('error', 'Erreur serveur lors de la mise à jour.');
-      },
-    });
-  }
-
-  deleteDossier(dossier: DossierPermisBatir, event: Event): void {
-    event.stopPropagation();
-    if (!confirm(`Confirmer la suppression du dossier ${dossier.numeroDossier ?? ''} ?`)) return;
-    if (!dossier.id) return;
-    this.permisService.deleteDossierPermis(dossier.id).subscribe({
-      next: () => {
-        this.notify('success', 'Dossier supprimé avec succès.');
-        this.getAllDossiers();
-      },
-      error: () => this.notify('error', 'Erreur serveur lors de la suppression.'),
-    });
-  }
-
-  // ── Construction FormData ─────────────────────────────────────────────────
-  private construireFormData(form: FormGroup): FormData {
-    const fd = new FormData();
-    const v  = form.value;
-
-    const dto = {
-      id           : v.id          ?? undefined,
-      nom          : v.nom?.trim(),
-      prenom       : v.prenom?.trim(),
-      telephone    : v.telephone?.trim(),
-      email        : v.email?.trim(),
-      raison       : v.raison?.trim(),
-      mairieId     : this.idMairie(),
-      typesPlansIds: this.plansExecution().map(p => p.id),
-    };
-    fd.append('dossier', JSON.stringify(dto));
-
-    const annexer = (cle: string, f: File | null) => {
-      if (f) fd.append(cle, f, f.name);
-    };
-
-    annexer('cni',                  this.fileCni());
-    annexer('demandeTimbre',        this.fileDemandeTimbre());
-    annexer('certificatUrbanisme',  this.fileCertificatUrbanisme());
-    annexer('certificatPropriete',  this.fileCertificatPropriete());
-    annexer('devis',                this.fileDevis());
-    annexer('planMasse',            this.filePlanMasse());
-    annexer('planSituationTerrain', this.filePlanSituationTerrain());
-
-   // this.plansExecution().forEach(p => fd.append('plansExecution', p.file, p.file.name)); // A ADAPTER AVEC LES NOUVELLES MODIFICATIONS ET
-
-    return fd;
-  }
-
-  // ── Helpers template ──────────────────────────────────────────────────────
-  nomFichier(fichier: File | null, defaut = 'Aucun fichier sélectionné'): string {
-    return fichier?.name ?? defaut;
-  }
-
-  get nombrePlans(): number {
-    return this.plansExecution().length;
-  }
-
-  /** Retourne true si le chemin correspond à une image */
-  isImage(chemin: string): boolean {
-    return /\.(jpg|jpeg|png|gif|webp)$/i.test(chemin ?? '');
-  }
-
-  /** Retourne true si le chemin correspond à un PDF */
-  isPdf(chemin: string): boolean {
-    return /\.pdf$/i.test(chemin ?? '');
-  }
-
-  /** Classe CSS du badge de statut */
-  statutClass(intitule: string): string {
-    switch ((intitule ?? '').toUpperCase()) {
+  /* ── Helper statut badge ──────────────────────────────────── */
+  classeBadge(statut: StatutDossier | undefined): string {
+    switch (statut?.intitule) {
       case 'EN EVALUATION': return 'badge-evaluation';
-      case 'VALIDE':        return 'badge-valide';
-      case 'REJETE':        return 'badge-rejete';
-      default:              return 'badge-default';
+      case 'VALIDE'       : return 'badge-valide';
+      case 'REJETE'       : return 'badge-rejete';
+      default             : return 'badge-default';
     }
   }
 
-  // ── Recherche & pagination ────────────────────────────────────────────────
-  onSearch(event: Event): void {
-    this.searchTerm.set((event.target as HTMLInputElement).value);
-    this.currentPage.set(1);
+  /* ── Chargement liste ─────────────────────────────────────── */
+  chargerDossiers(): void {
+    this.enChargement.set(true);
+    this.permisService.findAllDossierPermisByMairie(this.idMairie()).subscribe({
+      next : (data: DossierPermisBatir[]) => {
+        this.listDossiers.set(data);
+        this.enChargement.set(false);
+      },
+      error: () => {
+        this.enChargement.set(false);
+        this.afficherToast('error', 'Erreur de chargement',
+          'Impossible de charger les dossiers.', 6000);
+      },
+    });
   }
 
-  setPage(p: number): void {
-    if (p >= 1 && p <= this.totalPages()) this.currentPage.set(p);
+  chargerStatuts(): void {
+    // this.permisService.findAllStatutDossier().subscribe({
+    //   next : (data: StatutDossier[]) => this.listStatuts.set(data),
+    //   error: () => console.error('Erreur chargement statuts'),
+    // });
   }
 
-  ctrl(form: FormGroup, name: string): FormControl {
-    return form.get(name) as FormControl;
+  /* ══════════════════════════════════════════════════════════
+     MODAL VOIR
+  ══════════════════════════════════════════════════════════ */
+  dossierVoir       = signal<ConstructDossierPermis | null>(null);
+  modalVoirOuvert   = signal<boolean>(false);
+  chargementDetail  = signal<boolean>(false);
+
+  ouvrirModalVoir(dossier: DossierPermisBatir): void {
+    this.modalVoirOuvert.set(true);
+    this.chargementDetail.set(true);
+    this.dossierVoir.set(null);
+
+
+     this.permisService.getPlanExecutionByDossier(dossier.id).subscribe({
+      next: (data:PlanExecution[])=>{
+          const dp : ConstructDossierPermis = {
+            dossier: dossier, 
+            plans: data,
+            statut : dossier.statut
+          }
+
+          this.dossierVoir.set(dp); 
+
+          this.chargementDetail.set(false); 
+      }
+     }); 
+    
+    // this.permisService.findDossierPermisById(dossier.id).subscribe({
+    //   next : (data: ConstructDossierPermis) => {
+    //     this.dossierVoir.set(data);
+    //     this.chargementDetail.set(false);
+    //   },
+    //   error: () => {
+    //     this.chargementDetail.set(false);
+    //     this.afficherToast('error', 'Erreur', 'Impossible de charger le détail.', 5000);
+    //     this.modalVoirOuvert.set(false);
+    //   },
+    // });
   }
 
-  private notify(type: 'success' | 'error', msg: string): void {
-    if (type === 'success') {
-      this.successMessage.set(msg);
-      setTimeout(() => this.successMessage.set(''), 4500);
-    } else {
-      this.errorMessage.set(msg);
-      setTimeout(() => this.errorMessage.set(''), 5500);
-    }
+  fermerModalVoir(): void {
+    this.modalVoirOuvert.set(false);
+    this.dossierVoir.set(null);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     MODAL ÉDITION (changement de statut)
+  ══════════════════════════════════════════════════════════ */
+  dossierEdition    = signal<DossierPermisBatir | null>(null);
+  modalEditOuvert   = signal<boolean>(false);
+  enCoursEdit       = signal<boolean>(false);
+
+  editFb: FormGroup = this.fb.group({
+    statutId: new FormControl<number | null>(null, Validators.required),
+    note    : new FormControl<string>(''),
+  });
+
+  ouvrirModalEdit(dossier: DossierPermisBatir): void {
+    this.dossierEdition.set(dossier);
+    this.editFb.patchValue({
+      statutId: dossier.statut?.id ?? null,
+      note    : '',
+    });
+    this.modalEditOuvert.set(true);
+  }
+
+  fermerModalEdit(): void {
+    this.modalEditOuvert.set(false);
+    this.dossierEdition.set(null);
+    this.editFb.reset();
+  }
+
+  enregistrerStatut(): void {
+    const dossier = this.dossierEdition();
+    if (!dossier || this.editFb.invalid) return;
+
+    this.enCoursEdit.set(true);
+    const { statutId, note } = this.editFb.value;
+
+    // this.permisService.changerStatutDossier(dossier.id, statutId, note).subscribe({
+    //   next: (reponse: ServerResponse) => {
+    //     this.enCoursEdit.set(false);
+    //     if (reponse.status) {
+    //       this.afficherToast('success', 'Statut mis à jour',
+    //         reponse.message || 'Le statut a bien été modifié.', 6000);
+    //       this.fermerModalEdit();
+    //       this.chargerDossiers();
+    //     } else {
+    //       this.afficherToast('error', 'Échec', reponse.message || 'Une erreur est survenue.', 6000);
+    //     }
+    //   },
+    //   error: (err: any) => {
+    //     this.enCoursEdit.set(false);
+    //     this.afficherToast('error', 'Erreur',
+    //       err?.error?.message ?? 'Une erreur est survenue.', 6000);
+    //   },
+    // });
+  }
+
+  min(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+
+  paginationInfo = computed(() => {
+    const debut = (this.pageCourante() - 1) * this.PAR_PAGE;
+    const fin   = Math.min(this.pageCourante() * this.PAR_PAGE, this.dossiersFiltres().length);
+    return `${debut + 1} – ${fin} sur ${this.dossiersFiltres().length} résultats`;
+  });
+  /* ══════════════════════════════════════════════════════════
+     MODAL SUPPRESSION
+  ══════════════════════════════════════════════════════════ */
+  dossierSupprimer   = signal<DossierPermisBatir | null>(null);
+  modalSuppOuvert    = signal<boolean>(false);
+  enCoursSuppr       = signal<boolean>(false);
+
+  ouvrirModalSuppr(dossier: DossierPermisBatir): void {
+    this.dossierSupprimer.set(dossier);
+    this.modalSuppOuvert.set(true);
+  }
+
+  fermerModalSuppr(): void {
+    this.modalSuppOuvert.set(false);
+    this.dossierSupprimer.set(null);
+  }
+
+  confirmerSuppression(): void {
+    const dossier = this.dossierSupprimer();
+    if (!dossier) return;
+
+    this.enCoursSuppr.set(true);
+    this.permisService.deleteDossierPermis(dossier.id).subscribe({
+      next: (reponse: ServerResponse) => {
+        this.enCoursSuppr.set(false);
+        if (reponse.status) {
+          this.afficherToast('success', 'Dossier supprimé',
+            reponse.message || `Le dossier ${dossier.numeroDossier} a été supprimé.`, 6000);
+          this.fermerModalSuppr();
+          this.chargerDossiers();
+        } else {
+          this.afficherToast('error', 'Échec', reponse.message || 'Une erreur est survenue.', 6000);
+        }
+      },
+      error: (err: any) => {
+        this.enCoursSuppr.set(false);
+        this.afficherToast('error', 'Erreur',
+          err?.error?.message ?? 'Une erreur est survenue.', 6000);
+      },
+    });
+  }
+
+  /* ── Formatage date ───────────────────────────────────────── */
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('fr-FR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+    });
   }
 }

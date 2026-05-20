@@ -18,10 +18,53 @@
       </div>
     </div>
 
+     <!-- ════════════════════════════════════════
+         CARTES MÉTRIQUES
+    ════════════════════════════════════════ -->
+    <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 0;">
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(0,49,137,0.1); color:var(--primary);">🗂️</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalDocuments() }}</div>
+          <div class="kpi-label">Documents archivés</div>
+        </div>
+        <div class="kpi-trend up">↑ Total</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(232,0,45,0.08); color:var(--accent);">📄</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalPdf() }}</div>
+          <div class="kpi-label">Fichiers PDF</div>
+        </div>
+        <div class="kpi-trend up">↑ PDF</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(200,168,75,0.12); color:var(--gold);">🖼️</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalImages() }}</div>
+          <div class="kpi-label">Images / Scans</div>
+        </div>
+        <div class="kpi-trend up">↑ Images</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(25,135,84,0.08); color:#198754;">🧩</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalChunks() }}</div>
+          <div class="kpi-label">Chunks indexés</div>
+        </div>
+        <div class="kpi-trend up">↑ RAG</div>
+      </div>
+
+    </div>
+
     <!-- ════════════════════════════════════════
          ZONE UPLOAD
     ════════════════════════════════════════ -->
-    <div class="stat-section" style="margin-bottom: 24px;">
+    <div class="stat-section my-2" style="margin-bottom: 24px;">
       <div class="stat-section-title">
         <span>📤</span> Déposer un document
       </div>
@@ -129,10 +172,11 @@
       </div>
     </div>
 
+   
     <!-- ════════════════════════════════════════
          TABLEAU DES DOCUMENTS
     ════════════════════════════════════════ -->
-    <div class="stat-section" style="margin-bottom: 24px;">
+    <div class="stat-section my-2" style="margin-bottom: 24px;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
         <div class="stat-section-title" style="margin-bottom:0;">
           <span>📋</span> Documents archivés
@@ -236,48 +280,7 @@
       }
     </div>
 
-    <!-- ════════════════════════════════════════
-         CARTES MÉTRIQUES
-    ════════════════════════════════════════ -->
-    <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 0;">
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:rgba(0,49,137,0.1); color:var(--primary);">🗂️</div>
-        <div class="kpi-body">
-          <div class="kpi-value">{{ totalDocuments() }}</div>
-          <div class="kpi-label">Documents archivés</div>
-        </div>
-        <div class="kpi-trend up">↑ Total</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:rgba(232,0,45,0.08); color:var(--accent);">📄</div>
-        <div class="kpi-body">
-          <div class="kpi-value">{{ totalPdf() }}</div>
-          <div class="kpi-label">Fichiers PDF</div>
-        </div>
-        <div class="kpi-trend up">↑ PDF</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:rgba(200,168,75,0.12); color:var(--gold);">🖼️</div>
-        <div class="kpi-body">
-          <div class="kpi-value">{{ totalImages() }}</div>
-          <div class="kpi-label">Images / Scans</div>
-        </div>
-        <div class="kpi-trend up">↑ Images</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-icon" style="background:rgba(25,135,84,0.08); color:#198754;">🧩</div>
-        <div class="kpi-body">
-          <div class="kpi-value">{{ totalChunks() }}</div>
-          <div class="kpi-label">Chunks indexés</div>
-        </div>
-        <div class="kpi-trend up">↑ RAG</div>
-      </div>
-
-    </div>
+    
 
   </div>
 </div>

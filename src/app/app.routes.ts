@@ -10,6 +10,10 @@ export const routes: Routes = [
         children: [
            
             { 
+                path: '', 
+                loadComponent: () => import('./Features/platform/acceuil/acceuil').then(m => m.Acceuil) 
+            },
+            { 
                 path: 'landing-page', 
                 loadComponent: () => import('./Features/platform/acceuil/acceuil').then(m => m.Acceuil) 
             }, 

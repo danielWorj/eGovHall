@@ -61,7 +61,9 @@ export const eHAllSystemEndPoints = {
         }, 
         TypePlan :{
             all:          `${permisBaseUrl}/typeplan/all`,
-
+        }, 
+        PlanExecution:{
+            allbydossier : `${permisBaseUrl}/planExecution/bydossier/`
         }
     },
 

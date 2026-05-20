@@ -1958,3 +1958,339 @@ router-outlet + * {
   height: auto !important;
   overflow: visible !important;
 }
+
+/* ── NAVBAR INLINE ── */
+    .topbar {
+      background: var(--primary-dark);
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 6px 0;
+    }
+    .topbar a { color: rgba(255,255,255,0.75); transition: color .2s; text-decoration:none }
+    .topbar a:hover { color: #fff; }
+    .topbar .sep { margin: 0 10px; opacity: .4; }
+
+    /* ── SECTIONS EXTRA ── */
+    .section { padding: 80px 0; }
+    .section-light { background: var(--light-bg); }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--primary);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr 40px 1fr;
+      align-items: start;
+      gap: 0;
+      margin-top: 56px;
+    }
+    .how-step {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      position: relative;
+      transition: all .3s;
+    }
+    .how-step:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); border-color: var(--primary); }
+    .how-step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: rgba(0,49,137,0.07);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .how-step-icon {
+      width: 64px; height: 64px;
+      background: rgba(0,49,137,0.08);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: var(--primary);
+      margin: 0 auto 16px;
+      transition: all .3s;
+    }
+    .how-step:hover .how-step-icon { background: var(--primary); color: white; }
+    .how-step h5 { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+    .how-step p { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+    .how-step .step-tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .tag-hopital { background: rgba(232,0,45,.08); color: var(--accent); }
+    .tag-mairie  { background: rgba(0,49,137,.08);  color: var(--primary); }
+    .tag-citoyen { background: rgba(200,168,75,.12); color: #7a5000; }
+
+    .how-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--border);
+      font-size: 24px;
+      padding-top: 80px;
+    }
+
+    /* ── DASHBOARD PREVIEW ── */
+    .dash-section {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      padding: 88px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .dash-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .dash-section .section-label { color: rgba(255,255,255,.5); }
+    .dash-section .section-title { color: white; }
+    .dash-section .section-desc { color: rgba(255,255,255,.65); font-size:16px; max-width:500px; margin-bottom:36px; }
+
+    .feature-list-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      border: 1px solid transparent;
+      transition: all .2s;
+      margin-bottom: 6px;
+    }
+    .feature-list-item:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); }
+    .feature-list-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: rgba(255,255,255,.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: var(--gold);
+    }
+    .feature-list-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .feature-list-desc  { font-size: 13px; color: rgba(255,255,255,.55); line-height:1.55; }
+
+    /* Dashboard mockup */
+    .dash-mockup {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+    }
+    .dash-topbar {
+      background: rgba(255,255,255,.09);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 7px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .dash-dot { width:10px; height:10px; border-radius:50%; }
+    .dash-topbar-title {
+      font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,.4);
+      margin-left: 8px;
+    }
+    .dash-body { padding: 18px; }
+    .dash-stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:12px; }
+    .dash-stat-cell {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: 14px 12px;
+    }
+    .dash-stat-label { font-size:10px; color:rgba(255,255,255,.35); margin-bottom:6px; }
+    .dash-stat-num {
+      font-family:'Playfair Display',serif;
+      font-size:22px; font-weight:900;
+      color:var(--gold);
+      line-height:1;
+    }
+    .dash-stat-num.blue  { color:#7eb8ff; }
+    .dash-stat-num.green { color:#7ee8a2; }
+    .dash-prog { margin-top:8px; height:4px; border-radius:4px; background:rgba(255,255,255,.1); overflow:hidden; }
+    .dash-prog-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--primary-light),var(--gold)); animation:progGrow 1.8s ease-out forwards; }
+    @keyframes progGrow { from{width:0} }
+
+    .dash-table-wrap {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .dash-table-head {
+      display:grid; grid-template-columns:1fr 100px 90px;
+      padding:9px 14px;
+      background:rgba(255,255,255,.06);
+      font-size:10px; font-weight:700;
+      color:rgba(255,255,255,.35);
+      text-transform:uppercase; letter-spacing:.8px;
+    }
+    .dash-table-row {
+      display:grid; grid-template-columns:1fr 100px 90px;
+      padding:10px 14px;
+      border-top:1px solid rgba(255,255,255,.05);
+      font-size:11.5px;
+      align-items:center;
+    }
+    .dash-table-row .name { color:rgba(255,255,255,.7); }
+    .dash-table-row .type { color:rgba(255,255,255,.4); font-size:11px; }
+    .dash-badge {
+      font-size:10px; font-weight:700;
+      padding:2px 9px; border-radius:20px;
+      display:inline-block;
+    }
+    .badge-ok      { background:rgba(110,231,160,.12); color:#6ee7a0; }
+    .badge-pending { background:rgba(255,193,7,.12);   color:#ffc107; }
+    .badge-new     { background:rgba(0,123,255,.12);   color:#7eb8ff; }
+
+    /* ── PORTAIL CARDS (Mairies + Hôpitaux) ── */
+    .audience-cards { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:48px; }
+    .audience-card {
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .audience-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+    .audience-card.mairie  { background:var(--primary); color:white; }
+    .audience-card.hopital { background:var(--white); border:2px solid var(--border); color:var(--text-dark); }
+    .audience-card::before {
+      content:'';
+      position:absolute; top:-40px; right:-40px;
+      width:160px; height:160px;
+      border-radius:50%;
+      opacity:.07;
+    }
+    .audience-card.mairie::before  { background:white; }
+    .audience-card.hopital::before { background:var(--accent); }
+    .audience-card-icon {
+      width:60px; height:60px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px; margin-bottom:20px;
+    }
+    .audience-card.mairie  .audience-card-icon { background:rgba(255,255,255,.15); color:white; }
+    .audience-card.hopital .audience-card-icon { background:rgba(232,0,45,.08); color:var(--accent); }
+    .audience-card h4 { font-size:22px; margin-bottom:12px; }
+    .audience-card.mairie  h4 { color:white; }
+    .audience-card.hopital h4 { color:var(--text-dark); }
+    .audience-card p { font-size:14px; line-height:1.7; margin-bottom:24px; }
+    .audience-card.mairie  p { color:rgba(255,255,255,.75); }
+    .audience-card.hopital p { color:var(--text-muted); }
+    .audience-card ul { list-style:none; padding:0; margin-bottom:28px; }
+    .audience-card ul li {
+      font-size:13.5px; display:flex; align-items:center; gap:8px;
+      margin-bottom:8px;
+    }
+    .audience-card.mairie  ul li { color:rgba(255,255,255,.8); }
+    .audience-card.hopital ul li { color:var(--text-mid); }
+    .audience-card ul li i { font-size:14px; }
+    .audience-card.mairie  ul li i { color:var(--gold); }
+    .audience-card.hopital ul li i { color:var(--primary); }
+
+    .btn-card-mairie {
+      display:inline-flex; align-items:center; gap:8px;
+      background:white; color:var(--primary);
+      padding:11px 24px; border-radius:30px;
+      font-weight:700; font-size:14px;
+      transition:all .25s; text-decoration:none;
+    }
+    .btn-card-mairie:hover { background:var(--gold); color:var(--primary-dark); }
+    .btn-card-hopital {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--accent); color:white;
+      padding:11px 24px; border-radius:30px;
+      font-weight:700; font-size:14px;
+      transition:all .25s; text-decoration:none;
+    }
+    .btn-card-hopital:hover { background:#c0001f; color:white; }
+
+    /* ── STATS BAND ── */
+    .stats-band {
+      background: var(--primary-dark);
+      padding: 56px 0;
+    }
+    .stats-inner {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1px; background:rgba(255,255,255,.08);
+      border-radius: var(--radius-lg); overflow:hidden;
+    }
+    .stat-cell {
+      padding:40px 24px; text-align:center;
+      background:var(--primary-dark);
+      transition:background .2s;
+    }
+    .stat-cell:hover { background:var(--primary); }
+    .stat-num {
+      font-family:'Playfair Display',serif;
+      font-size:46px; font-weight:900;
+      color:var(--gold); line-height:1;
+      margin-bottom:6px;
+    }
+    .stat-label { font-size:13px; color:rgba(255,255,255,.5); }
+
+    /* ── SERVICE CARDS ── */
+    .service-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      height: 100%;
+      transition: all .3s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::after {
+      content:''; position:absolute; bottom:0; left:0; right:0;
+      height:3px;
+      background:linear-gradient(90deg,var(--primary),var(--primary-light));
+      transform:scaleX(0); transform-origin:left;
+      transition:transform .3s;
+    }
+    .service-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); border-color:var(--primary); }
+    .service-card:hover::after { transform:scaleX(1); }
+    .service-icon {
+      width:52px; height:52px; border-radius:12px;
+      background:rgba(0,49,137,.08);
+      display:flex; align-items:center; justify-content:center;
+      font-size:24px; color:var(--primary);
+      margin-bottom:18px;
+      transition: all .3s;
+    }
+    .service-card:hover .service-icon { background:var(--primary); color:white; }
+    .service-card h6 { font-size:16px; font-weight:700; margin-bottom:10px; color:var(--text-dark); }
+    .service-card p  { font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-bottom:16px; }
+    .service-card .service-tag {
+      font-size:12px; font-weight:600; color:var(--primary);
+      display:flex; align-items:center; gap:5px;
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      background: var(--primary);
+      padding: 72px 0;
+      text-align:center;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:991px){
+      .how-grid { grid-template-columns:1fr; }
+      .how-arrow { display:none; }
+      .audience-cards { grid-template-columns:1fr; }
+      .stats-inner { grid-template-columns:repeat(2,1fr); }
+      .quick-access-inner { grid-template-columns:repeat(2,1fr); }
+    }
+    @media(max-width:575px){
+      .stats-inner { grid-template-columns:1fr 1fr; }
+      .quick-access-inner { grid-template-columns:1fr; }
+      .section-title { font-size:26px; }
+    }

@@ -5,6 +5,7 @@ import { DossierPermisBatir } from '../../Model/Permis/DossierPermis';
 import { eHAllSystemEndPoints } from '../../Constant/EndPoints';
 import { ServerResponse } from '../../Model/Server/ServerResponse';
 import { TypePlan } from '../../Model/Permis/TypePlan';
+import { PlanExecution } from '../../Model/Permis/PlanExecution';
 
 @Injectable({
   providedIn: 'root',
@@ -36,8 +37,8 @@ export class PermisService {
     );
   }
 
-  deleteDossierPermis(id:number):Observable<DossierPermisBatir[]>{
-    return this.http.get<DossierPermisBatir[]>(eHAllSystemEndPoints.Permis.Dossier.delete+id);
+  deleteDossierPermis(id:number):Observable<ServerResponse>{
+    return this.http.get<ServerResponse>(eHAllSystemEndPoints.Permis.Dossier.delete+id);
   }
 
 
@@ -46,6 +47,10 @@ export class PermisService {
 
   findAllTypePlan():Observable<TypePlan[]>{
     return this.http.get<TypePlan[]>(eHAllSystemEndPoints.Permis.TypePlan.all);
+  }
+
+  getPlanExecutionByDossier(id:number):Observable<PlanExecution[]>{
+    return this.http.get<PlanExecution[]>(eHAllSystemEndPoints.Permis.PlanExecution.allbydossier+id);
   }
 
   
