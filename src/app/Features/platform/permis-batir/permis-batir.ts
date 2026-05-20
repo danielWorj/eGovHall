@@ -1,8 +1,6 @@
 import {
   Component,
   signal,
-  computed,
-  effect,
   inject,
 } from '@angular/core';
 import {
@@ -15,12 +13,22 @@ import {
 import { CommonModule } from '@angular/common';
 import { PermisService } from '../../../Core/Service/Permis/permis-service';
 import { ServerResponse } from '../../../Core/Model/Server/ServerResponse';
+import { TypePlan } from '../../../Core/Model/Permis/TypePlan';
 
-/** Représente un plan d'exécution en attente d'envoi */
 interface PlanExecutionEntry {
   file: File;
   typePlanId: number;
-  preview: string; // nom affiché
+  preview: string;
+}
+
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+export interface Toast {
+  id: number;
+  type: ToastType;
+  title: string;
+  message: string;
+  duration: number; // ms, 0 = persistant
 }
 
 @Component({
@@ -31,25 +39,31 @@ interface PlanExecutionEntry {
   styleUrl: './permis-batir.css',
 })
 export class PermisBatir {
+  //
+  //
+  // PERMIS BATIR COTE PLATEFORME POUR LE PORTAIL DU SITE 
+  //
+  //
+  //
 
-  // ── Injection ──────────────────────────────────────────────────────────
-  private fb             = inject(FormBuilder);
-  private permisService  = inject(PermisService);
+  constructor(){
+    this.getAllTypePlan(); 
+  }
 
-  // ── Formulaire réactif ─────────────────────────────────────────────────
+  private fb            = inject(FormBuilder);
+  private permisService = inject(PermisService);
+
+  // ── Formulaire ─────────────────────────────────────────────────────────
   dossierPermisFb: FormGroup = this.fb.group({
-    // Identité du demandeur
-    nom          : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
-    prenom       : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
-    telephone    : new FormControl<string>('', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]),
-    email        : new FormControl<string>('', [Validators.required, Validators.email]),
-    // Informations dossier
-    raison       : new FormControl<string>('', Validators.required),
-    raisonSociale: new FormControl<string>(''),
-    mairieId     : new FormControl<number | null>(null, Validators.required),
+    nom      : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
+    prenom   : new FormControl<string>('', [Validators.required, Validators.minLength(2)]),
+    telephone: new FormControl<string>('', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]),
+    email    : new FormControl<string>('', [Validators.required, Validators.email]),
+    raison   : new FormControl<string>('', Validators.required),
+    mairieId : new FormControl<number | null>(null, Validators.required),
   });
 
-  // ── Signaux — fichiers uniques ─────────────────────────────────────────
+  // ── Fichiers uniques ───────────────────────────────────────────────────
   demandeTimbre        = signal<File | null>(null);
   certificatUrbanisme  = signal<File | null>(null);
   certificatPropriete  = signal<File | null>(null);
@@ -58,50 +72,64 @@ export class PermisBatir {
   planSituationTerrain = signal<File | null>(null);
   cni                  = signal<File | null>(null);
 
-  // ── Signaux — plans d'exécution (multiple) ─────────────────────────────
-  plansExecution = signal<PlanExecutionEntry[]>([]);
+  // ── Plans d'exécution ──────────────────────────────────────────────────
+  plansExecution    = signal<PlanExecutionEntry[]>([]);
+  planEnCours       = signal<File | null>(null);
+  typePlanIdEnCours = signal<number | null>(null);
 
-  // Saisie temporaire pour ajouter un plan (fichier + type)
-  planEnCours        = signal<File | null>(null);
-  typePlanIdEnCours  = signal<number | null>(null);
+  // ── État UI ────────────────────────────────────────────────────────────
+  enCoursEnvoi             = signal<boolean>(false);
+  messageRetour            = signal<string>('');
+  estSucces                = signal<boolean>(false);
+  etapeActive              = signal<number>(1);
+  declarationHonneurCochee = signal<boolean>(false);
 
-  // ── Signaux — état UI ──────────────────────────────────────────────────
-  enCoursEnvoi  = signal<boolean>(false);
-  messageRetour = signal<string>('');
-  estSucces     = signal<boolean>(false);
-  etapeActive   = signal<number>(1);
+  // ── Toasts ─────────────────────────────────────────────────────────────
+  toasts   = signal<Toast[]>([]);
+  private _toastCounter = 0;
 
-  // ── Signaux — mode édition ─────────────────────────────────────────────
-  modeEdition    = signal<boolean>(false);
-  dossierEditId  = signal<number | null>(null);
-
-  // ── Computed ───────────────────────────────────────────────────────────
-
-  /** Indique si le formulaire peut être soumis */
-  formulaireValide = computed(() =>
-    this.dossierPermisFb.valid && !this.enCoursEnvoi()
-  );
-
-  /** Nombre de plans d'exécution ajoutés */
-  nombrePlans = computed(() => this.plansExecution().length);
-
-  /** Libellé du bouton de soumission */
-  libelleAction = computed(() => {
-    if (this.enCoursEnvoi()) return 'Envoi en cours…';
-    return this.modeEdition() ? 'Mettre à jour le dossier' : 'Soumettre le dossier';
-  });
-
-  // ── Effect — log de debug (à retirer en prod) ──────────────────────────
-  constructor() {
-    effect(() => {
-      if (this.messageRetour()) {
-        // Auto-effacement du message après 6 secondes
-        setTimeout(() => this.messageRetour.set(''), 6000);
-      }
-    });
+  afficherToast(
+    type: ToastType,
+    title: string,
+    message: string,
+    duration = 5000
+  ): void {
+    const id = ++this._toastCounter;
+    this.toasts.update(list => [...list, { id, type, title, message, duration }]);
+    if (duration > 0) {
+      setTimeout(() => this.fermerToast(id), duration);
+    }
   }
 
-  // ── Handlers — fichiers uniques ────────────────────────────────────────
+  fermerToast(id: number): void {
+    this.toasts.update(list => list.filter(t => t.id !== id));
+  }
+
+  // ── Mode édition ───────────────────────────────────────────────────────
+  modeEdition   = signal<boolean>(false);
+  dossierEditId = signal<number | null>(null);
+
+  // ── Helpers template ───────────────────────────────────────────────────
+
+  get nombrePlans(): number {
+    return this.plansExecution().length;
+  }
+
+  get libelleAction(): string {
+    if (this.enCoursEnvoi()) return 'Envoi en cours…';
+    return this.modeEdition() ? 'Mettre à jour le dossier' : 'Soumettre le dossier';
+  }
+
+  champInvalide(nomChamp: string): boolean {
+    const ctrl = this.dossierPermisFb.get(nomChamp);
+    return !!(ctrl?.invalid && ctrl.touched);
+  }
+
+  nomFichier(fichier: File | null, defaut = 'Aucun fichier sélectionné'): string {
+    return fichier?.name ?? defaut;
+  }
+
+  // ── Handlers fichiers uniques ──────────────────────────────────────────
 
   onFileChange(
     event: Event,
@@ -109,11 +137,10 @@ export class PermisBatir {
            'devis' | 'planMasse' | 'planSituationTerrain' | 'cni'
   ): void {
     const input = event.target as HTMLInputElement;
-    const fichier = input.files?.[0] ?? null;
-    this[cible].set(fichier);
+    this[cible].set(input.files?.[0] ?? null);
   }
 
-  // ── Handlers — plans d'exécution ───────────────────────────────────────
+  // ── Handlers plans d'exécution ─────────────────────────────────────────
 
   onPlanFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -121,82 +148,84 @@ export class PermisBatir {
   }
 
   onTypePlanChange(typePlanId: number): void {
-    this.typePlanIdEnCours.set(typePlanId);
+    this.typePlanIdEnCours.set(+typePlanId);
   }
 
-  /** Ajoute le plan en cours à la liste */
   ajouterPlan(): void {
     const fichier = this.planEnCours();
     const typeId  = this.typePlanIdEnCours();
-
-    if (!fichier || typeId === null) return;
+    if (!fichier || typeId === null || typeId === 0) return;
 
     this.plansExecution.update(plans => [
       ...plans,
       { file: fichier, typePlanId: typeId, preview: fichier.name },
     ]);
-
-    // Réinitialise la saisie en cours
     this.planEnCours.set(null);
     this.typePlanIdEnCours.set(null);
   }
 
-  /** Supprime un plan de la liste par son index */
   supprimerPlan(index: number): void {
     this.plansExecution.update(plans => plans.filter((_, i) => i !== index));
   }
 
-  // ── Construction du FormData ───────────────────────────────────────────
+  listTypePlan = signal<TypePlan[]>([]);
+  getAllTypePlan(){
+    this.permisService.findAllTypePlan().subscribe({
+      next:(data:TypePlan[])=>{
+        this.listTypePlan.set(data); 
+      }, 
+      error:()=>{
+        console.log('List type de plan'); 
+      }
+    })
+  }
 
-  private construireFormData(): FormData {
-    const fd = new FormData();
+  // ── Validation simple ──────────────────────────────────────────────────
 
-    // Partie JSON « dossier »
-    const valeurs = this.dossierPermisFb.value;
-    const dossierDto = {
-      nom          : valeurs.nom,
-      prenom       : valeurs.prenom,
-      telephone    : valeurs.telephone,
-      email        : valeurs.email,
-      raison       : valeurs.raison,
-      raisonSociale: valeurs.raisonSociale ?? '',
-      mairieId     : valeurs.mairieId,
-      // typesPlansIds doit correspondre dans l'ordre aux fichiers plansExecution
-      typesPlansIds: this.plansExecution().map(p => p.typePlanId),
-    };
-    fd.append('dossier', JSON.stringify(dossierDto));
+  /**
+   * Vérifie chaque champ manuellement.
+   * Retourne le premier message d'erreur trouvé, ou null si tout est valide.
+   */
+  private validerFormulaire(): string | null {
+    const v = this.dossierPermisFb.value;
 
-    // Pièces justificatives (fichiers optionnels)
-    const ajouterFichier = (cle: string, fichier: File | null) => {
-      if (fichier) fd.append(cle, fichier, fichier.name);
-    };
+    if (!v.nom || v.nom.trim().length < 2)
+      return 'Le nom est requis (minimum 2 caractères).';
 
-    ajouterFichier('demandeTimbre',        this.demandeTimbre());
-    ajouterFichier('certificatUrbanisme',  this.certificatUrbanisme());
-    ajouterFichier('certificatPropriete',  this.certificatPropriete());
-    ajouterFichier('devis',                this.devis());
-    ajouterFichier('planMasse',            this.planMasse());
-    ajouterFichier('planSituationTerrain', this.planSituationTerrain());
-    ajouterFichier('cni',                  this.cni());
+    if (!v.prenom || v.prenom.trim().length < 2)
+      return 'Le prénom est requis (minimum 2 caractères).';
 
-    // Plans d'exécution (tableau de fichiers)
-    this.plansExecution().forEach(plan => {
-      fd.append('plansExecution', plan.file, plan.file.name);
-    });
+    if (!v.telephone || !/^\+?[0-9]{8,15}$/.test(v.telephone.trim()))
+      return 'Le numéro de téléphone est invalide (8 à 15 chiffres).';
 
-    return fd;
+    if (!v.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email.trim()))
+      return 'L\'adresse email est invalide.';
+
+    if (!v.raison || v.raison.trim().length === 0)
+      return 'La description du projet est requise.';
+
+    if (!v.mairieId)
+      return 'Veuillez sélectionner une mairie.';
+
+    if (!this.declarationHonneurCochee())
+      return 'Vous devez cocher la déclaration sur l\'honneur.';
+
+    return null;
   }
 
   // ── Soumission ─────────────────────────────────────────────────────────
 
   soumettreDossier(): void {
-    if (!this.formulaireValide()) {
-      this.dossierPermisFb.markAllAsTouched();
+    // Validation simple
+    const erreur = this.validerFormulaire();
+    if (erreur) {
+      this.afficherToast('warning', 'Formulaire incomplet', erreur, 7000);
       return;
     }
 
     this.enCoursEnvoi.set(true);
     this.messageRetour.set('');
+    this.afficherToast('info', 'Envoi en cours…', 'Votre dossier est en cours de transmission. Veuillez patienter.', 0);
 
     const formData = this.construireFormData();
 
@@ -209,45 +238,90 @@ export class PermisBatir {
         this.enCoursEnvoi.set(false);
         this.estSucces.set(reponse.status);
         this.messageRetour.set(reponse.message);
+        // Ferme le toast "Envoi en cours"
+        this.toasts.update(list => list.filter(t => t.type !== 'info'));
 
         if (reponse.status) {
+          const action = this.modeEdition() ? 'mis à jour' : 'soumis';
+          this.afficherToast(
+            'success',
+            `Dossier ${action} avec succès`,
+            reponse.message || `Votre dossier de permis de bâtir a bien été ${action}.`,
+            8000
+          );
           this.reinitialiserFormulaire();
+        } else {
+          this.afficherToast('error', 'Échec de la soumission', reponse.message || 'Une erreur est survenue.', 8000);
         }
+        setTimeout(() => this.messageRetour.set(''), 6000);
       },
       error: (err) => {
         this.enCoursEnvoi.set(false);
         this.estSucces.set(false);
-        this.messageRetour.set(
-          err?.error?.message ?? 'Une erreur est survenue. Veuillez réessayer.'
-        );
+        // Ferme le toast "Envoi en cours"
+        this.toasts.update(list => list.filter(t => t.type !== 'info'));
+
+        const msg = err?.error?.message ?? 'Une erreur est survenue. Veuillez réessayer.';
+        this.messageRetour.set(msg);
+        this.afficherToast('error', 'Erreur de connexion', msg, 8000);
+        setTimeout(() => this.messageRetour.set(''), 6000);
       },
     });
   }
 
+  // ── Construction FormData ──────────────────────────────────────────────
+
+  private construireFormData(): FormData {
+    const fd = new FormData();
+    const v  = this.dossierPermisFb.value;
+
+    const dossierDto = {
+      nom          : v.nom.trim(),
+      prenom       : v.prenom.trim(),
+      telephone    : v.telephone.trim(),
+      email        : v.email.trim(),
+      raison       : v.raison.trim(),
+      mairieId     : v.mairieId,
+      typesPlansIds: this.plansExecution().map(p => p.typePlanId),
+    };
+    fd.append('dossier', JSON.stringify(dossierDto));
+
+    const ajouterFichier = (cle: string, fichier: File | null) => {
+      if (fichier) fd.append(cle, fichier, fichier.name);
+    };
+
+    ajouterFichier('demandeTimbre',        this.demandeTimbre());
+    ajouterFichier('certificatUrbanisme',  this.certificatUrbanisme());
+    ajouterFichier('certificatPropriete',  this.certificatPropriete());
+    ajouterFichier('devis',                this.devis());
+    ajouterFichier('planMasse',            this.planMasse());
+    ajouterFichier('planSituationTerrain', this.planSituationTerrain());
+    ajouterFichier('cni',                  this.cni());
+
+    this.plansExecution().forEach(plan => {
+      fd.append('plansExecution', plan.file, plan.file.name);
+    });
+
+    return fd;
+  }
+
   // ── Mode édition ───────────────────────────────────────────────────────
 
-  /**
-   * Pré-remplit le formulaire pour une mise à jour.
-   * Appelle cette méthode depuis le composant parent ou une liste de dossiers.
-   */
   chargerDossierPourEdition(dossier: {
-    id         : number;
-    demandeur  : { nom: string; prenom: string; telephone: string; email: string };
-    raison     : string;
-    raisonSociale?: string;
-    mairie     : { id: number };
+    id       : number;
+    demandeur: { nom: string; prenom: string; telephone: string; email: string };
+    raison   : string;
+    mairie   : { id: number };
   }): void {
     this.modeEdition.set(true);
     this.dossierEditId.set(dossier.id);
-
     this.dossierPermisFb.patchValue({
-      nom          : dossier.demandeur.nom,
-      prenom       : dossier.demandeur.prenom,
-      telephone    : dossier.demandeur.telephone,
-      email        : dossier.demandeur.email,
-      raison       : dossier.raison,
-      raisonSociale: dossier.raisonSociale ?? '',
-      mairieId     : dossier.mairie.id,
+      nom      : dossier.demandeur.nom,
+      prenom   : dossier.demandeur.prenom,
+      telephone: dossier.demandeur.telephone,
+      email    : dossier.demandeur.email,
+      raison   : dossier.raison,
+      mairieId : dossier.mairie.id,
     });
   }
 
@@ -267,18 +341,6 @@ export class PermisBatir {
     this.typePlanIdEnCours.set(null);
     this.modeEdition.set(false);
     this.dossierEditId.set(null);
-  }
-
-  // ── Helpers template ───────────────────────────────────────────────────
-
-  /** Retourne true si le champ est invalide et a été touché */
-  champInvalide(nomChamp: string): boolean {
-    const ctrl = this.dossierPermisFb.get(nomChamp);
-    return !!(ctrl?.invalid && ctrl.touched);
-  }
-
-  /** Retourne le nom du fichier d'un signal ou un texte par défaut */
-  nomFichier(fichier: File | null, defaut = 'Aucun fichier sélectionné'): string {
-    return fichier?.name ?? defaut;
+    this.declarationHonneurCochee.set(false);
   }
 }

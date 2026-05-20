@@ -1,0 +1,51 @@
+  .statut-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .badge-evaluation { background: rgba(255,193,7,.15);  color: #a07000; }
+  .badge-valide     { background: rgba(25,135,84,.12);  color: #146c43; }
+  .badge-rejete     { background: rgba(220,53,69,.12);  color: #b02a37; }
+  .badge-default    { background: var(--light-bg);      color: var(--text-muted); }
+
+  /* Cards de prévisualisation ─────────────────────────────────── */
+  .doc-preview-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .doc-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--light-bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-mid);
+  }
+  .doc-preview-header i { color: var(--primary); font-size: 14px; }
+
+  /* Raccourcis type de projet ─────────────────────────────────── */
+  .type-card-mini {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--text-mid);
+    transition: all .2s;
+    background: var(--white);
+    user-select: none;
+  }
+  .type-card-mini:hover   { border-color: var(--primary); color: var(--primary);
+                             background: rgba(0,49,137,.04); }
+  .type-card-mini.selected{ border-color: var(--primary); color: var(--primary);
+                             background: rgba(0,49,137,.08); font-weight: 700; }

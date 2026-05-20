@@ -1,4 +1,4 @@
 export interface StatutDossier{
     id : number; 
-    intitule : string; 
+    intitule : string; // EN EVALUATION / VALIDE / REJETE 
 }

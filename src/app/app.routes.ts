@@ -69,6 +69,14 @@ export const routes: Routes = [
             path: 'mairie-notifications', 
             loadComponent: () => import('./Features/Admin/Mairie/notifications/notifications').then(m => m.Notifications) 
           },
+          { 
+            path: 'archivage', 
+            loadComponent: () => import('./Features/Admin/Mairie/archivage/archivage').then(m => m.Archivage) 
+          },
+          { 
+            path: 'chat', 
+            loadComponent: () => import('./Features/Admin/Mairie/archive-chat/archive-chat').then(m => m.ArchiveChat) 
+          },
       ]
     }, 
     //ADMIN

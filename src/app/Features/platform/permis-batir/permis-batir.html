@@ -1,18 +1,55 @@
 <!--
   ┌─────────────────────────────────────────────────────────────────────┐
-  │  permis-batir.html  —  Template Angular adapté au composant TS      │
-  │                                                                     │
-  │  ⚠️  MODIFICATION REQUISE dans permis-batir.ts :                    │
-  │      Ajouter le signal de navigation wizard :                       │
-  │        etapeActive = signal<number>(1);                             │
-  │                                                                     │
-  │  ⚠️  Peupler les listes via le service dans ngOnInit :              │
-  │      mairies  (pour mairieId)                                       │
-  │      typesPlans (pour les plans d'exécution → TypePlan[])          │
+  │  permis-batir.html  —         COTE PLATEFORME POUR LE PORTAIL DU SITE           │
   └─────────────────────────────────────────────────────────────────────┘
 -->
 
-<!-- ══════════════════════════════ FEEDBACK GLOBAL ══════════════════════════════ -->
+<!-- ══════════════════════════════ TOAST CONTAINER ══════════════════════════ -->
+<div class="toast-container" aria-live="polite" aria-atomic="false">
+  @for (toast of toasts(); track toast.id) {
+    <div
+      class="toast-item toast-{{ toast.type }} show"
+      role="alert"
+      [attr.aria-label]="toast.title">
+
+      <!-- Icône -->
+      <div class="toast-icon">
+        @switch (toast.type) {
+          @case ('success') { <i class="bi bi-check-circle-fill"></i> }
+          @case ('error')   { <i class="bi bi-x-circle-fill"></i> }
+          @case ('warning') { <i class="bi bi-exclamation-triangle-fill"></i> }
+          @case ('info')    { <i class="bi bi-info-circle-fill"></i> }
+        }
+      </div>
+
+      <!-- Corps -->
+      <div class="toast-body">
+        <p class="toast-title">{{ toast.title }}</p>
+        <p class="toast-message">{{ toast.message }}</p>
+      </div>
+
+      <!-- Barre de progression (si durée définie) -->
+      @if (toast.duration > 0) {
+        <div
+          class="toast-progress"
+          [style.animation-duration]="toast.duration + 'ms'">
+        </div>
+      }
+
+      <!-- Bouton fermer -->
+      <button
+        type="button"
+        class="toast-close"
+        (click)="fermerToast(toast.id)"
+        aria-label="Fermer">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+    </div>
+  }
+</div>
+
+<!-- ══════════════════════════════ FEEDBACK GLOBAL (conservé) ═══════════════ -->
 @if (messageRetour()) {
   <div
     class="alert d-flex align-items-center gap-2 mb-4 mx-3"
@@ -88,7 +125,7 @@
 
             </div>
 
-            <!-- Raison (champ principal) + Raison sociale -->
+            <!-- Raison (champ principal) -->
             <div class="row g-3 mb-2">
               <div class="col-12">
                 <label class="form-label">
@@ -104,18 +141,6 @@
                 @if (champInvalide('raison')) {
                   <div class="invalid-feedback">La description du projet est requise.</div>
                 }
-              </div>
-
-              <div class="col-12">
-                <label class="form-label">
-                  Raison sociale
-                  <small class="text-muted fw-normal">(si entreprise ou bureau d'études)</small>
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="raisonSociale"
-                  placeholder="Nom de la société / bureau d'études — laisser vide si particulier">
               </div>
             </div>
 
@@ -301,17 +326,17 @@
               <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0">
                 — ajoutez autant que nécessaire
               </span>
-              @if (nombrePlans() > 0) {
+              @if (nombrePlans > 0) {
                 <span
                   class="badge ms-2"
                   style="background:var(--primary);font-size:11px;vertical-align:middle">
-                  {{ nombrePlans() }} plan(s)
+                  {{ nombrePlans }} plan(s)
                 </span>
               }
             </div>
 
             <!-- Liste des plans déjà ajoutés -->
-            @if (nombrePlans() > 0) {
+            @if (nombrePlans > 0) {
               <div class="mb-3">
                 @for (plan of plansExecution(); track $index) {
                   <div
@@ -358,19 +383,9 @@
                   #typePlanSelect
                   (change)="onTypePlanChange(+typePlanSelect.value)">
                   <option value="0">— Choisir le type —</option>
-                  <!--
-                    ⚠️ Peupler dynamiquement via le service TypePlan :
-                    @for (tp of typesPlans(); track tp.id) {
+                    @for (tp of listTypePlan(); track tp.id) {
                       <option [value]="tp.id">{{ tp.intitule }}</option>
                     }
-                  -->
-                  <option value="1">Plan de façade</option>
-                  <option value="2">Plan de coupe transversale</option>
-                  <option value="3">Plan de fondations</option>
-                  <option value="4">Plan de toiture</option>
-                  <option value="5">Plan électrique</option>
-                  <option value="6">Plan plomberie / sanitaire</option>
-                  <option value="7">Note de calcul de structure</option>
                 </select>
               </div>
 
@@ -539,12 +554,6 @@
                   {{ dossierPermisFb.get('raison')?.value || '—' }}
                 </span>
               </div>
-              @if (dossierPermisFb.get('raisonSociale')?.value) {
-                <div class="recap-row">
-                  <span class="recap-label">Raison sociale</span>
-                  <span class="recap-value">{{ dossierPermisFb.get('raisonSociale')?.value }}</span>
-                </div>
-              }
             </div>
 
             <!-- Demandeur -->
@@ -609,11 +618,11 @@
 
               <div class="recap-row">
                 <span class="recap-label">Plans d'exécution</span>
-                <span class="recap-value" [style.color]="nombrePlans() > 0 ? '#198754' : 'var(--text-muted)'">
+                <span class="recap-value" [style.color]="nombrePlans > 0 ? '#198754' : 'var(--text-muted)'">
                   <i class="bi me-1"
-                    [class.bi-check-circle-fill]="nombrePlans() > 0"
-                    [class.bi-dash-circle]="nombrePlans() === 0"></i>
-                  {{ nombrePlans() > 0 ? (nombrePlans() + ' plan(s) joint(s)') : 'Aucun plan ajouté' }}
+                    [class.bi-check-circle-fill]="nombrePlans > 0"
+                    [class.bi-dash-circle]="nombrePlans === 0"></i>
+                  {{ nombrePlans > 0 ? (nombrePlans + ' plan(s) joint(s)') : 'Aucun plan ajouté' }}
                 </span>
               </div>
 
@@ -675,9 +684,9 @@
               <input
                 type="checkbox"
                 id="honneur"
-                #declarationHonneur
                 class="form-check-input mt-1"
-                style="flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px">
+                style="flex-shrink:0;width:18px;height:18px;border:1.5px solid var(--border);border-radius:3px"
+                (change)="declarationHonneurCochee.set($any($event.target).checked)">
               <label
                 for="honneur"
                 class="form-check-label"
@@ -688,13 +697,7 @@
               </label>
             </div>
 
-            <!-- Alerte formulaire invalide -->
-            @if (dossierPermisFb.invalid && dossierPermisFb.touched) {
-              <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" role="alert">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <span>Des champs obligatoires sont incomplets. Revenez aux étapes précédentes pour les corriger.</span>
-              </div>
-            }
+
 
             <div class="wizard-footer">
               <button type="button" class="btn-prev" (click)="etapeActive.set(3)">
@@ -703,7 +706,7 @@
               <button
                 type="submit"
                 class="btn-submit-final"
-                [disabled]="!formulaireValide() || !declarationHonneur.checked">
+                [disabled]="enCoursEnvoi()">
                 @if (enCoursEnvoi()) {
                   <span
                     class="spinner-border spinner-border-sm me-2"
@@ -713,7 +716,7 @@
                 } @else {
                   <i class="bi bi-send-fill me-1"></i>
                 }
-                {{ libelleAction() }}
+                {{ libelleAction }}
               </button>
             </div>
 
@@ -793,8 +796,8 @@
               <i class="bi" [class.bi-check-circle-fill]="planSituationTerrain()" [class.bi-check-circle]="!planSituationTerrain()"></i>
               Plan de situation (1/2000)
             </li>
-            <li [style.color]="nombrePlans() > 0 ? '#198754' : ''">
-              <i class="bi" [class.bi-check-circle-fill]="nombrePlans() > 0" [class.bi-check-circle]="nombrePlans() === 0"></i>
+            <li [style.color]="nombrePlans > 0 ? '#198754' : ''">
+              <i class="bi" [class.bi-check-circle-fill]="nombrePlans > 0" [class.bi-check-circle]="nombrePlans === 0"></i>
               Plans de façades &amp; coupes
             </li>
             <li [style.color]="certificatPropriete() ? '#198754' : ''">
@@ -868,3 +871,4 @@
     </div><!-- /row -->
   </div><!-- /container -->
 </section>
+

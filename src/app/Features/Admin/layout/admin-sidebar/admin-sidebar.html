@@ -61,7 +61,7 @@
   <!-- AGENT MAIRIE -->
   @if(role()==3){
     
-    <nav class="sidebar" id="sidebarEl">
+    <nav class="sidebar h-100" id="sidebarEl">
       <div class="sidebar-section-label">Tableau de bord</div>
       <a class="sidebar-item active" data-panel="dashboard" >
         <i class="bi bi-speedometer2"></i> Vue d'ensemble
@@ -84,6 +84,14 @@
         <i class="bi bi-building"></i> Permis de Bâtir
         <span class="sidebar-badge">5</span>
       </a>
+       <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Administration</div>
+       <a class="sidebar-item" routerLink="archivage" routerLinkActive="active"  >
+        <i class="bi bi-folder2-open"></i> Archivage
+      </a>
+      <a class="sidebar-item" routerLink="chat" routerLinkActive="active">
+        <i class="bi bi-chat-dots"></i> Assistant IA
+      </a>
 
       <div class="sidebar-divider"></div>
       <div class="sidebar-section-label">Finances</div>
@@ -98,19 +106,12 @@
         <i class="bi bi-calendar3"></i> Rendez-vous
       </a>
 
-      <div class="sidebar-divider"></div>
-      <div class="sidebar-section-label">Administration</div>
-      
-      <a  routerLink="notification" routerLinkActive="active" class="sidebar-item" data-panel="notifications" >
+     
+      <!-- <a  routerLink="notification" routerLinkActive="active" class="sidebar-item" data-panel="notifications" >
         <i class="bi bi-bell"></i> Notifications
         <span class="sidebar-badge">4</span>
-      </a>
-      <a class="sidebar-item" data-panel="ged" >
-        <i class="bi bi-folder2-open"></i> GED Documents
-      </a>
-      <a class="sidebar-item" data-panel="reporting" >
-        <i class="bi bi-bar-chart-line"></i> Reporting
-      </a>
+      </a> -->
+     
     </nav>
    }
 

@@ -1,0 +1,228 @@
+<div class="portail-agent chat-layout">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="chat-sidebar" [class.closed]="!sidebarOpen()">
+    <div class="sidebar-header">
+      <span>🗂️ Archives</span>
+      <button class="tbl-btn" (click)="toggleSidebar()" title="Réduire">‹</button>
+    </div>
+
+    <!-- Filtre par document -->
+    <div class="sidebar-section">
+      <p class="fld-label" style="margin-bottom:8px;">Filtrer par document</p>
+
+      @if (loadingDocs()) {
+        <p style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px;">
+          Chargement…
+        </p>
+      } @else {
+        <div class="doc-list">
+
+          <!-- Tous -->
+          <div
+            class="doc-item"
+            [class.active]="selectedDocId() === ''"
+            (click)="selectedDocId.set('')"
+          >
+            <span class="doc-item-icon">🌐</span>
+            <span class="doc-item-label">Tous les documents</span>
+          </div>
+
+          @for (doc of documents(); track doc.id) {
+            <div
+              class="doc-item"
+              [class.active]="selectedDocId() === doc.id"
+              (click)="selectedDocId.set(doc.id)"
+              [title]="doc.intitule"
+            >
+              <span class="doc-item-icon">
+                {{ doc.mime_type === 'application/pdf' ? '📄' : '🖼️' }}
+              </span>
+              <span class="doc-item-label">{{ doc.intitule }}</span>
+            </div>
+          }
+
+          @if (documents().length === 0) {
+            <p style="font-size:12px; color:var(--text-muted); padding:8px 4px;">
+              Aucun document archivé.
+            </p>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Paramètres -->
+    <div class="sidebar-section" style="margin-top: auto;">
+      <p class="fld-label" style="margin-bottom:8px;">Chunks utilisés</p>
+      <select
+        class="fld-ctrl"
+        style="font-size:12px;"
+        [value]="nResults()"
+        (change)="nResults.set(+$any($event.target).value)"
+      >
+        <option value="3">3 chunks</option>
+        <option value="5">5 chunks</option>
+        <option value="8">8 chunks</option>
+        <option value="12">12 chunks</option>
+      </select>
+
+      <div style="margin-top:10px; padding:10px; background:rgba(0,49,137,0.05); border-radius:var(--radius); font-size:11px; color:var(--text-muted); line-height:1.5;">
+        <strong style="color:var(--primary);">Source active :</strong><br/>
+        {{ selectedDocLabel() }}
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════ ZONE CHAT ════════ -->
+  <div class="chat-main">
+
+    <!-- Header -->
+    <div class="chat-topbar">
+      @if (!sidebarOpen()) {
+        <button class="tbl-btn" (click)="toggleSidebar()" title="Ouvrir le panneau">›</button>
+      }
+      <div>
+        <h2 style="font-family:'Playfair Display',serif; font-size:18px; color:var(--primary); margin:0;">
+          Assistant documentaire
+        </h2>
+        <p style="font-size:11px; color:var(--text-muted); margin:0;">
+          Posez vos questions sur les documents archivés
+        </p>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:8px;">
+        @if (hasMessages()) {
+          <button class="btn-modal-cancel" style="font-size:12px; padding:6px 14px;" (click)="clearChat()">
+            🗑️ Effacer
+          </button>
+        }
+        <button class="btn-modal-save" style="font-size:12px; padding:6px 14px;" (click)="loadDocuments()">
+          🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-area">
+
+      <!-- Empty state -->
+      @if (!hasMessages()) {
+        <div class="empty-state">
+          <div style="font-size:3.5rem; margin-bottom:16px; opacity:.5;">🤖</div>
+          <h3 style="font-family:'Playfair Display',serif; font-size:20px; color:var(--primary); margin-bottom:8px;">
+            Prêt à répondre
+          </h3>
+          <p style="font-size:13px; color:var(--text-muted); max-width:320px; line-height:1.6;">
+            Posez une question sur vos documents archivés.
+            Le système retrouvera les passages pertinents et génèrera une réponse.
+          </p>
+          <div class="suggestions">
+            <p class="fld-label" style="margin-bottom:10px;">Exemples de questions</p>
+            <button class="suggestion-chip" (click)="question.set('De quoi parlent les documents archivés ?')">
+              De quoi parlent les documents archivés ?
+            </button>
+            <button class="suggestion-chip" (click)="question.set('Quel est le contenu principal ?')">
+              Quel est le contenu principal ?
+            </button>
+            <button class="suggestion-chip" (click)="question.set('Résume les informations disponibles.')">
+              Résume les informations disponibles.
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Liste des messages -->
+      @for (msg of messages(); track $index) {
+
+        <!-- Message utilisateur -->
+        @if (msg.role === 'user') {
+          <div class="msg-row user">
+            <div class="msg-bubble user-bubble">
+              <p style="margin:0; white-space:pre-wrap;">{{ msg.content }}</p>
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+            </div>
+            <div class="msg-avatar user-avatar">👤</div>
+          </div>
+        }
+
+        <!-- Message assistant -->
+        @if (msg.role === 'assistant') {
+          <div class="msg-row assistant">
+            <div class="msg-avatar assistant-avatar">🤖</div>
+            <div>
+              <div class="msg-bubble assistant-bubble">
+                <p style="margin:0; white-space:pre-wrap; line-height:1.7;">{{ msg.content }}</p>
+                <span class="msg-time" style="color:var(--text-muted);">{{ formatTime(msg.timestamp) }}</span>
+              </div>
+              <!-- Sources -->
+              @if (msg.sources && msg.sources.length > 0) {
+                <div class="sources-row">
+                  <span style="font-size:11px; color:var(--text-muted);">Sources :</span>
+                  @for (src of msg.sources; track src.document_id) {
+                    <span class="source-chip">📄 {{ src.intitule }}</span>
+                  }
+                  <span style="font-size:11px; color:var(--text-muted);">
+                    · {{ msg.chunks_used }} chunk(s)
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Message erreur -->
+        @if (msg.role === 'error') {
+          <div class="msg-row assistant">
+            <div class="msg-avatar" style="background:rgba(220,53,69,0.1); color:#dc3545;">⚠️</div>
+            <div class="msg-bubble error-bubble">
+              <p style="margin:0;">{{ msg.content }}</p>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- Indicateur de frappe -->
+      @if (isLoading()) {
+        <div class="msg-row assistant">
+          <div class="msg-avatar assistant-avatar">🤖</div>
+          <div class="msg-bubble assistant-bubble typing-bubble">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      }
+
+      <div #messagesEnd></div>
+    </div>
+
+    <!-- Zone de saisie -->
+    <div class="input-area">
+      <div class="input-wrap" [class.focused]="question().length > 0">
+        <textarea
+          class="chat-input"
+          placeholder="Posez votre question sur les documents archivés…"
+          rows="1"
+          [value]="question()"
+          (input)="question.set($any($event.target).value)"
+          (keydown)="onKeydown($event)"
+        ></textarea>
+        <button
+          class="send-btn"
+          [disabled]="!canSend()"
+          (click)="sendQuestion()"
+          title="Envoyer (Entrée)"
+        >
+          @if (isLoading()) {
+            <span class="spinner-chat"></span>
+          } @else {
+            ↑
+          }
+        </button>
+      </div>
+      <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:6px;">
+        Entrée pour envoyer · Maj+Entrée pour saut de ligne
+      </p>
+    </div>
+
+  </div>
+</div>

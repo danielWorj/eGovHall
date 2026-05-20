@@ -1,0 +1,283 @@
+<div class="portail-agent">
+  <div class="portal-main">
+
+    <!-- ── En-tête de page ── -->
+    <div class="page-header" style="margin-bottom: 24px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 class="section-title" style="margin-bottom:4px;">
+            <span class="section-title-icon">🗂️</span> Archivage documentaire
+          </h2>
+          <p style="font-size:13px; color:var(--text-muted);">
+            Déposez vos documents PDF ou images pour les indexer et les rendre interrogeables via IA.
+          </p>
+        </div>
+        <button class="btn-modal-save" (click)="loadDocuments()" style="display:flex;align-items:center;gap:6px;">
+          🔄 Actualiser
+        </button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         ZONE UPLOAD
+    ════════════════════════════════════════ -->
+    <div class="stat-section" style="margin-bottom: 24px;">
+      <div class="stat-section-title">
+        <span>📤</span> Déposer un document
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+        <!-- Drop Zone -->
+        <div>
+          <label class="fld-label">Fichier (PDF, PNG, JPG, TIFF)</label>
+
+          @if (!selectedFile()) {
+            <div
+              class="drop-zone"
+              [class.drag-over]="isDragOver()"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave()"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()"
+            >
+              <div style="font-size:2.5rem; margin-bottom:10px;">📂</div>
+              <p style="font-weight:700; font-size:14px; color:var(--text-dark); margin-bottom:4px;">
+                Glissez votre fichier ici
+              </p>
+              <p style="font-size:12px; color:var(--text-muted);">ou cliquez pour parcourir</p>
+              <input
+                #fileInput
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp"
+                style="display:none"
+                (change)="onFileChange($event)"
+              />
+            </div>
+          }
+
+          @if (selectedFile(); as file) {
+            <div class="file-preview-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div class="file-icon-wrap">
+                  {{ file.type.includes('pdf') ? '📄' : '🖼️' }}
+                </div>
+                <div style="flex:1; overflow:hidden;">
+                  <p style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    {{ file.name }}
+                  </p>
+                  <p style="font-size:11px; color:var(--text-muted);">{{ formatSize(file.size) }}</p>
+                </div>
+                <button class="tbl-btn danger" (click)="clearFile()" title="Supprimer">✕</button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Champs + bouton -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div>
+            <label class="fld-label">Intitulé du document</label>
+            <input
+              class="fld-ctrl"
+              type="text"
+              placeholder="Ex : Rapport annuel 2024..."
+              [value]="intitule()"
+              (input)="intitule.set($any($event.target).value)"
+            />
+          </div>
+
+          <button
+            class="btn-modal-save"
+            [disabled]="!canUpload()"
+            (click)="upload()"
+            style="width:100%; padding:12px; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px;"
+          >
+            @if (uploading()) {
+              <span class="spinner-sm"></span> Archivage en cours…
+            } @else {
+              ↑ &nbsp; Archiver le document
+            }
+          </button>
+
+          <!-- Résultat upload -->
+          @if (uploadSuccess(); as res) {
+            <div class="alert-success">
+              <span>✅</span>
+              <div>
+                <strong>Document archivé avec succès</strong>
+                <p style="font-size:12px; margin-top:4px;">
+                  {{ res.chunks_created }} chunks indexés ·
+                  <a [href]="res.cloudinary_url" target="_blank" style="color:var(--primary);">
+                    Voir le fichier ↗
+                  </a>
+                </p>
+              </div>
+            </div>
+          }
+
+          @if (uploadError(); as err) {
+            <div class="alert-error">
+              <span>❌</span>
+              <div>
+                <strong>Erreur</strong>
+                <p style="font-size:12px; margin-top:4px;">{{ err }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         TABLEAU DES DOCUMENTS
+    ════════════════════════════════════════ -->
+    <div class="stat-section" style="margin-bottom: 24px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <div class="stat-section-title" style="margin-bottom:0;">
+          <span>📋</span> Documents archivés
+          <span class="pill" style="background:rgba(0,49,137,0.08); color:var(--primary); font-family:'Source Sans 3'; font-size:11px; padding:2px 8px; border-radius:99px;">
+            {{ totalDocuments() }}
+          </span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <!-- Filtre type -->
+          <select
+            class="fld-ctrl"
+            style="width:auto; padding:7px 12px; font-size:12px;"
+            [value]="filterType()"
+            (change)="filterType.set($any($event.target).value)"
+          >
+            <option value="tous">Tous les types</option>
+            <option value="pdf">PDF</option>
+            <option value="image">Images</option>
+          </select>
+          <!-- Recherche -->
+          <input
+            class="fld-ctrl"
+            type="text"
+            placeholder="🔍 Rechercher…"
+            style="width:200px; padding:7px 12px; font-size:12px;"
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+          />
+        </div>
+      </div>
+
+      @if (loadingDocs()) {
+        <div style="text-align:center; padding:40px; color:var(--text-muted);">
+          <div class="spinner-sm" style="margin:0 auto 12px;"></div>
+          Chargement des documents…
+        </div>
+      }
+
+      @if (!loadingDocs() && docsError()) {
+        <div class="alert-error">
+          <span>⚠️</span> {{ docsError() }}
+        </div>
+      }
+
+      @if (!loadingDocs() && !docsError()) {
+        @if (filteredDocs().length === 0) {
+          <div style="text-align:center; padding:48px 20px; color:var(--text-muted);">
+            <div style="font-size:3rem; margin-bottom:12px; opacity:.4;">🗃️</div>
+            <p style="font-size:14px;">Aucun document trouvé.</p>
+          </div>
+        } @else {
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Intitulé</th>
+                  <th>Chunks</th>
+                  <th>Date d'archivage</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (doc of filteredDocs(); track doc.id) {
+                  <tr>
+                    <td>
+                      <span class="pill" style="background:rgba(0,49,137,0.07); color:var(--primary);">
+                        {{ mimeIcon(doc.mime_type) }} {{ mimeLabel(doc.mime_type) }}
+                      </span>
+                    </td>
+                    <td>
+                      <strong style="font-size:13px;">{{ doc.intitule }}</strong>
+                      <br />
+                      <span style="font-size:11px; color:var(--text-muted); font-family:monospace;">
+                        {{ doc.id.substring(0, 8) }}…
+                      </span>
+                    </td>
+                    <td>
+                      <span style="font-weight:700; color:var(--primary);">{{ doc.chunk_count }}</span>
+                      <span style="font-size:11px; color:var(--text-muted);"> chunks</span>
+                    </td>
+                    <td style="font-size:12px; color:var(--text-muted);">
+                      {{ formatDate(doc.created_at) }}
+                    </td>
+                    <td>
+                      <div class="tbl-actions">
+                        <a
+                          [href]="doc.cloudinary_url"
+                          target="_blank"
+                          class="tbl-btn"
+                          title="Voir le fichier"
+                        >↗</a>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- ════════════════════════════════════════
+         CARTES MÉTRIQUES
+    ════════════════════════════════════════ -->
+    <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 0;">
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(0,49,137,0.1); color:var(--primary);">🗂️</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalDocuments() }}</div>
+          <div class="kpi-label">Documents archivés</div>
+        </div>
+        <div class="kpi-trend up">↑ Total</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(232,0,45,0.08); color:var(--accent);">📄</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalPdf() }}</div>
+          <div class="kpi-label">Fichiers PDF</div>
+        </div>
+        <div class="kpi-trend up">↑ PDF</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(200,168,75,0.12); color:var(--gold);">🖼️</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalImages() }}</div>
+          <div class="kpi-label">Images / Scans</div>
+        </div>
+        <div class="kpi-trend up">↑ Images</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background:rgba(25,135,84,0.08); color:#198754;">🧩</div>
+        <div class="kpi-body">
+          <div class="kpi-value">{{ totalChunks() }}</div>
+          <div class="kpi-label">Chunks indexés</div>
+        </div>
+        <div class="kpi-trend up">↑ RAG</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

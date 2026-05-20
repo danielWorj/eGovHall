@@ -1,239 +1,1626 @@
-<div class="portal-panel" id="panel-permis">
-      <div class="panel-header">
-        <h1 class="panel-title">Permis de Bâtir</h1>
-        <p class="panel-subtitle">Instruction et délivrance des permis de construire.</p>
+<!-- ═══════════════════════════════════════════════════════════════
+     TOASTS — position fixe haut-droite
+════════════════════════════════════════════════════════════════ -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:9999;min-width:340px">
+
+  @if (successMessage()) {
+    <div class="toast-custom toast-success d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap success"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="toast-body-text">
+        <strong>Succès</strong>
+        <span>{{ successMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="successMessage.set('')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="toast-custom toast-error d-flex align-items-center gap-3">
+      <div class="toast-icon-wrap error"><i class="bi bi-x-circle-fill"></i></div>
+      <div class="toast-body-text">
+        <strong>Erreur</strong>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      <button class="toast-close" (click)="errorMessage.set('')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  }
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════════ -->
+<div class="container-fluid" style="max-width:1280px;padding:36px 24px">
+
+  <!-- PAGE TITLE -->
+  <div class="mb-4">
+    <h1 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--primary);margin-bottom:4px">
+      Permis de Bâtir
+    </h1>
+    <p style="color:var(--text-muted);font-size:14px">
+      <i class="bi bi-building me-1"></i>
+      Gestion et instruction des dossiers de demande de permis de bâtir.
+    </p>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-folder2-open"></i></div>
+        <div>
+          <div class="stat-value">{{ listDossiers().length }}</div>
+          <div class="stat-label">Total dossiers</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(255,193,7,.12);color:#d39e00">
+          <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ totalEnEvaluation() }}</div>
+          <div class="stat-label">En évaluation</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+        <div>
+          <div class="stat-value">{{ totalValides() }}</div>
+          <div class="stat-label">Validés</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="stat-card">
+        <div class="stat-icon rose"><i class="bi bi-x-circle-fill"></i></div>
+        <div>
+          <div class="stat-value">{{ totalRejetes() }}</div>
+          <div class="stat-label">Rejetés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE + SIDE PANEL -->
+  <div class="row g-4">
+
+    <!-- ── TABLE ──────────────────────────────────────────────────── -->
+    <div class="col-lg-8">
+      <div class="section-header">
+        <h2 class="section-title">Liste des dossiers</h2>
+        <button class="btn-add" (click)="openModalAdd()">
+          <i class="bi bi-plus-lg"></i> Nouveau dossier
+        </button>
       </div>
 
-      <div class="table-toolbar">
-        <div class="search-input-wrap">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Numéro, nom, adresse…" oninput="filterTable('tbl-permis', this.value)" />
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <select class="filter-select">
-            <option value="">Tous les statuts</option>
-            <option>Soumis</option>
-            <option>Complet</option>
-            <option>En instruction</option>
-            <option>Accordé</option>
-            <option>Refusé</option>
-          </select>
-          <button class="btn-add accent" onclick="openModal('modal-permis-add')"><i class="bi bi-plus-lg"></i>Nouveau dossier</button>
-        </div>
-      </div>
-
-      <div class="data-table-wrap">
-        <table class="data-table" id="tbl-permis">
-          <thead>
-            <tr>
-              <th>Référence</th>
-              <th>Demandeur / Projet</th>
-              <th>Adresse</th>
-              <th>Architecte</th>
-              <th>Soumis le</th>
-              <th>Statut</th>
-              <th>Frais</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="ref">PB-2026-0014</span></td>
-              <td><strong>Léon Tanga</strong><small>Entrepôt commercial</small></td>
-              <td><small>Quartier Bépanda</small></td>
-              <td><small>Arch. Moussa</small></td>
-              <td><small>28/04/2026</small></td>
-              <td><span class="pill recu">Soumis</span></td>
-              <td><small style="color:var(--text-muted)">—</small></td>
-              <td><div class="tbl-actions">
-                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
-                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Instruire"><i class="bi bi-pencil"></i></button>
-                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0014')"><i class="bi bi-trash"></i></button>
-              </div></td>
-            </tr>
-            <tr>
-              <td><span class="ref">PB-2026-0012</span></td>
-              <td><strong>Jean Mbida</strong><small>Villa R+1</small></td>
-              <td><small>Akwa Nord</small></td>
-              <td><small>Arch. Tanga</small></td>
-              <td><small>15/03/2026</small></td>
-              <td><span class="pill traitement">En instruction</span></td>
-              <td><small style="color:#e07b00">75 000 XAF</small></td>
-              <td><div class="tbl-actions">
-                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
-                <button class="tbl-btn success" onclick="openModal('modal-permis-edit')" title="Modifier"><i class="bi bi-pencil"></i></button>
-                <button class="tbl-btn" onclick="openModal('modal-permis-decision')" title="Décision"><i class="bi bi-check2-square"></i></button>
-                <button class="tbl-btn danger" onclick="openConfirmDelete('Dossier PB-2026-0012')"><i class="bi bi-trash"></i></button>
-              </div></td>
-            </tr>
-            <tr>
-              <td><span class="ref">PB-2026-0010</span></td>
-              <td><strong>SCI Bonanjo</strong><small>Immeuble R+3</small></td>
-              <td><small>Bonanjo</small></td>
-              <td><small>Arch. Ngono</small></td>
-              <td><small>01/03/2026</small></td>
-              <td><span class="pill accorde">Accordé</span></td>
-              <td><small style="color:#198754">120 000 XAF ✓</small></td>
-              <td><div class="tbl-actions">
-                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
-                <button class="tbl-btn" title="Imprimer permis"><i class="bi bi-printer"></i></button>
-              </div></td>
-            </tr>
-            <tr>
-              <td><span class="ref">PB-2026-0008</span></td>
-              <td><strong>Rose Ateba</strong><small>Extension pavillon</small></td>
-              <td><small>Deido</small></td>
-              <td><small>—</small></td>
-              <td><small>20/02/2026</small></td>
-              <td><span class="pill refuse">Refusé</span></td>
-              <td><small style="color:var(--text-muted)">—</small></td>
-              <td><div class="tbl-actions">
-                <button class="tbl-btn" onclick="openModal('modal-permis-view')" title="Voir"><i class="bi bi-eye"></i></button>
-              </div></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="table-footer">
-          <span>Affichage de 4 sur 51 résultats</span>
-          <div class="pagination-btns">
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">…</button>
-            <button class="page-btn">6</button>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="search-bar" style="flex:1">
+            <i class="bi bi-search"></i>
+            <input type="text"
+                   placeholder="Rechercher par nom, numéro, statut…"
+                   (input)="onSearch($event)" />
           </div>
         </div>
-      </div>
-    </div>
 
+        <!-- Loading skeleton -->
+        @if (isLoading()) {
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                @for (_ of [1,2,3,4,5]; track $index) {
+                  <tr>
+                    <td colspan="6">
+                      <div style="height:16px;background:var(--light-bg);border-radius:4px;
+                                  animation:pulse 1.4s ease-in-out infinite"></div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
 
-    <!-- ADD Permis -->
-<div class="modal fade" id="modal-permis-add" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header accent">
-        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Nouveau dossier permis de bâtir</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section-title">Demandeur</div>
-        <div class="row g-3">
-          <div class="col-md-6"><label class="fld-label">Nom / Raison sociale <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">Type de demandeur</label><select class="fld-ctrl"><option>Particulier</option><option>Architecte</option><option>Société</option></select></div>
-          <div class="col-md-6"><label class="fld-label">Email</label><input type="email" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">Téléphone</label><input type="tel" class="fld-ctrl" /></div>
-        </div>
-        <div class="modal-section-title">Projet</div>
-        <div class="row g-3">
-          <div class="col-md-12"><label class="fld-label">Description du projet <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" placeholder="Ex: Villa R+1, entrepôt commercial…" /></div>
-          <div class="col-md-6"><label class="fld-label">Adresse du terrain <span style="color:var(--accent)">*</span></label><input type="text" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">Références cadastrales</label><input type="text" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">Architecte responsable</label><input type="text" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">N° Ordre des architectes</label><input type="text" class="fld-ctrl" /></div>
-        </div>
-        <div class="modal-section-title">Documents joints</div>
-        <div class="row g-3">
-          <div class="col-md-6"><label class="fld-label">Plan de masse</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
-          <div class="col-md-6"><label class="fld-label">Plan de façade</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
-          <div class="col-md-6"><label class="fld-label">Titre foncier</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
-          <div class="col-md-6"><label class="fld-label">CNI du demandeur</label><input type="file" class="fld-ctrl" style="padding:6px" /></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn-modal-save accent" onclick="showToast('Dossier permis enregistré','success');closeModal('modal-permis-add')"><i class="bi bi-check-lg me-1"></i>Enregistrer</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Table data -->
+        @if (!isLoading()) {
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>N° Dossier</th>
+                  <th>Demandeur</th>
+                  <th>Raison</th>
+                  <th>Date dépôt</th>
+                  <th>Statut</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
 
-<!-- VIEW Permis -->
-<div class="modal fade" id="modal-permis-view" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header accent">
-        <h5 class="modal-title"><i class="bi bi-building me-2"></i>Dossier PB-2026-0012</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-section-title">Demandeur</div>
-        <dl class="detail-row"><dt>Nom</dt><dd><strong>Jean Mbida</strong></dd></dl>
-        <dl class="detail-row"><dt>Email</dt><dd>j.mbida@gmail.com</dd></dl>
-        <dl class="detail-row"><dt>Architecte</dt><dd>Arch. Tanga — N° 0452</dd></dl>
-        <div class="modal-section-title">Projet</div>
-        <dl class="detail-row"><dt>Description</dt><dd>Villa R+1 — 180m²</dd></dl>
-        <dl class="detail-row"><dt>Adresse</dt><dd>Akwa Nord, lot 14</dd></dl>
-        <dl class="detail-row"><dt>Références cadastrales</dt><dd>CAD-DLA-AKW-014-B</dd></dl>
-        <div class="modal-section-title">Suivi</div>
-        <ul class="mini-timeline">
-          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Soumis</strong><span>15/03/2026</span></div></li>
-          <li><div class="tl-dot done"><i class="bi bi-check"></i></div><div class="tl-info"><strong>Dossier complet</strong><span>17/03/2026</span></div></li>
-          <li><div class="tl-dot current">3</div><div class="tl-info"><strong>En instruction</strong><span>En cours par Amina Kouna</span></div></li>
-          <li><div class="tl-dot pending">4</div><div class="tl-info"><strong>Décision</strong><span>—</span></div></li>
-          <li><div class="tl-dot pending">5</div><div class="tl-info"><strong>Remise du permis</strong><span>—</span></div></li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" data-bs-dismiss="modal">Fermer</button>
-        <button class="btn-modal-save accent" onclick="openModal('modal-permis-decision');closeModal('modal-permis-view')"><i class="bi bi-check2-square me-1"></i>Rendre une décision</button>
-      </div>
-    </div>
-  </div>
-</div>
+                @if (filteredList().length === 0) {
+                  <tr>
+                    <td colspan="6" class="text-center py-5"
+                        style="color:var(--text-muted);font-size:14px">
+                      <i class="bi bi-folder2-open"
+                         style="font-size:2rem;opacity:.4;display:block;margin-bottom:8px"></i>
+                      Aucun dossier de permis trouvé.
+                    </td>
+                  </tr>
+                }
 
-<!-- EDIT Permis -->
-<div class="modal fade" id="modal-permis-edit" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header accent">
-        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Modifier — PB-2026-0012</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-3">
-          <div class="col-md-6"><label class="fld-label">Demandeur</label><input type="text" class="fld-ctrl" value="Jean Mbida" /></div>
-          <div class="col-md-6"><label class="fld-label">Description projet</label><input type="text" class="fld-ctrl" value="Villa R+1" /></div>
-          <div class="col-md-6"><label class="fld-label">Adresse</label><input type="text" class="fld-ctrl" value="Akwa Nord" /></div>
-          <div class="col-md-6"><label class="fld-label">Statut</label><select class="fld-ctrl"><option>Soumis</option><option>Complet</option><option selected>En instruction</option><option>Accordé</option><option>Refusé</option></select></div>
-          <div class="col-md-6"><label class="fld-label">Frais d'instruction (XAF)</label><input type="number" class="fld-ctrl" value="75000" /></div>
-          <div class="col-md-6"><label class="fld-label">Agent urbanisme</label><select class="fld-ctrl"><option selected>Amina Kouna</option><option>Robert Essoh</option></select></div>
-          <div class="col-12"><label class="fld-label">Pièces manquantes / remarques</label><textarea class="fld-ctrl" rows="3"></textarea></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn-modal-save accent" onclick="showToast('Dossier permis mis à jour','success');closeModal('modal-permis-edit')"><i class="bi bi-check-lg me-1"></i>Sauvegarder</button>
-      </div>
-    </div>
-  </div>
-</div>
+                @for (dossier of paginatedList(); track dossier.id) {
+                  <tr (click)="openModalView(dossier)" style="cursor:pointer">
 
-<!-- DÉCISION Permis -->
-<div class="modal fade" id="modal-permis-decision" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><i class="bi bi-gavel me-2"></i>Décision — PB-2026-0012</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-3">
-          <div class="col-12"><label class="fld-label">Décision <span style="color:var(--accent)">*</span></label>
-            <div style="display:flex;gap:10px;margin-top:8px">
-              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="accorde" style="accent-color:var(--primary)" /> <i class="bi bi-check-circle" style="color:#198754"></i> Accordé</label>
-              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="refuse" style="accent-color:var(--accent)" /> <i class="bi bi-x-circle" style="color:var(--accent)"></i> Refusé</label>
-              <label style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="radio" name="decision" value="attente" style="accent-color:var(--gold)" /> <i class="bi bi-clock" style="color:var(--gold)"></i> En attente</label>
+                    <td>
+                      <span class="decl-num">{{ dossier.numeroDossier ?? '—' }}</span>
+                    </td>
+
+                    <td>
+                      <strong style="display:block">
+                        {{ dossier.demandeur?.prenom }} {{ dossier.demandeur?.nom }}
+                      </strong>
+                      <small style="color:var(--text-muted)">
+                        {{ dossier.demandeur?.telephone ?? '—' }}
+                      </small>
+                    </td>
+
+                    <td style="font-size:13px;max-width:180px">
+                      <span style="display:-webkit-box;-webkit-line-clamp:2;
+                                   -webkit-box-orient:vertical;overflow:hidden">
+                        {{ dossier.raison ?? '—' }}
+                      </span>
+                    </td>
+
+                    <td><small>{{ dossier.date | date:'dd/MM/yyyy' }}</small></td>
+
+                    <td>
+                      <span class="statut-badge {{ statutClass(dossier.statut?.intitule ?? '') }}">
+                        {{ dossier.statut?.intitule ?? 'Inconnu' }}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div style="display:flex;gap:6px">
+                        <button class="tbl-icon-btn"
+                                (click)="openModalView(dossier);$event.stopPropagation()"
+                                title="Voir le dossier">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="tbl-icon-btn success"
+                                (click)="openModalEdit(dossier);$event.stopPropagation()"
+                                title="Modifier">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="tbl-icon-btn danger"
+                                (click)="deleteDossier(dossier, $event)"
+                                title="Supprimer">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+
+                  </tr>
+                }
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div style="padding:14px 20px;border-top:1px solid var(--border);
+                      display:flex;justify-content:space-between;align-items:center;
+                      font-size:13px;color:var(--text-muted)">
+            <span>Affichage de {{ paginatedList().length }} sur {{ filteredList().length }} résultats</span>
+            <div class="d-flex gap-2">
+              <button class="filter-pill"
+                      [disabled]="currentPage() === 1"
+                      (click)="setPage(currentPage() - 1)">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              @for (p of pages(); track p) {
+                <button class="filter-pill"
+                        [class.active]="p === currentPage()"
+                        (click)="setPage(p)">{{ p }}</button>
+              }
+              <button class="filter-pill"
+                      [disabled]="currentPage() === totalPages()"
+                      (click)="setPage(currentPage() + 1)">
+                <i class="bi bi-chevron-right"></i>
+              </button>
             </div>
           </div>
-          <div class="col-12"><label class="fld-label">Justification / Motifs</label><textarea class="fld-ctrl" rows="4" placeholder="Motivations de la décision (obligatoire en cas de refus)…"></textarea></div>
-          <div class="col-md-6"><label class="fld-label">Date de prise de décision</label><input type="date" class="fld-ctrl" /></div>
-          <div class="col-md-6"><label class="fld-label">Délai de validité (jours)</label><input type="number" class="fld-ctrl" value="365" /></div>
+        }
+
+      </div><!-- /table-card -->
+    </div><!-- /col-lg-8 -->
+
+    <!-- ── SIDE PANEL ─────────────────────────────────────────────── -->
+    <div class="col-lg-4">
+
+      <!-- Dossiers récents -->
+      <div class="gender-chart-card mb-4">
+        <h6>
+          <i class="bi bi-clock-history me-2" style="color:var(--primary)"></i>
+          Dossiers récents
+        </h6>
+        @if (listDossiers().length === 0) {
+          <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">
+            Aucun dossier enregistré.
+          </p>
+        } @else {
+          <div style="display:flex;flex-direction:column;gap:10px">
+            @for (d of listDossiers().slice(0, 5); track d.id) {
+              <div style="display:flex;align-items:center;gap:12px;font-size:13px;
+                          padding:8px 0;border-bottom:1px solid var(--border)">
+                <div style="width:32px;height:32px;border-radius:50%;
+                            display:flex;align-items:center;justify-content:center;flex-shrink:0"
+                     [style.background]="d.statut?.intitule?.toUpperCase() === 'VALIDE'
+                       ? 'rgba(25,135,84,.1)'
+                       : d.statut?.intitule?.toUpperCase() === 'REJETE'
+                         ? 'rgba(220,53,69,.1)'
+                         : 'rgba(255,193,7,.12)'"
+                     [style.color]="d.statut?.intitule?.toUpperCase() === 'VALIDE'
+                       ? '#198754'
+                       : d.statut?.intitule?.toUpperCase() === 'REJETE'
+                         ? '#dc3545'
+                         : '#d39e00'">
+                  <i class="bi"
+                     [class.bi-check-circle-fill]="d.statut?.intitule?.toUpperCase() === 'VALIDE'"
+                     [class.bi-x-circle-fill]="d.statut?.intitule?.toUpperCase() === 'REJETE'"
+                     [class.bi-hourglass-split]="d.statut?.intitule?.toUpperCase() !== 'VALIDE'
+                                              && d.statut?.intitule?.toUpperCase() !== 'REJETE'">
+                  </i>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;color:var(--text-dark);
+                              white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                    {{ d.demandeur?.prenom }} {{ d.demandeur?.nom }}
+                  </div>
+                  <div style="color:var(--text-muted);font-size:11px">
+                    {{ d.numeroDossier ?? 'N° —' }} · {{ d.date | date:'dd/MM/yy' }}
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Guide d'instruction -->
+      <div class="gender-chart-card">
+        <h6><i class="bi bi-info-circle me-2" style="color:var(--primary)"></i>Guide d'instruction</h6>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;font-size:13px;
+                    color:var(--text-mid)">
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-1-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Vérifiez la <strong>complétude du dossier</strong> (CNI, plans, certificats)
+                  avant toute instruction.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-2-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Passez le statut à <strong>EN EVALUATION</strong> dès réception, puis
+                  <strong>VALIDE</strong> ou <strong>REJETE</strong> après instruction.</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <i class="bi bi-3-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
+            <span>Le <strong>numéro de dossier</strong> est généré automatiquement à la création.</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+                    font-size:12px;color:var(--text-muted)">
+          <i class="bi bi-shield-check me-1" style="color:#198754"></i>
+          Accès restreint — agents habilités uniquement
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" data-bs-dismiss="modal">Annuler</button>
-        <button class="btn-modal-save" onclick="showToast('Décision enregistrée — citoyen notifié','success');closeModal('modal-permis-decision')"><i class="bi bi-check-lg me-1"></i>Valider la décision</button>
+
+    </div><!-- /col-lg-4 -->
+
+  </div><!-- /row -->
+</div><!-- /container-fluid -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     MODAL — CRÉER UN DOSSIER DE PERMIS (scrollable, tous les champs à plat)
+════════════════════════════════════════════════════════════════════════ -->
+@if (showModalAdd()) {
+  <div class="modal-overlay" (click)="closeModalAdd()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+
+        <!-- En-tête -->
+        <div class="modal-header-custom">
+          <div>
+            <h5><i class="bi bi-folder-plus me-2"></i>Nouveau dossier de permis de bâtir</h5>
+            <small>Remplissez tous les champs obligatoires marqués d'un <span class="req">*</span></small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalAdd()" [disabled]="isSubmitting()"></button>
+        </div>
+
+        <!-- Corps scrollable -->
+        <div class="modal-body-custom" [formGroup]="dossierFb">
+
+          <!-- ═══ INFORMATIONS DU DEMANDEUR ══════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Informations du demandeur
+          </div>
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nom" placeholder="Nom de famille"
+                       [class.is-invalid]="ctrl(dossierFb,'nom').invalid && ctrl(dossierFb,'nom').touched" />
+                @if (ctrl(dossierFb,'nom').invalid && ctrl(dossierFb,'nom').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Au moins 2 caractères requis
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenom" placeholder="Prénom(s)"
+                       [class.is-invalid]="ctrl(dossierFb,'prenom').invalid && ctrl(dossierFb,'prenom').touched" />
+                @if (ctrl(dossierFb,'prenom').invalid && ctrl(dossierFb,'prenom').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Au moins 2 caractères requis
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Téléphone <span class="req">*</span></label>
+                <input type="tel" class="form-control-custom"
+                       formControlName="telephone" placeholder="+237 6XX XXX XXX"
+                       [class.is-invalid]="ctrl(dossierFb,'telephone').invalid && ctrl(dossierFb,'telephone').touched" />
+                @if (ctrl(dossierFb,'telephone').invalid && ctrl(dossierFb,'telephone').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Numéro invalide (8–15 chiffres)
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Adresse email <span class="req">*</span></label>
+                <input type="email" class="form-control-custom"
+                       formControlName="email" placeholder="contact@exemple.cm"
+                       [class.is-invalid]="ctrl(dossierFb,'email').invalid && ctrl(dossierFb,'email').touched" />
+                @if (ctrl(dossierFb,'email').errors?.['required'] && ctrl(dossierFb,'email').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire
+                  </div>
+                }
+                @if (ctrl(dossierFb,'email').errors?.['email'] && ctrl(dossierFb,'email').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Adresse email invalide
+                  </div>
+                }
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ═══ DESCRIPTION DU PROJET ══════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-building-add me-2"></i>Description du projet
+          </div>
+
+          <!-- Raccourcis nature du projet -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+            @for (type of [
+              { label:'Construction neuve', icon:'bi-building-add',  val:'Construction neuve — '  },
+              { label:'Extension',          icon:'bi-arrows-expand', val:'Extension — '            },
+              { label:'Rénovation lourde',  icon:'bi-tools',         val:'Rénovation lourde — '   },
+              { label:'Démolition',         icon:'bi-trash3',        val:'Démolition — '          }
+            ]; track type.val) {
+              <div class="type-card-mini"
+                   [class.selected]="dossierFb.get('raison')?.value?.startsWith(type.val)"
+                   (click)="dossierFb.get('raison')?.setValue(type.val)">
+                <i class="bi {{ type.icon }}"
+                   style="font-size:18px;display:block;margin-bottom:4px"></i>
+                <span style="font-size:12px;font-weight:600">{{ type.label }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Raison / description détaillée <span class="req">*</span>
+                </label>
+                <textarea class="form-control-custom" rows="3"
+                          formControlName="raison"
+                          placeholder="Ex : Construction neuve — villa R+1, usage résidentiel, surface 250 m²…"
+                          [class.is-invalid]="ctrl(dossierFb,'raison').invalid && ctrl(dossierFb,'raison').touched">
+                </textarea>
+                @if (ctrl(dossierFb,'raison').invalid && ctrl(dossierFb,'raison').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Description requise
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ PLANS ARCHITECTURAUX ════════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-map me-2"></i>Plans architecturaux
+            <span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0">
+              — obligatoires
+            </span>
+          </div>
+          <div class="row g-3 mb-2">
+
+            <!-- Plan de masse -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Plan de masse <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="filePlanMasse() !== null"
+                     (click)="inputPlanMasse.click()">
+                  <input #inputPlanMasse type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'filePlanMasse')" />
+                  @if (!filePlanMasse()) {
+                    <i class="bi bi-map file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Plan de masse</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(filePlanMasse()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); filePlanMasse.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Plan de situation du terrain -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Plan de situation du terrain <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="filePlanSituationTerrain() !== null"
+                     (click)="inputPlanSituation.click()">
+                  <input #inputPlanSituation type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'filePlanSituationTerrain')" />
+                  @if (!filePlanSituationTerrain()) {
+                    <i class="bi bi-geo file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Plan de situation</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(filePlanSituationTerrain()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); filePlanSituationTerrain.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ═══ PLANS D'EXÉCUTION ═══════════════════════════════════ -->
+          <!-- plansExecution est de type PlanExecution[] — chemin & typePlan -->
+          <div class="form-section-divider">
+            <i class="bi bi-file-earmark-image me-2"></i>Plans d'exécution
+            <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">
+              — ajoutez autant que nécessaire
+            </span>
+            @if (nombrePlans > 0) {
+              <span class="badge ms-2"
+                    style="background:var(--primary);font-size:11px;vertical-align:middle">
+                {{ nombrePlans }} plan(s)
+              </span>
+            }
+          </div>
+
+          <!-- Plans déjà stagés — PlanExecution.chemin + PlanExecution.typePlan.intitule -->
+          @if (nombrePlans > 0) {
+            <div class="mb-3">
+              @for (plan of plansExecution(); track plan.id) {
+                <div class="d-flex align-items-center gap-3 p-2 mb-2 rounded"
+                     style="background:var(--light-bg);border:1px solid var(--border)">
+                  <i class="bi bi-file-earmark-check fs-5"
+                     style="color:#198754;flex-shrink:0"></i>
+                  <div class="flex-grow-1 overflow-hidden">
+                    <div style="font-size:14px;font-weight:600;white-space:nowrap;
+                                overflow:hidden;text-overflow:ellipsis">
+                      {{ plan.chemin ?? 'Fichier en attente' }}
+                    </div>
+                    <div style="font-size:12px;color:var(--text-muted)">
+                      {{ plan.typePlan?.intitule ?? '—' }}
+                    </div>
+                  </div>
+                  <button type="button" class="tbl-icon-btn danger flex-shrink-0"
+                          (click)="supprimerPlan($index)" title="Supprimer">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Formulaire d'ajout d'un plan -->
+          <div class="row g-3 mb-4 p-3 rounded"
+               style="background:rgba(0,49,137,.03);border:1px dashed var(--border)">
+            <div class="col-12">
+              <span style="font-size:13px;font-weight:600;color:var(--text-mid)">
+                <i class="bi bi-plus-circle me-1" style="color:var(--primary)"></i>
+                Ajouter un plan d'exécution
+              </span>
+            </div>
+
+            <!-- Type de plan -->
+            <div class="col-md-5">
+              <label class="form-label-custom">Type de plan</label>
+              @if (listTypePlan().length === 0) {
+                <div class="form-control-custom d-flex align-items-center gap-2"
+                     style="color:var(--text-muted);cursor:default">
+                  <span class="spinner-border spinner-border-sm"
+                        style="width:14px;height:14px;border-width:2px"></span>
+                  Chargement…
+                </div>
+              } @else {
+                <select class="form-control-custom" #typePlanAddSelect
+                        (change)="onTypePlanChange(typePlanAddSelect.value)">
+                  <option value="0">— Choisir le type —</option>
+                  @for (tp of listTypePlan(); track tp.id) {
+                    <option [value]="tp.id">{{ tp.intitule }}</option>
+                  }
+                </select>
+              }
+            </div>
+
+            <!-- Fichier du plan -->
+            <div class="col-md-5">
+              <label class="form-label-custom">Fichier du plan</label>
+              <div class="file-zone" [class.file-zone--ok]="planEnCours() !== null"
+                   (click)="inputPlanAdd.click()">
+                <input #inputPlanAdd type="file" accept=".pdf,.jpg,.jpeg,.png"
+                       style="display:none" (change)="onPlanFileChange($event)" />
+                @if (!planEnCours()) {
+                  <i class="bi bi-file-earmark-image file-zone__icon"></i>
+                  <div class="file-zone__text">
+                    <strong>Choisir un plan</strong><span>PDF ou image</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                } @else {
+                  <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                  <div class="file-zone__text">
+                    <strong>{{ nomFichier(planEnCours()) }}</strong>
+                    <span>Sélectionné ✓</span>
+                  </div>
+                  <span class="fz-btn fz-btn--remove"
+                        (click)="$event.stopPropagation(); planEnCours.set(null)">
+                    <i class="bi bi-trash3 me-1"></i>Retirer
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Bouton Ajouter -->
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="button"
+                      class="btn-add w-100"
+                      style="border-radius:6px;justify-content:center"
+                      [disabled]="!planEnCours() || !typePlanIdEnCours() || typePlanIdEnCours() === 0"
+                      (click)="ajouterPlan()">
+                <i class="bi bi-plus-lg"></i> Ajouter
+              </button>
+            </div>
+          </div>
+
+          <!-- ═══ PIÈCES ADMINISTRATIVES ══════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-paperclip me-2"></i>Pièces administratives
+          </div>
+          <div class="row g-3">
+
+            <!-- CNI du demandeur — dossier.cni -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  CNI du demandeur <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCni() !== null"
+                     (click)="inputCni.click()">
+                  <input #inputCni type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCni')" />
+                  @if (!fileCni()) {
+                    <i class="bi bi-person-vcard file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Carte Nationale d'Identité</strong>
+                      <span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCni()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCni.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Certificat de propriété — dossier.certificatPropriete -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Certificat de propriété / Titre Foncier <span class="req">*</span>
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCertificatPropriete() !== null"
+                     (click)="inputCertProp.click()">
+                  <input #inputCertProp type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCertificatPropriete')" />
+                  @if (!fileCertificatPropriete()) {
+                    <i class="bi bi-file-earmark-text file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Titre de propriété</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCertificatPropriete()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCertificatPropriete.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Certificat d'urbanisme — dossier.certificatUrbanisme -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Certificat d'urbanisme
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCertificatUrbanisme() !== null"
+                     (click)="inputCertUrba.click()">
+                  <input #inputCertUrba type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCertificatUrbanisme')" />
+                  @if (!fileCertificatUrbanisme()) {
+                    <i class="bi bi-building file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Cert. d'urbanisme</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCertificatUrbanisme()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCertificatUrbanisme.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Demande de timbre fiscal — dossier.demandeTimbre -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Demande de timbre fiscal
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileDemandeTimbre() !== null"
+                     (click)="inputTimbre.click()">
+                  <input #inputTimbre type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileDemandeTimbre')" />
+                  @if (!fileDemandeTimbre()) {
+                    <i class="bi bi-stamp file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Timbre fiscal</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileDemandeTimbre()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileDemandeTimbre.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Devis estimatif — dossier.devis -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Devis estimatif des travaux
+                  <span class="fmt-hint">PDF</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileDevis() !== null"
+                     (click)="inputDevis.click()">
+                  <input #inputDevis type="file" accept=".pdf"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileDevis')" />
+                  @if (!fileDevis()) {
+                    <i class="bi bi-calculator file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Devis / budget prévisionnel</strong><span>Cliquer pour sélectionner</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileDevis()) }}</strong>
+                      <span>Fichier sélectionné ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileDevis.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /pièces admin -->
+
+          <!-- Note info -->
+          <div style="background:rgba(0,49,137,.04);border-left:3px solid var(--primary);
+                      border-radius:0 4px 4px 0;padding:12px 16px;font-size:13px;
+                      color:var(--text-mid);margin-top:20px">
+            <i class="bi bi-info-circle me-1" style="color:var(--primary)"></i>
+            Le numéro de dossier sera généré automatiquement. La mairie rattachée est celle
+            de votre compte (<strong>ID {{ idMairie() }}</strong>).
+          </div>
+
+        </div><!-- /modal-body-custom -->
+
+        <!-- Pied modal -->
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalAdd()" [disabled]="isSubmitting()">
+            Annuler
+          </button>
+          <button class="btn-submit" (click)="createDossier()" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <span class="spinner-border spinner-border-sm me-2"
+                    style="width:15px;height:15px;border-width:2px"></span>
+              Enregistrement…
+            } @else {
+              <i class="bi bi-check-lg me-2"></i>Créer le dossier
+            }
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
-</div>
+}
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     MODAL — VOIR UN DOSSIER
+     • Champs directs de DossierPermisBatir  →  dossierSelected()
+     • Plans d'exécution (PlanExecution[])   →  dossierSelectedDetails()
+════════════════════════════════════════════════════════════════════════ -->
+@if (showModalView() && dossierSelected()) {
+  <div class="modal-overlay" (click)="closeModalView()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+
+        <div class="modal-header-custom modal-header-custom--view">
+          <div>
+            <h5>
+              <i class="bi bi-folder2-open me-2"></i>
+              Dossier — {{ dossierSelected()!.numeroDossier ?? 'N° en attente' }}
+            </h5>
+            <small>
+              Déposé le {{ dossierSelected()!.date | date:'dd/MM/yyyy' }}
+              &nbsp;·&nbsp;
+              <span class="statut-badge {{ statutClass(dossierSelected()!.statut?.intitule ?? '') }}"
+                    style="font-size:11px;vertical-align:middle">
+                {{ dossierSelected()!.statut?.intitule ?? 'Inconnu' }}
+              </span>
+            </small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalView()"></button>
+        </div>
+
+        <div class="modal-body-custom">
+
+          <!-- ═══ DEMANDEUR ════════════════════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Demandeur
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Nom complet</span>
+              <span class="detail-value">
+                <strong>
+                  {{ dossierSelected()!.demandeur?.prenom }}
+                  {{ dossierSelected()!.demandeur?.nom }}
+                </strong>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Téléphone</span>
+              <span class="detail-value">{{ dossierSelected()!.demandeur?.telephone ?? '—' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ dossierSelected()!.demandeur?.email ?? '—' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Mairie compétente</span>
+              <span class="detail-value">{{ dossierSelected()!.mairie?.nom ?? '—' }}</span>
+            </div>
+          </div>
+
+          <!-- ═══ PROJET ═══════════════════════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-building-add me-2"></i>Description du projet
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item" style="grid-column:1/-1">
+              <span class="detail-label">Raison</span>
+              <span class="detail-value">{{ dossierSelected()!.raison ?? '—' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date de dépôt</span>
+              <span class="detail-value">{{ dossierSelected()!.date | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date d'instruction</span>
+              <span class="detail-value">
+                {{ dossierSelected()!.dateInstruction
+                   ? (dossierSelected()!.dateInstruction | date:'dd/MM/yyyy')
+                   : '—' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Dernière modification</span>
+              <span class="detail-value">
+                {{ dossierSelected()!.dateModification
+                   ? (dossierSelected()!.dateModification | date:'dd/MM/yyyy')
+                   : '—' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Statut</span>
+              <span class="detail-value">
+                <span class="statut-badge {{ statutClass(dossierSelected()!.statut?.intitule ?? '') }}">
+                  {{ dossierSelected()!.statut?.intitule ?? 'Inconnu' }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <!-- ═══ DOCUMENTS ADMINISTRATIFS ════════════════════════════ -->
+          <!--
+            Attributs DossierPermisBatir utilisés :
+              cni · demandeTimbre · certificatUrbanisme
+              certificatPropriete · devis · planMasse · planTerrain
+          -->
+          <div class="form-section-divider">
+            <i class="bi bi-paperclip me-2"></i>Documents administratifs
+          </div>
+          <div class="row g-3">
+
+            @for (doc of [
+              { label: 'CNI du demandeur',           chemin: dossierSelected()!.cni,                 icon: 'bi-person-vcard'       },
+              { label: 'Certificat de propriété',    chemin: dossierSelected()!.certificatPropriete, icon: 'bi-file-earmark-text'  },
+              { label: "Certificat d'urbanisme",     chemin: dossierSelected()!.certificatUrbanisme, icon: 'bi-building'           },
+              { label: 'Demande de timbre fiscal',   chemin: dossierSelected()!.demandeTimbre,       icon: 'bi-stamp'              },
+              { label: 'Devis estimatif',            chemin: dossierSelected()!.devis,               icon: 'bi-calculator'         },
+              { label: 'Plan de masse',              chemin: dossierSelected()!.planMasse,           icon: 'bi-map'                },
+              { label: 'Plan de situation terrain',  chemin: dossierSelected()!.planTerrain,         icon: 'bi-geo'                }
+            ]; track doc.label) {
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-preview-card">
+
+                  <div class="doc-preview-header">
+                    <i class="bi {{ doc.icon }}"></i>
+                    <span>{{ doc.label }}</span>
+                  </div>
+
+                  @if (doc.chemin) {
+
+                    <!-- Image inline -->
+                    @if (isImage(doc.chemin)) {
+                      <div style="padding:8px">
+                        <img [src]="doc.chemin" [alt]="doc.label"
+                             style="width:100%;height:140px;object-fit:cover;
+                                    border-radius:4px;border:1px solid var(--border)" />
+                      </div>
+                      <div style="padding:0 8px 8px;text-align:center">
+                        <a [href]="doc.chemin" target="_blank" rel="noopener"
+                           style="font-size:12px;color:var(--primary)">
+                          <i class="bi bi-box-arrow-up-right me-1"></i>Ouvrir en plein écran
+                        </a>
+                      </div>
+                    }
+
+                    <!-- PDF -->
+                    @if (isPdf(doc.chemin)) {
+                      <div style="text-align:center;padding:20px 8px">
+                        <i class="bi bi-file-earmark-pdf-fill"
+                           style="font-size:2.5rem;color:#dc3545;display:block;margin-bottom:8px"></i>
+                        <span style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:10px">
+                          Document PDF
+                        </span>
+                        <a [href]="doc.chemin" target="_blank" rel="noopener"
+                           class="btn-submit"
+                           style="font-size:12px;padding:6px 16px;text-decoration:none;
+                                  display:inline-flex;align-items:center;gap:6px">
+                          <i class="bi bi-box-arrow-up-right"></i>Ouvrir
+                        </a>
+                      </div>
+                    }
+
+                    <!-- Autre format -->
+                    @if (!isImage(doc.chemin) && !isPdf(doc.chemin)) {
+                      <div style="text-align:center;padding:20px 8px">
+                        <i class="bi bi-file-earmark"
+                           style="font-size:2rem;color:var(--text-muted);display:block;margin-bottom:6px"></i>
+                        <a [href]="doc.chemin" target="_blank" rel="noopener"
+                           style="font-size:12px;color:var(--primary)">
+                          Télécharger le fichier
+                        </a>
+                      </div>
+                    }
+
+                  } @else {
+                    <!-- Non fourni -->
+                    <div style="text-align:center;padding:24px 8px;
+                                color:var(--text-muted);font-size:13px">
+                      <i class="bi bi-dash-circle"
+                         style="display:block;font-size:1.5rem;margin-bottom:6px;opacity:.4"></i>
+                      Non fourni
+                    </div>
+                  }
+
+                </div>
+              </div>
+            }
+
+          </div><!-- /row documents -->
+
+          <!-- ═══ PLANS D'EXÉCUTION  ═══════════════════════════════════
+               Source : dossierSelectedDetails() de type ConstructDossierPermis
+               (qui embarque plansExecution: PlanExecution[])
+               Chaque PlanExecution → chemin (URL) + typePlan.intitule
+          ════════════════════════════════════════════════════════════ -->
+          @if (dossierSelectedDetails()?.plans &&
+               dossierSelectedDetails()!.plans!.length > 0) {
+
+            <div class="form-section-divider">
+              <i class="bi bi-file-earmark-image me-2"></i>Plans d'exécution
+              <span class="badge ms-2"
+                    style="background:var(--primary);font-size:11px;vertical-align:middle">
+                {{ dossierSelectedDetails()!.plans!.length }} plan(s)
+              </span>
+            </div>
+
+            <div class="row g-3">
+              @for (plan of dossierSelectedDetails()!.plans!; track plan.id) {
+                <div class="col-md-6 col-lg-4">
+                  <div class="doc-preview-card">
+
+                    <div class="doc-preview-header">
+                      <i class="bi bi-file-earmark-image"></i>
+                      <span>{{ plan.typePlan?.intitule ?? 'Plan n°' + plan.id }}</span>
+                    </div>
+
+                    @if (plan.chemin) {
+
+                      @if (isImage(plan.chemin)) {
+                        <div style="padding:8px">
+                          <img [src]="plan.chemin" [alt]="plan.typePlan?.intitule ?? 'Plan'"
+                               style="width:100%;height:140px;object-fit:cover;
+                                      border-radius:4px;border:1px solid var(--border)" />
+                        </div>
+                        <div style="padding:0 8px 8px;text-align:center">
+                          <a [href]="plan.chemin" target="_blank" rel="noopener"
+                             style="font-size:12px;color:var(--primary)">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>Ouvrir en plein écran
+                          </a>
+                        </div>
+                      }
+
+                      @if (isPdf(plan.chemin)) {
+                        <div style="text-align:center;padding:20px 8px">
+                          <i class="bi bi-file-earmark-pdf-fill"
+                             style="font-size:2.5rem;color:#dc3545;display:block;margin-bottom:8px"></i>
+                          <a [href]="plan.chemin" target="_blank" rel="noopener"
+                             class="btn-submit"
+                             style="font-size:12px;padding:6px 16px;text-decoration:none;
+                                    display:inline-flex;align-items:center;gap:6px">
+                            <i class="bi bi-box-arrow-up-right"></i>Ouvrir le PDF
+                          </a>
+                        </div>
+                      }
+
+                      @if (!isImage(plan.chemin) && !isPdf(plan.chemin)) {
+                        <div style="text-align:center;padding:20px 8px">
+                          <a [href]="plan.chemin" target="_blank" rel="noopener"
+                             style="font-size:12px;color:var(--primary)">
+                            Télécharger le fichier
+                          </a>
+                        </div>
+                      }
+
+                    } @else {
+                      <div style="text-align:center;padding:24px 8px;
+                                  color:var(--text-muted);font-size:13px">
+                        <i class="bi bi-dash-circle"
+                           style="display:block;font-size:1.5rem;margin-bottom:6px;opacity:.4"></i>
+                        Fichier indisponible
+                      </div>
+                    }
+
+                  </div>
+                </div>
+              }
+            </div>
+
+          }
+
+        </div><!-- /modal-body-custom -->
+
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalView()">Fermer</button>
+          <button class="btn-submit" (click)="openModalEdit(dossierSelected()!)">
+            <i class="bi bi-pencil me-2"></i>Modifier le dossier
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     MODAL — MODIFIER UN DOSSIER
+════════════════════════════════════════════════════════════════════════ -->
+@if (showModalEdit() && dossierSelected()) {
+  <div class="modal-overlay" (click)="closeModalEdit()"></div>
+  <div class="modal-wrapper">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content"
+           style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+
+        <div class="modal-header-custom modal-header-custom--edit">
+          <div>
+            <h5>
+              <i class="bi bi-pencil-square me-2"></i>
+              Modifier — {{ dossierSelected()!.numeroDossier ?? 'Dossier' }}
+            </h5>
+            <small>Mettez à jour les informations et/ou remplacez les documents</small>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto"
+                  (click)="closeModalEdit()" [disabled]="isSubmitting()"></button>
+        </div>
+
+        <div class="modal-body-custom" [formGroup]="dossierEditFb">
+
+          <!-- ═══ INFORMATIONS DU DEMANDEUR ══════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-person-fill me-2"></i>Informations du demandeur
+          </div>
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Nom <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="nom"
+                       [class.is-invalid]="ctrl(dossierEditFb,'nom').invalid && ctrl(dossierEditFb,'nom').touched" />
+                @if (ctrl(dossierEditFb,'nom').invalid && ctrl(dossierEditFb,'nom').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Au moins 2 caractères requis
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Prénom(s) <span class="req">*</span></label>
+                <input type="text" class="form-control-custom"
+                       formControlName="prenom"
+                       [class.is-invalid]="ctrl(dossierEditFb,'prenom').invalid && ctrl(dossierEditFb,'prenom').touched" />
+                @if (ctrl(dossierEditFb,'prenom').invalid && ctrl(dossierEditFb,'prenom').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Au moins 2 caractères requis
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Téléphone <span class="req">*</span></label>
+                <input type="tel" class="form-control-custom"
+                       formControlName="telephone"
+                       [class.is-invalid]="ctrl(dossierEditFb,'telephone').invalid && ctrl(dossierEditFb,'telephone').touched" />
+                @if (ctrl(dossierEditFb,'telephone').invalid && ctrl(dossierEditFb,'telephone').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Numéro invalide
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Email <span class="req">*</span></label>
+                <input type="email" class="form-control-custom"
+                       formControlName="email"
+                       [class.is-invalid]="ctrl(dossierEditFb,'email').invalid && ctrl(dossierEditFb,'email').touched" />
+                @if (ctrl(dossierEditFb,'email').errors?.['required'] && ctrl(dossierEditFb,'email').touched) {
+                  <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Champ obligatoire</div>
+                }
+                @if (ctrl(dossierEditFb,'email').errors?.['email'] && ctrl(dossierEditFb,'email').touched) {
+                  <div class="field-error"><i class="bi bi-exclamation-circle-fill"></i> Email invalide</div>
+                }
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ═══ DESCRIPTION DU PROJET ══════════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-building-add me-2"></i>Description du projet
+          </div>
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-group-custom">
+                <label class="form-label-custom">Raison <span class="req">*</span></label>
+                <textarea class="form-control-custom" rows="3"
+                          formControlName="raison"
+                          [class.is-invalid]="ctrl(dossierEditFb,'raison').invalid && ctrl(dossierEditFb,'raison').touched">
+                </textarea>
+                @if (ctrl(dossierEditFb,'raison').invalid && ctrl(dossierEditFb,'raison').touched) {
+                  <div class="field-error">
+                    <i class="bi bi-exclamation-circle-fill"></i> Description requise
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ REMPLACEMENT DES DOCUMENTS ════════════════════════ -->
+          <!--
+            Chaque file-zone correspond à un attribut de DossierPermisBatir :
+              fileCni                  → dossier.cni
+              fileCertificatPropriete  → dossier.certificatPropriete
+              fileCertificatUrbanisme  → dossier.certificatUrbanisme
+              fileDemandeTimbre        → dossier.demandeTimbre
+              fileDevis                → dossier.devis
+              filePlanMasse            → dossier.planMasse
+              filePlanSituationTerrain → dossier.planTerrain
+          -->
+          <div class="form-section-divider">
+            <i class="bi bi-arrow-repeat me-2"></i>Remplacer les documents
+            <span style="color:var(--text-muted);font-weight:400;
+                         text-transform:none;letter-spacing:0">
+              — laisser vide pour conserver l'original
+            </span>
+          </div>
+          <div class="row g-3">
+
+            <!-- CNI -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  CNI du demandeur
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCni() !== null"
+                     (click)="inputEditCni.click()">
+                  <input #inputEditCni type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCni')" />
+                  @if (!fileCni()) {
+                    <i class="bi bi-person-vcard file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>CNI du demandeur</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCni()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCni.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Certificat de propriété -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Certificat de propriété / Titre Foncier
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCertificatPropriete() !== null"
+                     (click)="inputEditCertProp.click()">
+                  <input #inputEditCertProp type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCertificatPropriete')" />
+                  @if (!fileCertificatPropriete()) {
+                    <i class="bi bi-file-earmark-text file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Titre de propriété</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCertificatPropriete()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCertificatPropriete.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Certificat d'urbanisme -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Certificat d'urbanisme
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileCertificatUrbanisme() !== null"
+                     (click)="inputEditCertUrba.click()">
+                  <input #inputEditCertUrba type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileCertificatUrbanisme')" />
+                  @if (!fileCertificatUrbanisme()) {
+                    <i class="bi bi-building file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Cert. d'urbanisme</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileCertificatUrbanisme()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileCertificatUrbanisme.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Demande de timbre fiscal -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Demande de timbre fiscal
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileDemandeTimbre() !== null"
+                     (click)="inputEditTimbre.click()">
+                  <input #inputEditTimbre type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileDemandeTimbre')" />
+                  @if (!fileDemandeTimbre()) {
+                    <i class="bi bi-stamp file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Timbre fiscal</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileDemandeTimbre()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileDemandeTimbre.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Devis estimatif -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Devis estimatif des travaux
+                  <span class="fmt-hint">PDF</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="fileDevis() !== null"
+                     (click)="inputEditDevis.click()">
+                  <input #inputEditDevis type="file" accept=".pdf"
+                         style="display:none"
+                         (change)="onFileChange($event, 'fileDevis')" />
+                  @if (!fileDevis()) {
+                    <i class="bi bi-calculator file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Devis</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(fileDevis()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); fileDevis.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Plan de masse -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Plan de masse
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="filePlanMasse() !== null"
+                     (click)="inputEditPlanMasse.click()">
+                  <input #inputEditPlanMasse type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'filePlanMasse')" />
+                  @if (!filePlanMasse()) {
+                    <i class="bi bi-map file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Plan de masse</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(filePlanMasse()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); filePlanMasse.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Plan de situation terrain — clé API : planSituationTerrain / modèle : planTerrain -->
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Plan de situation du terrain
+                  <span class="fmt-hint">PDF · JPG · PNG</span>
+                </label>
+                <div class="file-zone" [class.file-zone--ok]="filePlanSituationTerrain() !== null"
+                     (click)="inputEditPlanSit.click()">
+                  <input #inputEditPlanSit type="file" accept=".pdf,.jpg,.jpeg,.png"
+                         style="display:none"
+                         (change)="onFileChange($event, 'filePlanSituationTerrain')" />
+                  @if (!filePlanSituationTerrain()) {
+                    <i class="bi bi-geo file-zone__icon"></i>
+                    <div class="file-zone__text">
+                      <strong>Plan de situation</strong><span>Cliquer pour remplacer</span>
+                    </div>
+                    <span class="fz-btn"><i class="bi bi-arrow-repeat me-1"></i>Remplacer</span>
+                  } @else {
+                    <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                    <div class="file-zone__text">
+                      <strong>{{ nomFichier(filePlanSituationTerrain()) }}</strong>
+                      <span>Nouveau fichier ✓</span>
+                    </div>
+                    <span class="fz-btn fz-btn--remove"
+                          (click)="$event.stopPropagation(); filePlanSituationTerrain.set(null)">
+                      <i class="bi bi-trash3 me-1"></i>Retirer
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /row replace docs -->
+
+          <!-- ═══ NOUVEAUX PLANS D'EXÉCUTION ═════════════════════════ -->
+          <div class="form-section-divider">
+            <i class="bi bi-file-earmark-image me-2"></i>Nouveaux plans d'exécution
+            <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">
+              — s'ajouteront aux plans existants
+            </span>
+            @if (nombrePlans > 0) {
+              <span class="badge ms-2"
+                    style="background:var(--primary);font-size:11px;vertical-align:middle">
+                {{ nombrePlans }} plan(s) stagé(s)
+              </span>
+            }
+          </div>
+
+          <!-- Plans stagés — PlanExecution.chemin + PlanExecution.typePlan.intitule -->
+          @if (nombrePlans > 0) {
+            <div class="mb-3">
+              @for (plan of plansExecution(); track plan.id) {
+                <div class="d-flex align-items-center gap-3 p-2 mb-2 rounded"
+                     style="background:var(--light-bg);border:1px solid var(--border)">
+                  <i class="bi bi-file-earmark-check fs-5"
+                     style="color:#198754;flex-shrink:0"></i>
+                  <div class="flex-grow-1 overflow-hidden">
+                    <div style="font-size:14px;font-weight:600;white-space:nowrap;
+                                overflow:hidden;text-overflow:ellipsis">
+                      {{ plan.chemin ?? 'Fichier en attente' }}
+                    </div>
+                    <div style="font-size:12px;color:var(--text-muted)">
+                      {{ plan.typePlan?.intitule ?? '—' }}
+                    </div>
+                  </div>
+                  <button type="button" class="tbl-icon-btn danger"
+                          (click)="supprimerPlan($index)">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Formulaire d'ajout d'un plan (édition) -->
+          <div class="row g-3 p-3 rounded"
+               style="background:rgba(0,49,137,.03);border:1px dashed var(--border)">
+            <div class="col-12">
+              <span style="font-size:13px;font-weight:600;color:var(--text-mid)">
+                <i class="bi bi-plus-circle me-1" style="color:var(--primary)"></i>
+                Ajouter un plan d'exécution
+              </span>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label-custom">Type de plan</label>
+              <select class="form-control-custom" #typePlanEditSelect
+                      (change)="onTypePlanChange(typePlanEditSelect.value)">
+                <option value="0">— Choisir le type —</option>
+                @for (tp of listTypePlan(); track tp.id) {
+                  <option [value]="tp.id">{{ tp.intitule }}</option>
+                }
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label-custom">Fichier</label>
+              <div class="file-zone" [class.file-zone--ok]="planEnCours() !== null"
+                   (click)="inputPlanEdit.click()">
+                <input #inputPlanEdit type="file" accept=".pdf,.jpg,.jpeg,.png"
+                       style="display:none" (change)="onPlanFileChange($event)" />
+                @if (!planEnCours()) {
+                  <i class="bi bi-file-earmark-image file-zone__icon"></i>
+                  <div class="file-zone__text">
+                    <strong>Choisir un plan</strong><span>PDF ou image</span>
+                  </div>
+                  <span class="fz-btn"><i class="bi bi-upload me-1"></i>Parcourir</span>
+                } @else {
+                  <i class="bi bi-file-earmark-check-fill file-zone__icon file-zone__icon--ok"></i>
+                  <div class="file-zone__text">
+                    <strong>{{ nomFichier(planEnCours()) }}</strong>
+                    <span>Sélectionné ✓</span>
+                  </div>
+                  <span class="fz-btn fz-btn--remove"
+                        (click)="$event.stopPropagation(); planEnCours.set(null)">
+                    <i class="bi bi-trash3 me-1"></i>Retirer
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="button"
+                      class="btn-add w-100"
+                      style="border-radius:6px;justify-content:center"
+                      [disabled]="!planEnCours() || !typePlanIdEnCours() || typePlanIdEnCours() === 0"
+                      (click)="ajouterPlan()">
+                <i class="bi bi-plus-lg"></i> Ajouter
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /modal-body-custom -->
+
+        <div class="modal-footer-custom">
+          <button class="btn-cancel" (click)="closeModalEdit()" [disabled]="isSubmitting()">
+            Annuler
+          </button>
+          <button class="btn-submit btn-submit--green"
+                  (click)="updateDossier()" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <span class="spinner-border spinner-border-sm me-2"
+                    style="width:15px;height:15px;border-width:2px"></span>
+              Sauvegarde…
+            } @else {
+              <i class="bi bi-check-lg me-2"></i>Sauvegarder les modifications
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+

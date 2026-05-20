@@ -1,5 +1,6 @@
 import { Mairie } from "../Etablissement/Mairie";
 import { Utilisateur } from "../Utilisateur/Utilisateur";
+import { PlanExecution } from "./PlanExecution";
 import { StatutDossier } from "./StatutDossier";
 
 export interface DossierPermisBatir{
@@ -22,4 +23,11 @@ export interface DossierPermisBatir{
     planTerrain:string; 
     planMasse:string; 
     statut:StatutDossier; 
+}
+
+
+export interface ConstructDossierPermis{
+    dossier : DossierPermisBatir, 
+    plans : PlanExecution[], 
+    statut : StatutDossier 
 }
