@@ -1,4 +1,9 @@
-const baseUrl = 'http://localhost:8080/eHall/api';
+//const baseUrl = 'http://localhost:8080/eHall/api';
+
+const baseUrl = "https://egovhallback.onrender.com/eHall/api";  //End points final 
+
+
+
 
 const authBaseUrl          = `${baseUrl}/auth`;
 const etablissementBaseUrl = `${baseUrl}/domaine`;
