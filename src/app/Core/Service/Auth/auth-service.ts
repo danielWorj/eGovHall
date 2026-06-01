@@ -21,4 +21,10 @@ export class AuthService {
   login(request :any):Observable<BasicAuthData>{
     return this.httpClient.post<BasicAuthData>(eHAllSystemEndPoints.Auth.login , request); 
   }
+
+  isHopital(): boolean {
+  const role = localStorage.getItem('role');
+  const etablissement = localStorage.getItem('etablissement');
+  return role === '2' && !!etablissement && etablissement !== 'null' && etablissement !== '0';
+}
 }

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './Core/Guards/AuthGuard';
+import { hopitalGuard } from './Core/Guards/HopitalGuard';
 
 export const routes: Routes = [
     //PLatorme
@@ -171,7 +172,7 @@ export const routes: Routes = [
    
     {
         path: 'portail-hopital',
-        canActivate: [authGuard],
+        canActivate: [hopitalGuard],
         loadComponent: () => import('./Features/Portail/hopital/hopital').then(m => m.HopitalC)
     }
 ];
