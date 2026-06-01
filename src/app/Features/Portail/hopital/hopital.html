@@ -366,7 +366,7 @@
         <button type="button"
                 class="btn-close btn-close-white ms-auto"
                 data-bs-dismiss="modal"
-                [disabled]="isLoading()">
+                [attr.disabled]="isLoading() ? true : null">
         </button>
       </div>
 
@@ -739,13 +739,13 @@
       <div class="modal-footer-custom">
         <button class="btn-cancel"
                 data-bs-dismiss="modal"
-                [disabled]="isLoading()">
+                [attr.disabled]="isLoading() ? true : null">
           Annuler
         </button>
 
         <button class="btn-submit"
                 (click)="soumettre()"
-                [disabled]="isLoading()">
+                [attr.disabled]="isLoading() ? true : null">
           @if (isLoading()) {
             <span class="spinner-border spinner-border-sm me-2"
                   style="width:15px;height:15px;border-width:2px"></span>
