@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 
 
 import { Sexe } from '../../../Core/Model/Enfant/Sexe';
@@ -10,6 +10,7 @@ import { ServerResponse } from '../../../Core/Model/Server/ServerResponse';
 import { Declaration } from '../../../Core/Model/Acte/Declaration';
 import { EtablissementService } from '../../../Core/Service/Etablissement/etablissement-service';
 import { Hopital } from '../../../Core/Model/Etablissement/Hopital';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hopital',
@@ -52,7 +53,15 @@ export class HopitalC  {
     private utilisateurService : UtilisateurService
   ) {
     const idStored = localStorage.getItem('etablissement');
-    this.idHopital.set(idStored ? parseInt(idStored) : 0);
+    const parsed = idStored ? parseInt(idStored) : NaN;
+
+    if (!idStored || isNaN(parsed) || parsed <= 0) {
+      // Pas de session valide → rediriger
+      inject(Router).navigate(['/login']);
+      return;
+    }
+
+    this.idHopital.set(parsed);
 
     this.declarationFb = this.fb.group({
       // ── Enfant ──────────────────────────────────────────────────────────────
@@ -263,8 +272,14 @@ export class HopitalC  {
     // Construction du DTO (partie JSON)
     // typesPiecesJointes correspond aux IDs TypePieceDeclaration dans le même ordre que les fichiers
     // Construction du FormData (JSON + fichiers)
-    this.declarationFb.controls['hopital'].setValue(this.hopitalConnected()?.id); 
-    this.declarationFb.controls['mairie'].setValue(this.hopitalConnected()?.mairie.id);
+    const hopital = this.hopitalConnected();
+    if (!hopital) {
+      this.errorMessage.set('Établissement non chargé. Reconnectez-vous.');
+      return;
+    }
+    // ...
+    this.declarationFb.controls['hopital'].setValue(hopital.id);
+    this.declarationFb.controls['mairie'].setValue(hopital.mairie.id);
     
     const dto = {
       ...this.declarationFb.value,

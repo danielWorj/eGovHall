@@ -55,6 +55,12 @@ export class Auth {
           localStorage.setItem('role', `${data.role}`);
           localStorage.setItem('etablissement', `${data.etablissement}`);
 
+          if (data.etablissement != null) {
+              localStorage.setItem('etablissement', `${data.etablissement}`);
+            } else {
+              localStorage.removeItem('etablissement');
+            }
+
           console.log('Données stockées dans localStorage:', {
             id: localStorage.getItem('id'),
             role: localStorage.getItem('role'),
