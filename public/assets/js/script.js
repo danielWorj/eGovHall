@@ -7,19 +7,20 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
   // ── cniFile (seulement sur les pages qui l'ont) ───────
-  const cniFile = document.getElementById('cniFile');
-  if (cniFile) {
-    cniFile.addEventListener('change', function() {
-      const wrap = this.closest('.file-input-wrap');
-      const btn = wrap.querySelector('.file-btn');
-      const text = wrap.querySelector('.file-text strong');
-      if (this.files && this.files[0]) {
-        text.textContent = this.files[0].name;
-        btn.innerHTML = '<i class="bi bi-check-circle me-1" style="color:#198754"></i>Chargé';
-        wrap.style.borderColor = '#198754';
-      }
-    });
-  }
+ 
+const cniFile = document.getElementById('cniFile');
+if (cniFile) {
+  cniFile.addEventListener('change', function() {
+    const wrap = this.closest('.file-input-wrap');
+    const btn = wrap.querySelector('.file-btn');
+    const text = wrap.querySelector('.file-text strong');
+    if (this.files && this.files[0]) {
+      text.textContent = this.files[0].name;
+      btn.innerHTML = '<i class="bi bi-check-circle me-1" style="color:#198754"></i>Chargé';
+      wrap.style.borderColor = '#198754';
+    }
+  });
+}
 
   // ── Filter pills ──────────────────────────────────────
   document.querySelectorAll('.filter-pill').forEach(btn => {
