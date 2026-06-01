@@ -2,6 +2,7 @@ import {
   Component,
   signal,
   inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -10,7 +11,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PermisService } from '../../../Core/Service/Permis/permis-service';
 import { ServerResponse } from '../../../Core/Model/Server/ServerResponse';
 import { TypePlan } from '../../../Core/Model/Permis/TypePlan';
@@ -45,9 +46,13 @@ export class PermisBatir {
   //
   //
   //
+    private platformId = inject(PLATFORM_ID);
 
-  constructor(){
-    this.getAllTypePlan(); 
+
+   constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.getAllTypePlan();
+    }
   }
 
   private fb            = inject(FormBuilder);

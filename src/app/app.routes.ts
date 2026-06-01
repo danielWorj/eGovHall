@@ -104,10 +104,6 @@ export const routes: Routes = [
             loadComponent: () => import('./Features/Admin/Super/acte-mariage/acte-mariage').then(m => m.ActeMariage) 
           },
           { 
-            path: 'permis', 
-            loadComponent: () => import('./Features/Admin/Super/permis-batir/permis-batir').then(m => m.PermisBatir) 
-          },
-          { 
             path: 'paiements', 
             loadComponent: () => import('./Features/Admin/Super/paiements/paiements').then(m => m.Paiements) 
           },

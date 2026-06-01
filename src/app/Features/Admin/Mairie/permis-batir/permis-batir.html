@@ -703,8 +703,8 @@
         @if (dossierSupprimer()) {
           <p style="font-size:13px;color:var(--text-muted)">
             <strong>{{ dossierSupprimer()!.numeroDossier }}</strong> —
-            {{ dossierSupprimer()!.demandeur?.nom }}
-            {{ dossierSupprimer()!.demandeur?.prenom }}
+            {{ dossierSupprimer()!.demandeur!.nom }}
+            {{ dossierSupprimer()!.demandeur!.prenom }}
           </p>
         }
         <p style="font-size:12px;color:var(--accent);margin-top:12px">

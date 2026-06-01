@@ -3,6 +3,7 @@ import {
   signal,
   computed,
   inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -11,7 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PermisService }        from '../../../../Core/Service/Permis/permis-service';
 import { ServerResponse }       from '../../../../Core/Model/Server/ServerResponse';
 import { DossierPermisBatir, ConstructDossierPermis } from '../../../../Core/Model/Permis/DossierPermis';
@@ -43,15 +44,17 @@ export interface Toast {
 export class PermisBatir {
 
   idMairie = signal<number>(0);
+    private platformId = inject(PLATFORM_ID);
 
-  constructor() {
-    const idStored = localStorage.getItem('etablissement');
-    this.idMairie.set(idStored ? parseInt(idStored) : 0);
-    this.chargerDossiers();
-    this.chargerStatuts();
-    
-
+    constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+      const idStored = localStorage.getItem('etablissement');
+      this.idMairie.set(idStored ? parseInt(idStored) : 0);
+      this.chargerDossiers();
+      this.chargerStatuts();
+    }
   }
+  
 
   private fb            = inject(FormBuilder);
   private permisService = inject(PermisService);
