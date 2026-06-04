@@ -1,0 +1,133 @@
+<div class="profil-page">
+
+  <!-- En-tête de section -->
+  <div class="panel-header">
+    <h2 class="panel-title">Mon Profil</h2>
+    <p class="panel-subtitle">Consultez et modifiez vos informations personnelles</p>
+  </div>
+
+  @if (utilisateurConneted()) {
+
+    <!-- Carte avatar + identité -->
+    <div class="profil-identity-card">
+      <div class="profil-avatar">
+        {{ utilisateurConneted()!.nom.charAt(0).toUpperCase() }}{{ utilisateurConneted()!.prenom.charAt(0).toUpperCase() }}
+      </div>
+      <div class="profil-identity-info">
+        <h3 class="profil-fullname">{{ utilisateurConneted()!.prenom }} {{ utilisateurConneted()!.nom }}</h3>
+        <span class="agent-role-badge">{{ utilisateurConneted()!.roleUser?.nom ?? 'Agent' }}</span>
+        <div class="profil-meta">
+          <span><i class="bi bi-building"></i> {{ utilisateurConneted()!.structure?.nom ?? '—' }}</span>
+          <span><i class="bi bi-calendar3"></i> Membre depuis {{ utilisateurConneted()!.creation }}</span>
+        </div>
+      </div>
+      <div class="profil-statut">
+        @if (utilisateurConneted()!.statutUser?.nom?.toLowerCase() === 'actif') {
+          <span class="pill actif">● Actif</span>
+        } @else {
+          <span class="pill inactif">● Inactif</span>
+        }
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="profil-form-card" [formGroup]="userFb">
+
+      <div class="modal-section-title">Informations personnelles</div>
+
+      <div class="profil-form-grid">
+
+        <div class="profil-field">
+          <label class="fld-label" for="nom">Nom</label>
+          <input id="nom" class="fld-ctrl" type="text" formControlName="nom"
+                 [placeholder]="utilisateurConneted()!.nom" />
+        </div>
+
+        <div class="profil-field">
+          <label class="fld-label" for="prenom">Prénom</label>
+          <input id="prenom" class="fld-ctrl" type="text" formControlName="prenom"
+                 [placeholder]="utilisateurConneted()!.prenom" />
+        </div>
+
+        <div class="profil-field">
+          <label class="fld-label" for="email">Adresse e-mail</label>
+          <input id="email" class="fld-ctrl" type="email" formControlName="email"
+                 [placeholder]="utilisateurConneted()!.email ?? '—'" />
+        </div>
+
+        <div class="profil-field">
+          <label class="fld-label" for="telephone">Téléphone</label>
+          <input id="telephone" class="fld-ctrl" type="tel" formControlName="telephone"
+                 [placeholder]="utilisateurConneted()!.telephone ?? '—'" />
+        </div>
+
+      </div>
+
+      <div class="modal-section-title">Sécurité</div>
+
+      <div class="profil-form-grid">
+
+        <div class="profil-field">
+          <label class="fld-label" for="password">Nouveau mot de passe</label>
+          <div class="profil-pwd-wrap">
+            <input id="password" class="fld-ctrl" [type]="showPwd() ? 'text' : 'password'"
+                   formControlName="password" placeholder="Laisser vide pour ne pas modifier" />
+            <button type="button" class="profil-pwd-eye" (click)="togglePwd()">
+              <i [class]="showPwd() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <span class="profil-field-hint">Minimum 6 caractères. Laisser vide pour conserver l'actuel.</span>
+        </div>
+
+      </div>
+
+      <!-- Feedback -->
+      @if (successMsg()) {
+        <div class="profil-alert success">
+          <i class="bi bi-check-circle-fill"></i> {{ successMsg() }}
+        </div>
+      }
+      @if (errorMsg()) {
+        <div class="profil-alert error">
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMsg() }}
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="profil-form-actions">
+        <button type="button" class="btn-modal-cancel" (click)="resetForm()">
+          <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+        </button>
+        <button type="button" class="btn-modal-save" [disabled]="loading()" (click)="editData()">
+          @if (loading()) {
+            <span class="profil-spinner"></span> Enregistrement…
+          } @else {
+            <i class="bi bi-floppy"></i> Enregistrer les modifications
+          }
+        </button>
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- Skeleton loader -->
+    <div class="profil-skeleton-card">
+      <div class="profil-skeleton-avatar sk"></div>
+      <div class="profil-skeleton-lines">
+        <div class="sk sk-line sk-lg"></div>
+        <div class="sk sk-line sk-md"></div>
+      </div>
+    </div>
+    <div class="profil-form-card">
+      @for (_ of [1,2,3,4]; track $index) {
+        <div class="profil-field">
+          <div class="sk sk-line sk-sm" style="width:80px; margin-bottom:6px"></div>
+          <div class="sk sk-line" style="height:38px; border-radius:4px"></div>
+        </div>
+      }
+    </div>
+
+  }
+
+</div>

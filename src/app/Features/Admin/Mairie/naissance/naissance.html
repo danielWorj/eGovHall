@@ -91,6 +91,72 @@
     </div>
   </div>
 
+  <!-- ── GRAPHES SUPÉRIEURS : Évolution + Sexe ──────────────────── -->
+  <div class="row g-4 mb-4">
+
+    <!-- ① Évolution des créations (col-md-8) -->
+    <div class="col-md-8">
+      <div class="gender-chart-card" style="height:100%">
+        <h6>
+          <i class="bi bi-graph-up me-2" style="color:var(--primary)"></i>
+          Évolution des créations
+          @if (isLoading()) {
+            <span style="font-size:11px;font-weight:400;color:var(--text-muted);margin-left:8px">
+              <span class="spinner-border spinner-border-sm"
+                    style="width:10px;height:10px;border-width:1.5px"></span>
+              Chargement…
+            </span>
+          }
+        </h6>
+        <div style="position:relative;height:200px">
+          <canvas #chartEvolution></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② Répartition par sexe (col-md-4) -->
+    <div class="col-md-4">
+      <div class="gender-chart-card" style="height:100%">
+        <h6>
+          <i class="bi bi-pie-chart-fill me-2" style="color:var(--primary)"></i>
+          Répartition par sexe
+        </h6>
+        @if (listActeNaissance().length === 0) {
+          <div style="display:flex;align-items:center;justify-content:center;height:160px">
+            <div style="width:130px;height:130px;border-radius:50%;
+                        background:var(--light-bg);animation:pulse 1.4s ease-in-out infinite"></div>
+          </div>
+        } @else {
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+            <div style="position:relative;height:160px;width:100%">
+              <canvas #chartSexe></canvas>
+            </div>
+            <div style="display:flex;gap:16px;font-size:12px;flex-wrap:wrap;justify-content:center">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="width:10px;height:10px;border-radius:50%;background:#003189;flex-shrink:0"></span>
+                <span style="color:var(--text-muted)">Masculin</span>
+                <strong>{{ sexeData().masculin }}</strong>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="width:10px;height:10px;border-radius:50%;background:#e8002d;flex-shrink:0"></span>
+                <span style="color:var(--text-muted)">Féminin</span>
+                <strong>{{ sexeData().feminin }}</strong>
+              </div>
+              @if (sexeData().inconnu > 0) {
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="width:10px;height:10px;border-radius:50%;background:#94a3b8;flex-shrink:0"></span>
+                  <span style="color:var(--text-muted)">N/R</span>
+                  <strong>{{ sexeData().inconnu }}</strong>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
   <!-- TABLE + SIDE PANEL -->
   <div class="row g-4">
 
@@ -239,64 +305,21 @@
     <!-- ── SIDE PANEL ──────────────────────────────────────────── -->
     <div class="col-lg-4">
 
-      <!-- Évolution mensuelle (statique) -->
-      <div class="gender-chart-card mb-4">
+      <!-- ③ Répartition par hôpital -->
+      <div class="gender-chart-card">
         <h6>
-          <i class="bi bi-calendar3 me-2" style="color:var(--primary)"></i>
-          Actes récents
+          <i class="bi bi-hospital me-2" style="color:var(--primary)"></i>
+          Par établissement
         </h6>
         @if (listActeNaissance().length === 0) {
           <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0">
             Aucun acte enregistré.
           </p>
         } @else {
-          <div style="display:flex;flex-direction:column;gap:10px">
-            @for (acte of listActeNaissance().slice(0, 5); track acte.id) {
-              <div style="display:flex;align-items:center;gap:12px;font-size:13px;
-                          padding:8px 0;border-bottom:1px solid var(--border)">
-                <div style="width:32px;height:32px;border-radius:50%;background:rgba(0,49,137,.08);
-                            display:flex;align-items:center;justify-content:center;
-                            flex-shrink:0;color:var(--primary)">
-                  <i class="bi bi-file-earmark-text"></i>
-                </div>
-                <div style="flex:1;min-width:0">
-                  <div style="font-weight:700;color:var(--text-dark);
-                              white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-                    {{ acte.declaration?.enfant?.prenom }} {{ acte.declaration?.enfant?.nom }}
-                  </div>
-                  <div style="color:var(--text-muted);font-size:11px">
-                    {{ acte.numeroActe ?? 'N° —' }} · {{ acte.date | date:'dd/MM/yy' }}
-                  </div>
-                </div>
-              </div>
-            }
+          <div style="position:relative;height:260px">
+            <canvas #chartHopital></canvas>
           </div>
         }
-      </div>
-
-      <!-- Aide rapide -->
-      <div class="gender-chart-card">
-        <h6><i class="bi bi-info-circle me-2" style="color:var(--primary)"></i>Aide rapide</h6>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;font-size:13px;
-                    color:var(--text-mid)">
-          <div style="display:flex;gap:10px;align-items:flex-start">
-            <i class="bi bi-1-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
-            <span>Saisissez l'<strong>ID de la déclaration</strong> liée pour rattacher l'acte au dossier.</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:flex-start">
-            <i class="bi bi-2-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
-            <span>Joignez la <strong>CNI du père</strong> et sa <strong>photo 4×4</strong> obligatoirement.</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:flex-start">
-            <i class="bi bi-3-circle-fill" style="color:var(--primary);margin-top:2px;flex-shrink:0"></i>
-            <span>Le <strong>numéro d'acte</strong> est généré automatiquement après validation.</span>
-          </div>
-        </div>
-        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
-                    font-size:12px;color:var(--text-muted)">
-          <i class="bi bi-shield-check me-1" style="color:#198754"></i>
-          Données sécurisées — accès restreint mairie
-        </div>
       </div>
 
     </div>

@@ -1,0 +1,155 @@
+/* ── PAGE WRAPPER ── */
+.profil-page { max-width: 780px; }
+
+/* ── IDENTITY CARD ── */
+.profil-identity-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 26px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+.profil-identity-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--primary);
+}
+.profil-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0,49,137,0.22);
+}
+.profil-identity-info { flex: 1; }
+.profil-fullname {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.profil-meta {
+  display: flex;
+  gap: 18px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.profil-meta i { margin-right: 4px; }
+.profil-statut { margin-left: auto; }
+
+/* ── FORM CARD ── */
+.profil-form-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── GRID 2 COLONNES ── */
+.profil-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  margin-bottom: 8px;
+}
+.profil-field { display: flex; flex-direction: column; }
+
+/* ── PASSWORD FIELD ── */
+.profil-pwd-wrap { position: relative; }
+.profil-pwd-wrap .fld-ctrl { padding-right: 42px; }
+.profil-pwd-eye {
+  position: absolute;
+  right: 10px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--text-muted);
+  cursor: pointer; font-size: 16px;
+  transition: color .16s;
+}
+.profil-pwd-eye:hover { color: var(--primary); }
+.profil-field-hint {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── ALERTS ── */
+.profil-alert {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 16px;
+  border-radius: var(--radius);
+  font-size: 13px; font-weight: 600;
+  margin-top: 18px;
+}
+.profil-alert.success { background: rgba(25,135,84,0.09); color: #0d6e40; border: 1px solid rgba(25,135,84,0.2); }
+.profil-alert.error   { background: rgba(220,53,69,0.08);  color: #b02030; border: 1px solid rgba(220,53,69,0.2); }
+
+/* ── ACTIONS ── */
+.profil-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.btn-modal-save:disabled {
+  opacity: .65; cursor: not-allowed;
+}
+.btn-modal-save i, .btn-modal-cancel i { margin-right: 5px; }
+
+/* ── SPINNER ── */
+.profil-spinner {
+  display: inline-block;
+  width: 13px; height: 13px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-right: 6px; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SKELETON ── */
+.profil-skeleton-card {
+  display: flex; align-items: center; gap: 20px;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 22px 26px;
+  margin-bottom: 22px;
+}
+.profil-skeleton-avatar { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; }
+.profil-skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.sk {
+  background: linear-gradient(90deg, #eef1f8 25%, #e0e6f2 50%, #eef1f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+.sk-line { height: 14px; }
+.sk-lg  { width: 55%; }
+.sk-md  { width: 35%; }
+.sk-sm  { width: 25%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 575px) {
+  .profil-form-grid { grid-template-columns: 1fr; }
+  .profil-identity-card { flex-wrap: wrap; }
+  .profil-statut { margin-left: 0; }
+  .profil-form-actions { flex-direction: column-reverse; }
+  .profil-form-actions button { width: 100%; justify-content: center; }
+}

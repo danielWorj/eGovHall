@@ -1,30 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthData } from '../../Model/Auth/AuthData';
+import { Observable, tap } from 'rxjs';
 import { eHAllSystemEndPoints } from '../../Constant/EndPoints';
-import { Observable } from 'rxjs';
-import { BasicAuthData } from '../../Model/Auth/BasicAuthData';
+import { AuthData } from '../../Model/Auth/AuthData';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-   constructor(private httpClient : HttpClient){
 
+  constructor(private httpClient: HttpClient) {}
+
+  login(request: { email: string; password: string }): Observable<AuthData> {
+    return this.httpClient
+      .post<AuthData>(eHAllSystemEndPoints.Auth.jwt, request)
+      .pipe(tap(res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('id', `${res.id}`);
+
+        if (res.role != null) {
+          localStorage.setItem('role', `${res.role}`);
+        } else {
+          localStorage.removeItem('role');
+        }
+
+        if (res.etablissement != null) {
+          localStorage.setItem('etablissement', `${res.etablissement}`);
+        } else {
+          localStorage.removeItem('etablissement');
+        }
+      }));
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    localStorage.removeItem('role');
+    localStorage.removeItem('etablissement');
   }
 
   isAuthenticated(): boolean {
-    const id = localStorage.getItem('id');
-    return !!id; // Returns true if id exists, false otherwise
-  }
-
-  login(request :any):Observable<BasicAuthData>{
-    return this.httpClient.post<BasicAuthData>(eHAllSystemEndPoints.Auth.login , request); 
+    return !!localStorage.getItem('token');
   }
 
   isHopital(): boolean {
-  const role = localStorage.getItem('role');
-  const etablissement = localStorage.getItem('etablissement');
-  return role === '2' && !!etablissement && etablissement !== 'null' && etablissement !== '0';
-}
+    const role = localStorage.getItem('role');
+    const etablissement = localStorage.getItem('etablissement');
+    return role === '2' && !!etablissement && etablissement !== 'null' && etablissement !== '0';
+  }
 }

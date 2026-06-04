@@ -1,6 +1,8 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, ViewChild, ElementRef, AfterViewInit, effect } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 import { ActeService } from '../../../../Core/Service/Acte/acte-service';
 import { ActeNaissance } from '../../../../Core/Model/Acte/ActeNaissance';
 import { Declaration } from '../../../../Core/Model/Acte/Declaration';
@@ -12,9 +14,19 @@ import { Declaration } from '../../../../Core/Model/Acte/Declaration';
   templateUrl: './naissance.html',
   styleUrl: './naissance.css',
 })
-export class Naissance {
+export class Naissance implements AfterViewInit {
+
+  // ── Chart canvas refs ─────────────────────────────────────────────────────
+  @ViewChild('chartEvolution') chartEvolutionRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartSexe')      chartSexeRef!:      ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartHopital')   chartHopitalRef!:   ElementRef<HTMLCanvasElement>;
+
+  private chartEvolution?: Chart;
+  private chartSexe?:      Chart;
+  private chartHopital?:   Chart;
 
   // ── Identity ─────────────────────────────────────────────────────────────
+  readonly Math = Math;
   idMairie = signal<number>(0);
 
   // ── Data signals ─────────────────────────────────────────────────────────
@@ -64,6 +76,50 @@ export class Naissance {
 
   pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
 
+  // ── Chart data computed ───────────────────────────────────────────────────
+
+  /** Évolution mensuelle : { label: 'Jan 2025', count: 4 }[] */
+  evolutionData = computed(() => {
+    const map = new Map<string, number>();
+    this.listActeNaissance().forEach(a => {
+      if (!a.date) return;
+      const d   = new Date(a.date);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      map.set(key, (map.get(key) ?? 0) + 1);
+    });
+    const sorted = [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    const fmt = new Intl.DateTimeFormat('fr-FR', { month: 'short', year: 'numeric' });
+    return {
+      labels: sorted.map(([k]) => fmt.format(new Date(k + '-01'))),
+      values: sorted.map(([, v]) => v),
+    };
+  });
+
+  /** Répartition par sexe : { masculin, feminin, inconnu } */
+  sexeData = computed(() => {
+    let m = 0, f = 0, inc = 0;
+    this.listActeNaissance().forEach(a => {
+      const s = (a.declaration?.enfant?.sexe.libelle ?? '').toLowerCase();
+      if (s === 'm' || s === 'masculin' || s === 'male')      m++;
+      else if (s === 'f' || s === 'feminin' || s === 'female') f++;
+      else inc++;
+    });
+    return { masculin: m, feminin: f, inconnu: inc };
+  });
+
+  /** Répartition par hôpital : top 8 */
+  hopitalData = computed(() => {
+    const map = new Map<string, number>();
+    this.listActeNaissance().forEach(a => {
+      const nom = a.declaration?.hopital?.nom ?? 'Non renseigné';
+      map.set(nom, (map.get(nom) ?? 0) + 1);
+    });
+    const sorted = [...map.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+    return { labels: sorted.map(([k]) => k), values: sorted.map(([, v]) => v) };
+  });
+
   // ── Forms ─────────────────────────────────────────────────────────────────
   acteNaissanceFb!: FormGroup;
   acteEditFb!:      FormGroup;
@@ -78,6 +134,112 @@ export class Naissance {
   loadPage(): void {
     this.getAllActe();
     this.getAllDeclarationByMairie();
+  }
+
+  ngAfterViewInit(): void {
+    // Rendu immédiat dès l'ouverture — même avec données vides
+    setTimeout(() => this.buildCharts(), 0);
+  }
+
+  private buildCharts(): void {
+    this.buildChartEvolution();
+    this.buildChartSexe();
+    this.buildChartHopital();
+  }
+
+  private buildChartEvolution(): void {
+    const ref = this.chartEvolutionRef?.nativeElement;
+    if (!ref) return;
+    this.chartEvolution?.destroy();
+    const { labels, values } = this.evolutionData();
+    this.chartEvolution = new Chart(ref, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Actes créés',
+          data: values,
+          fill: true,
+          backgroundColor: 'rgba(0,49,137,0.08)',
+          borderColor: '#003189',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#003189',
+          pointRadius: 4,
+          tension: 0.35,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        },
+      },
+    });
+  }
+
+  private buildChartSexe(): void {
+    const ref = this.chartSexeRef?.nativeElement;
+    if (!ref) return;
+    this.chartSexe?.destroy();
+    const { masculin, feminin, inconnu } = this.sexeData();
+    const data   = [masculin, feminin, ...(inconnu > 0 ? [inconnu] : [])];
+    const labels = ['Masculin', 'Féminin', ...(inconnu > 0 ? ['Non renseigné'] : [])];
+    this.chartSexe = new Chart(ref, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: ['#003189', '#e8002d', '#94a3b8'],
+          borderWidth: 2,
+          borderColor: '#fff',
+          hoverOffset: 8,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12, boxWidth: 12 } },
+        },
+      },
+    });
+  }
+
+  private buildChartHopital(): void {
+    const ref = this.chartHopitalRef?.nativeElement;
+    if (!ref) return;
+    this.chartHopital?.destroy();
+    const { labels, values } = this.hopitalData();
+    const palette = ['#003189','#0046c0','#1a5fcf','#3d7ddf','#6099e8','#003189','#e8002d','#ff3355'];
+    this.chartHopital = new Chart(ref, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Actes',
+          data: values,
+          backgroundColor: labels.map((_, i) => palette[i % palette.length] + 'cc'),
+          borderColor:      labels.map((_, i) => palette[i % palette.length]),
+          borderWidth: 1.5,
+          borderRadius: 4,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          y: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        },
+      },
+    });
   }
 
   // ── Form initialisation ───────────────────────────────────────────────────
@@ -116,6 +278,7 @@ export class Naissance {
         this.listActeNaissance.set(data);
         this.isLoading.set(false);
         this.currentPage.set(1);
+        setTimeout(() => this.buildCharts(), 50);
       },
       error: () => {
         this.isLoading.set(false);

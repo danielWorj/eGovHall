@@ -75,6 +75,10 @@ export const routes: Routes = [
             loadComponent: () => import('./Features/Admin/Mairie/notifications/notifications').then(m => m.Notifications) 
           },
           { 
+            path: 'profil', 
+            loadComponent: () => import('./Features/Admin/Mairie/profil/profil').then(m => m.Profil) 
+          },
+          { 
             path: 'archivage', 
             loadComponent: () => import('./Features/Admin/Mairie/archivage/archivage').then(m => m.Archivage) 
           },
@@ -112,6 +116,10 @@ export const routes: Routes = [
             path: 'utilisateurs', 
             loadComponent: () => import('./Features/Admin/Super/paiements/paiements').then(m => m.Paiements) 
           }, 
+          { 
+            path: 'profil', 
+            loadComponent: () => import('./Features/Admin/Mairie/profil/profil').then(m => m.Profil) 
+          },
        // MAIRIE
           { 
             path: 'mairie-home', 
@@ -145,6 +153,10 @@ export const routes: Routes = [
             path: 'mairie-notifications', 
             loadComponent: () => import('./Features/Admin/Mairie/notifications/notifications').then(m => m.Notifications) 
           },
+          { 
+            path: 'mairie-profil', 
+            loadComponent: () => import('./Features/Admin/Mairie/profil/profil').then(m => m.Profil) 
+          },
       //CITOYEN
           { 
             path: 'citoyen-home', 
@@ -170,6 +182,26 @@ export const routes: Routes = [
      ]
     }, 
    
+    {
+        path: 'portail-hopital',
+        canActivate: [hopitalGuard],
+        loadComponent: () => import('./Features/Portail/hopital/hopital').then(m => m.HopitalC)
+    },
+    {
+        path: 'super',
+        canActivate: [authGuard],
+        loadComponent: () => import('./Features/Admin/layout/layout').then(m => m.Layout),
+        children:[
+             { 
+                path: 'user-admin', 
+                loadComponent: () => import('./Features/Super/utilisateurs/utilisateurs').then(m => m.Utilisateurs) 
+              },
+              { 
+                path: 'user-structure', 
+                loadComponent: () => import('./Features/Super/structure/structure').then(m => m.StructureC)  
+              },
+          ]
+    },
     {
         path: 'portail-hopital',
         canActivate: [hopitalGuard],

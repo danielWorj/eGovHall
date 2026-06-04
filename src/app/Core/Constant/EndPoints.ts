@@ -6,6 +6,7 @@ const baseUrl = 'http://localhost:8080/eHall/api';
 
 
 const authBaseUrl          = `${baseUrl}/auth`;
+const authBaseUrlJwt          = `${baseUrl}/jwt/auth`;
 const etablissementBaseUrl = `${baseUrl}/domaine`;
 const acteBaseUrl          = `${baseUrl}/declaration`;
 const userBaseUrl          = `${baseUrl}/user`;
@@ -17,7 +18,9 @@ const archiveBaseUrl = 'http://localhost:5000/api';
 export const eHAllSystemEndPoints = {
 
     Auth: {
-        login: `${authBaseUrl}/login`
+        jwt:      `${authBaseUrlJwt}/login`,    // POST  — obtenir un JWT
+        register: `${authBaseUrlJwt}/register`, // POST  — créer un compte
+        login:    `${authBaseUrl}/login`
     },
 
     structure: {
@@ -73,9 +76,22 @@ export const eHAllSystemEndPoints = {
     },
 
     Utilisateur: {
+        byId: `${userBaseUrl}/byId/`,
         Sexe: {
-            all: `${userBaseUrl}/sexe/all`
-        }
+            all: `${userBaseUrl}/sexe/all`,
+            
+        }, 
+         Parent :{
+                all : `${userBaseUrl}/parent/all`,
+                byId : `${userBaseUrl}/parent/byId/`,
+            },
+           Agent :{
+                all : `${userBaseUrl}/agent/all`,
+                allbystructure : `${userBaseUrl}/agent/all/bystructure/`,
+                create : `${userBaseUrl}/agent/create`,
+                update : `${userBaseUrl}/agent/update`,
+                delete : `${userBaseUrl}/agent/delete/`
+            }
     },
 
     // ── Archivage RAG ─────────────────────────────────────────────────────────

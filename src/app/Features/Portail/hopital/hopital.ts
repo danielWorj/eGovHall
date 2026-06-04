@@ -11,6 +11,7 @@ import { Declaration } from '../../../Core/Model/Acte/Declaration';
 import { EtablissementService } from '../../../Core/Service/Etablissement/etablissement-service';
 import { Hopital } from '../../../Core/Model/Etablissement/Hopital';
 import { Router } from '@angular/router';
+import { Utilisateur } from '../../../Core/Model/Utilisateur/Utilisateur';
 
 @Component({
   selector: 'app-hopital',
@@ -46,6 +47,8 @@ export class HopitalC  {
   // ─── Formulaire ─────────────────────────────────────────────────────────────
   declarationFb!: FormGroup;
 
+  userFb!: FormGroup ;
+ idUtilisteur  = signal<number>(0);
   constructor(
     private fb: FormBuilder,
     private etablissementService: EtablissementService,
@@ -86,6 +89,20 @@ export class HopitalC  {
       mairie:       new FormControl(),
     });
 
+    
+    const idStoredID = localStorage.getItem('id');
+    this.idUtilisteur.set(idStoredID ? parseInt(idStoredID) : 0);
+  
+
+    this.userFb = this.fb.group({
+      id : new FormControl(),
+      nom : new FormControl(),
+      prenom : new FormControl(),
+      email : new FormControl(),
+      telephone : new FormControl(),
+      password : new FormControl(),
+    });
+
     this.loadPage(); 
   }
 
@@ -93,6 +110,7 @@ export class HopitalC  {
     this.getHopitalById(this.idHopital());
     this.getAllSexes();
     this.getAllDeclaration(); 
+    this.getDataUtilisateur();
   }
 
   // ─── Chargement des données de référence ────────────────────────────────────
@@ -330,4 +348,68 @@ export class HopitalC  {
     const ctrl = this.declarationFb.get(nom);
     return !!(ctrl && ctrl.invalid && ctrl.touched);
   }
+
+
+  // ─── PROFIL AGENT CONNECTÉ ───────────────────────────────────────────────────
+
+utilisateurConneted = signal<Utilisateur | null>(null);
+showProfilPwd       = signal<boolean>(false);
+profilLoading       = signal<boolean>(false);
+profilSuccessMsg    = signal<string>('');
+profilErrorMsg      = signal<string>('');
+
+getDataUtilisateur(): void {
+  this.utilisateurService.getAllInformationUtilisateur(this.idUtilisteur()).subscribe({
+    next: (data) => {
+      this.utilisateurConneted.set(data);
+      // Pré-remplir le formulaire
+      this.userFb.patchValue({
+        id:        data.id,
+        nom:       data.nom,
+        prenom:    data.prenom,
+        email:     data.email,
+        telephone: data.telephone,
+        password:  '',
+      });
+    },
+    error: () => {
+      console.error('Erreur chargement profil utilisateur.');
+    }
+  });
+}
+
+editData(): void {
+  this.profilLoading.set(true);
+  this.profilSuccessMsg.set('');
+  this.profilErrorMsg.set('');
+
+  const payload: any = { ...this.userFb.value };
+
+  // Ne pas envoyer le mot de passe s'il est vide
+  if (!payload.password || payload.password.trim() === '') {
+    delete payload.password;
+  } else {
+    payload.password_hash = payload.password;
+    delete payload.password;
+  }
+
+  const formData = new FormData();
+  formData.append('user', JSON.stringify(payload));
+
+  this.utilisateurService.updateAgent(formData).subscribe({
+    next: (response) => {
+      this.profilLoading.set(false);
+      if (response.status) {
+        this.profilSuccessMsg.set('Profil mis à jour avec succès.');
+        this.getDataUtilisateur(); // Rafraîchir le signal utilisateur
+      } else {
+        this.profilErrorMsg.set(response.message ?? 'Une erreur est survenue.');
+      }
+    },
+    error: () => {
+      this.profilLoading.set(false);
+      this.profilErrorMsg.set('Erreur réseau. Veuillez réessayer.');
+    }
+  });
+}
 }

@@ -60,6 +60,13 @@
                 style="width:12px;height:12px;border-width:2px"></span>
           &nbsp;Chargement…
         }
+        <!-- Bouton icône profil agent -->
+        <button class="user-pill-edit-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#modalProfil"
+                title="Modifier mon profil">
+          <i class="bi bi-person-gear"></i>
+        </button>
       </div>
       <a href="login.html" style="font-size:13px;color:var(--text-muted);font-weight:600">
         <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
@@ -758,5 +765,154 @@
 
     </div>
   </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════
+     MODAL — PROFIL AGENT CONNECTÉ
+════════════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalProfil" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content"
+         style="border:none;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg)">
+
+      <!-- En-tête -->
+      <div class="modal-header-custom">
+        <div class="modal-header-left">
+          <div class="modal-header-icon">
+            <i class="bi bi-person-gear"></i>
+          </div>
+          <div>
+            <div class="modal-header-title">Mon Profil</div>
+            <div class="modal-header-sub">Modifiez vos informations personnelles</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Corps -->
+      <div class="modal-body-custom" [formGroup]="userFb">
+
+        <!-- Identité affichée -->
+        @if (utilisateurConneted()) {
+          <div class="profil-modal-identity">
+            <div class="profil-modal-avatar">
+              {{ utilisateurConneted()!.nom.charAt(0).toUpperCase() }}{{ utilisateurConneted()!.prenom.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <div class="profil-modal-name">
+                {{ utilisateurConneted()!.prenom }} {{ utilisateurConneted()!.nom }}
+              </div>
+              <div class="profil-modal-role">
+                {{ utilisateurConneted()!.roleUser?.nom ?? 'Agent' }}
+                &nbsp;·&nbsp;
+                {{ utilisateurConneted()!.structure?.nom ?? '—' }}
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Section infos personnelles -->
+        <div class="form-section-divider">
+          <i class="bi bi-person me-2"></i>Informations personnelles
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-group-custom">
+              <label class="form-label-custom">Nom</label>
+              <input type="text" class="form-control-custom"
+                     formControlName="nom"
+                     placeholder="{{ utilisateurConneted()?.nom ?? '' }}" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group-custom">
+              <label class="form-label-custom">Prénom</label>
+              <input type="text" class="form-control-custom"
+                     formControlName="prenom"
+                     placeholder="{{ utilisateurConneted()?.prenom ?? '' }}" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group-custom">
+              <label class="form-label-custom">Adresse e-mail</label>
+              <input type="email" class="form-control-custom"
+                     formControlName="email"
+                     placeholder="{{ utilisateurConneted()?.email ?? '' }}" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group-custom">
+              <label class="form-label-custom">Téléphone</label>
+              <input type="tel" class="form-control-custom"
+                     formControlName="telephone"
+                     placeholder="{{ utilisateurConneted()?.telephone ?? '' }}" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Section sécurité -->
+        <div class="form-section-divider" style="margin-top:20px">
+          <i class="bi bi-shield-lock me-2"></i>Sécurité
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-8">
+            <div class="form-group-custom">
+              <label class="form-label-custom">Nouveau mot de passe</label>
+              <div class="profil-pwd-wrap">
+                <input class="form-control-custom"
+                       [type]="showProfilPwd() ? 'text' : 'password'"
+                       formControlName="password"
+                       placeholder="Laisser vide pour ne pas modifier" />
+                <button type="button" class="profil-pwd-eye"
+                        (click)="showProfilPwd.set(!showProfilPwd())">
+                  <i [class]="showProfilPwd() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                </button>
+              </div>
+              <span class="profil-field-hint">
+                Minimum 6 caractères. Laisser vide pour conserver l'actuel.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback -->
+        @if (profilSuccessMsg()) {
+          <div class="profil-alert-modal success">
+            <i class="bi bi-check-circle-fill"></i> {{ profilSuccessMsg() }}
+          </div>
+        }
+        @if (profilErrorMsg()) {
+          <div class="profil-alert-modal error">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ profilErrorMsg() }}
+          </div>
+        }
+
+      </div>
+
+      <!-- Pied modal -->
+      <div class="modal-footer-custom">
+        <button class="btn-cancel" data-bs-dismiss="modal"
+                [attr.disabled]="profilLoading() ? true : null">
+          Annuler
+        </button>
+        <button class="btn-submit" (click)="editData()"
+                [attr.disabled]="profilLoading() ? true : null">
+          @if (profilLoading()) {
+            <span class="spinner-border spinner-border-sm me-2"
+                  style="width:15px;height:15px;border-width:2px"></span>
+            Enregistrement…
+          } @else {
+            <i class="bi bi-floppy me-2"></i>Enregistrer
+          }
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 </div>
 

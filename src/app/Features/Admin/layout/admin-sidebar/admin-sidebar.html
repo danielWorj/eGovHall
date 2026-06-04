@@ -31,53 +31,15 @@
   <!-- ══ SUPER ADMIN (role 1) ══════════════════════════════════════ -->
   @if (role() === 1) {
 
-    <div class="sidebar-section-label">Tableau de bord</div>
-    <a routerLink="dashboard" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-speedometer2"></i> Vue d'ensemble
-    </a>
-
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">État Civil</div>
-    <a routerLink="naissance" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-hospital"></i> Actes de Naissance
-      <span class="sidebar-badge">7</span>
-    </a>
-    <a routerLink="mariage" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-suit-heart"></i> Actes de Mariage
-      <span class="sidebar-badge gold">3</span>
-    </a>
-
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Urbanisme</div>
-    <a routerLink="permis" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-building"></i> Permis de Bâtir
-      <span class="sidebar-badge">5</span>
-    </a>
-
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Finances</div>
-    <a routerLink="paiements" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-credit-card"></i> Paiements
-      <span class="sidebar-badge green">12</span>
-    </a>
-
-    <div class="sidebar-divider"></div>
-    <div class="sidebar-section-label">Agenda</div>
-    <a routerLink="rdv" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-calendar3"></i> Rendez-vous
-    </a>
-
+  
     <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Administration</div>
-    <a routerLink="utilisateurs" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
+    <a routerLink="user-admin" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-people"></i> Utilisateurs
     </a>
-    <a routerLink="notifications" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-bell"></i> Notifications
-      <span class="sidebar-badge">4</span>
-    </a>
-    <a routerLink="ged" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
-      <i class="bi bi-folder2-open"></i> GED Documents
+
+    <a routerLink="user-structure" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
+      <i class="bi bi-folder2-open"></i> Structure
     </a>
     <a routerLink="reporting" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-bar-chart-line"></i> Reporting
@@ -114,7 +76,7 @@
       <i class="bi bi-chat-dots"></i> Assistant IA
     </a>
 
-    <div class="sidebar-divider"></div>
+    <!-- <div class="sidebar-divider"></div>
     <div class="sidebar-section-label">Finances</div>
     <a routerLink="paiements" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-credit-card"></i> Paiements
@@ -125,6 +87,11 @@
     <div class="sidebar-section-label">Agenda</div>
     <a routerLink="rdv" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-calendar3"></i> Rendez-vous
+    </a> -->
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Profil</div>
+    <a routerLink="profil" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
+      <i class="bi bi-user"></i> Profil
     </a>
 
   }
@@ -173,6 +140,9 @@
     <div class="sidebar-divider"></div>
     <a routerLink="rdv" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-calendar3"></i> Mes Rendez-vous
+    </a>
+    <a routerLink="profil" routerLinkActive="active" class="sidebar-item" (click)="fermerSidebar()">
+      <i class="bi bi-person"></i> Profil
     </a>
     <a class="sidebar-item" (click)="fermerSidebar()">
       <i class="bi bi-bell"></i> Notifications
